@@ -1,0 +1,38 @@
+<form [formGroup]="AnnualReviewForm" (ngSubmit)="onSubmitAnnualReview()">
+    <div class="row" id="btn_save" *ngIf="(year >= yearNow)">
+        <button type="submit" mat-raised-button color="success" class="ml-2" (click)="submitData()">
+            <i class="material-icons md-18 ml-1 ">save</i> Save
+        </button>
+    </div>
+    <div class="main-form ">
+        <div class="PC">
+            <div class=" row">
+
+                <div class="{{'col-12 col-xl-6 order-' + (item.ReviewId==4?6:item.ReviewId)}}"
+                    *ngFor="let item of listAnnualReview; let i = index">
+                    <mat-label class="w-100" style="color:#008577 ; text-transform: uppercase;">
+                        {{item.ReviewHeading}}
+                    </mat-label>
+                    <mat-form-field *ngIf="item.ReviewId!=4" floatLabel="always" appearance="outline" class="w-100">
+                        <textarea style=" border-color: #008577;" #ReviewContent maxlength="1000" matInput rows="5"
+                            formControlName="{{i+1}}" [ngModel]="item.ReviewContent">
+                                                                                                        {{item.ReviewContent}}
+                                                                                                </textarea>
+                        <mat-hint align="end">{{ReviewContent.value.length}} / 1000</mat-hint>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="item.ReviewId==4" class="w-100" style="position: relative;">
+                        <input (change)="getValueInput(ReviewContent1)" formControlName="{{i+1}}"
+                            value="{{item.ReviewContent}}" number mask="comma_separator" matInput maxlength="3"
+                            #ReviewContent1><span
+                            
+                            style="position: absolute;left: 30px;">%</span>
+                    </mat-form-field>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</form>

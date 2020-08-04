@@ -1,0 +1,236 @@
+<div class="lst" style="height: calc(100vh - 180px);margin-left: -25px">
+
+    <form #divSearch class="ml-5 form-header">
+        <div class="">
+            <div class="hasForm">
+
+                <mat-form-field class="mr-3 ml-3 ">
+                    <input width="30px"#reportYearAnnualInput [formControl]="reportYearAnnual" matInput placeholder="Choose a year"
+                        maxlength="4" number mask="0000">
+                    <mat-error>
+                        <div *ngIf="reportYearAnnual.errors?.yearRequired">Year is required </div>
+                        <!-- <div *ngIf="reportYearAnnual.value.length != 4">Year is wrong format! </div> -->
+                    </mat-error>
+                </mat-form-field>
+
+                <button type="submit" class="ml-3" mat-raised-button color="warn" (click)="loadAnnualBonus()">
+                    <i class="material-icons md-18 ml-1">search</i>
+                </button>
+                <button type="button" class="ml-0 ml-md-3" mat-raised-button color="success" (click)="onDownLoadFile()">
+                    <i class="material-icons md-18 ml-1">archive</i>DownLoad
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="mat-elevation-z8 m-3" *ngIf="flagHidden">
+
+        <div class="pt-3 pb-3">
+            <span style="float: right; margin-right: 15px;">Work Day/Month : {{monthly}}</span><span style="float: right; margin-right: 15px;">USD Rate: 23000</span><span style="float: right; margin-right: 15px;">JPY Rate: 255</span>   
+            <div class="col-lg-12 contentTable" #parentTable>
+
+                <mat-table class="tableHidden" style="max-height: calc(100vh - 240px)" [dataSource]="dataSource">
+
+                    <!-- No. -->
+                    <ng-container matColumnDef="No1">
+                        <mat-header-cell class="p-0 ml-0 mr-0" *matHeaderCellDef> No. </mat-header-cell>
+                        <mat-cell class="p-0 ml-0 mr-0" *matCellDef="let row" style="display: none">
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- EmpName -->
+                    <ng-container matColumnDef="EmpName1">
+                        <mat-header-cell *matHeaderCellDef>Employee Name
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Employee Name" style="display: none">
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- RatingFactorMember -->
+                    <ng-container matColumnDef="RatingFactorMember1">
+                        <mat-header-cell class="p-0 ml-0 mr-0" *matHeaderCellDef style="display: none">
+                        </mat-header-cell>
+                        <mat-cell class="p-0 ml-0 mr-0" *matCellDef="let row" data-label="Rating Factor"
+                            style="display: none">
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- TotalProjectMember -->
+                    <ng-container matColumnDef="TotalProjectMember1">
+                        <mat-header-cell *matHeaderCellDef style="display: none"></mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Total Project" style="display: none">
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- TotalDayMember -->
+                    <ng-container matColumnDef="TotalDayMember1">
+                        <mat-header-cell *matHeaderCellDef style="display: none"></mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Total Day" style="display: none">
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- BonusMember -->
+                    <ng-container matColumnDef="BonusMember1">
+                        <mat-header-cell *matHeaderCellDef>Member</mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Bonus" style="display: none">
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- RatingFactorLeader -->
+                    <ng-container matColumnDef="RatingFactorLeader1">
+                        <mat-header-cell *matHeaderCellDef style="display: none"></mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Rating Factor" style="display: none">
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- TotalProjectLeader -->
+                    <ng-container matColumnDef="TotalProjectLeader1">
+                        <mat-header-cell *matHeaderCellDef style="display: none"></mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Total Project" style="display: none">
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- TotalEstimateCostVNDLeader -->
+                    <ng-container matColumnDef="TotalEstimateCostVNDLeader1">
+                        <mat-header-cell *matHeaderCellDef style="display: none"> </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Estimate Cost" style="display: none">
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- BonusLeader -->
+                    <ng-container matColumnDef="BonusLeader1">
+                        <mat-header-cell *matHeaderCellDef> Leader </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Bonus" style="display: none">
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- TotalBonus -->
+                    <ng-container matColumnDef="TotalBonus1">
+                        <mat-header-cell *matHeaderCellDef> Total Bonus </mat-header-cell>
+                        <mat-cell *matCellDef="let row" style="display: none"></mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns1"></mat-header-row>
+                    <!-- <mat-row *matRowDef="let row; columns: displayedColumns1;"></mat-row> -->
+
+                </mat-table>
+
+                <mat-table style="max-height: calc(100vh - 240px)" [dataSource]="dataSource" [ngStyle]="{'margin-top: -25px': 1==1}">
+
+                    <!-- No. -->
+                    <ng-container matColumnDef="No">
+                        <mat-header-cell class="NoNumberCollapse" *matHeaderCellDef></mat-header-cell>
+                        <mat-cell class="p-0 ml-0 mr-0" *matCellDef="let row" data-label="No.">
+                            <a>
+                                1
+                            </a>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- EmpName -->
+                    <ng-container matColumnDef="EmpName">
+                        <mat-header-cell *matHeaderCellDef>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Employee Name">
+                            <a #btn1 data-toggle="modal" data-target="#myModal" class="someclass" id="{{row.Id}}">
+                                {{row.EmpName}}
+                            </a>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- RatingFactorMember -->
+                    <ng-container matColumnDef="RatingFactorMember">
+                        <mat-header-cell class="p-0 ml-0 mr-0" *matHeaderCellDef>
+                            Rating Factor</mat-header-cell>
+                        <mat-cell class="p-0 ml-0 mr-0" *matCellDef="let row" data-label="Rating Factor">
+                            <a>
+                                {{row.RatingFactorMember*100}}<span *ngIf="row.RatingFactorMember">%</span>
+                            </a>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- TotalProjectMember -->
+                    <ng-container matColumnDef="TotalProjectMember">
+                        <mat-header-cell *matHeaderCellDef> Total Project </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Total Project">
+                            {{row.TotalProjectMember}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- TotalDayMember -->
+                    <ng-container matColumnDef="TotalDayMember">
+                        <mat-header-cell *matHeaderCellDef> Total Day </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Total Day">
+                            {{row.TotalDayMember}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- BonusMember -->
+                    <ng-container matColumnDef="BonusMember">
+                        <mat-header-cell *matHeaderCellDef> Bonus </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Bonus">
+                            {{row.BonusMember}} <span *ngIf="row.BonusMember" style="margin-left: 2px"> đ</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- RatingFactorLeader -->
+                    <ng-container matColumnDef="RatingFactorLeader">
+                        <mat-header-cell *matHeaderCellDef> Rating Factor
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Rating Factor">
+                            {{row.RatingFactorLeader*100}}<span *ngIf="row.RatingFactorLeader">%</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- TotalProjectLeader -->
+                    <ng-container matColumnDef="TotalProjectLeader">
+                        <mat-header-cell *matHeaderCellDef> Total Project
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Total Project">
+                            {{row.TotalProjectLeader}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- TotalEstimateCostVNDLeader -->
+                    <ng-container matColumnDef="TotalEstimateCostVNDLeader">
+                        <mat-header-cell *matHeaderCellDef> Estimate Cost
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Estimate Cost">
+                            {{row.TotalEstimateCostVNDLeader}}<span *ngIf="row.TotalEstimateCostVNDLeader"
+                                style="margin-left: 2px">đ</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- BonusLeader -->
+                    <ng-container matColumnDef="BonusLeader">
+                        <mat-header-cell *matHeaderCellDef> Bonus </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Bonus">
+                            {{row.BonusLeader}}<span *ngIf="row.BonusLeader" style="margin-left: 2px">đ</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- TotalBonus -->
+                    <ng-container matColumnDef="TotalBonus">
+                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Total Bonus">
+                            {{row.TotalBonus}}<span *ngIf="row.TotalBonus" style="margin-left: 2px">đ</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                </mat-table>
+
+                <!-- No records found -->
+                <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">
+                    No records found
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

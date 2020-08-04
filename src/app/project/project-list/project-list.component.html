@@ -1,0 +1,213 @@
+<div class="lst" style="height: calc(100vh - 150px)">
+  <mat-drawer-container class="h-100"  [hasBackdrop]='true'>
+    <mat-drawer #drawer mode="over" style="width: 300px;font-size: 13px">
+      <div>
+        <form [formGroup]="dtFormSearch" (ngSubmit)="onSubmitSearch()">
+          <button mat-mini-fab color="success" class="mat-sm"
+            style="margin-top: 1px; border-radius: 4px 0 0 4px; position: absolute; z-index: 9999; top: 0px; right: 0; overflow: hidden;"
+            (click)="drawer.toggle()">
+            <mat-icon *ngIf="drawer.opened" aria-hidden="false" style="padding-left: 5px;">arrow_back_ios</mat-icon>
+          </button>
+          <mat-form-field class="w-100 p-3">
+            <input matInput placeholder="Project Name" formControlName="ProjectName">
+          </mat-form-field>
+          <br>
+          <mat-form-field class="w-100 p-3">
+            <input matInput placeholder="Customer Name" formControlName="CustName">
+          </mat-form-field>
+          <br>
+          <mat-form-field class="w-100 p-3">
+            <mat-select placeholder="Status" formControlName="ProjectStatusName">
+              <mat-option></mat-option>
+              <mat-option *ngFor="let item of lstStatus " [value]="item.ProjectStatusName">
+                {{item.ProjectStatusName}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br>
+          <mat-form-field class="w-50 pl-3" aria-required="false">
+            <mat-label aria-required="false">Start Date From</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="StartDate" maxlength="8" dateFormat>
+            <mat-datepicker-toggle matSuffix [for]="picker" class="colorGreen"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field class="w-50 pl-2 pr-3">
+            <mat-label aria-required="false">To</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="EndDate" maxlength="8" dateFormat>
+            <mat-datepicker-toggle matSuffix [for]="picker2" class="colorGreen"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+          <br>
+          <div class="text-right pr-3">
+            <button type="button" mat-raised-button color="primary" class="ml-2" (click)="refersh()">
+              <i class="material-icons ">cached</i>
+            </button>
+            <button type="submit" mat-raised-button color="warn" class="ml-2" (click)="goToTop()">
+              <i class="material-icons ">search</i>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </mat-drawer>
+    <mat-drawer-content class="h-100" style="position: relative;">
+      <button mat-mini-fab color="warn" class="mat-sm"
+        style="margin-top: 1px; border-radius: 0 4px 4px 0; position: absolute; z-index: 9999;"
+        (click)="drawer.toggle()">
+        <mat-icon *ngIf="!drawer.opened" aria-hidden="false">search</mat-icon>
+      </button>
+      <button type="button" mat-raised-button color="success" [routerLink]="['create']"
+        style="margin-top: 1px;margin-right: 15px; position: absolute; z-index: 9999;right: 0;">
+        <i class="material-icons md-5 pr-1">add</i>Create
+      </button>
+      <div class="pt-4 mt-1">
+        <div class="mat-elevation-z8 m-3 ">
+          <div class="pt-3 pb-3">
+            <div class="col-lg-12 contentTable" #parentTable>
+              <mat-table [dataSource]="dataSource" matSort matSortActive="StartDate" matSortDirection="desc"
+                matSortDisableClear>
+                <ng-container matColumnDef="Action">
+                  <mat-header-cell *matHeaderCellDef>Action </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="Action">
+                    <a [routerLink]="['info', row.Id]"><i class="material-icons">edit</i></a>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="ProjectName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Project Name </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="Project Name"><a #btn1 (click)="getIdProject(btn1)"
+                      data-toggle="modal" data-target="#myModal" class="someclass" id="{{row.Id}}"
+                      href="#">{{row.ProjectName}}</a></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="CustName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Customer Name </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="Customer Name"> {{row.CustName}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="StartDate">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Start Date - End Date </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="Date">
+                      {{row.StartDate  | date:'yyyy/MM/dd'}}
+                                <span class="mx-1"> ～ </span>
+                      {{row.EndDate  | date:'yyyy/MM/dd'}}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="EstimateCost">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Estimate Cost </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="Estimate Cost"><span
+                      *ngIf="row.CostCurrencySymboy !='đ'">{{row.CostCurrencySymboy}}{{row.EstimateCost | number: '4.0'}}</span>
+                    <span id="cost"
+                      *ngIf="row.CostCurrencySymboy =='đ'">{{row.EstimateCost | number: '4.0'}}{{row.CostCurrencySymboy}}</span>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="PaymentDate">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Payment Date </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="Payment Date"> {{row.PaymentDate | date:'yyyy/MM/dd'}}
+                  </mat-cell>
+                </ng-container>
+
+
+                <ng-container matColumnDef="ProjectStatusName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="Status">
+                    <span [ngStyle]="convertStyleObject(row.StyleCss)"> {{row.ProjectStatusName}} </span>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;">
+                </mat-row>
+              </mat-table>
+              <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">No records
+                found
+              </div>
+            </div>
+          </div>
+          <mat-paginator [pageSizeOptions]="[5, 10, 15, 25, 50,100]" [pageSize]="15" (click)="goToTop()" class="">
+          </mat-paginator>
+        </div>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-white">
+        <div class="col-lg-5 col-5 pt-1">
+          <h5 class="modal-title" id="exampleModalLabel"><b>{{ projects.ProjectName }}</b></h5>
+        </div>
+        <div class="col-lg-6 col-6 pt-2 mr-1 custDetail">
+          {{ projects.StartDate | date:'yyyy/MM/dd' }} <span *ngIf="projects.EndDate">~</span>
+          {{ projects.EndDate | date:'yyyy/MM/dd' }}
+          <p *ngIf="projects.CostCurrencySymboy !='đ'">
+            <span *ngIf="projects.EstimateCost || projects.EstimateManDay"> Estimate:
+              {{projects.CostCurrencySymboy}}{{ projects.EstimateCost | number: '4.0'}}<span
+                *ngIf="projects.EstimateManDay && projects.EstimateCost">/</span></span><span
+              *ngIf="projects.EstimateManDay">{{projects.EstimateManDay}}ManDay</span>
+          </p>
+          <p *ngIf="projects.CostCurrencySymboy =='đ'">
+            <span *ngIf="projects.EstimateCost || projects.EstimateManDay"> Estimate:
+              {{ projects.EstimateCost | number: '4.0'}}{{projects.CostCurrencySymboy}}<span
+                *ngIf="projects.EstimateManDay && projects.EstimateCost">/</span></span><span
+              *ngIf="projects.EstimateManDay">{{projects.EstimateManDay}}ManDay</span>
+          </p>
+        </div>
+        <div class="col-lg-1 col-1 ml-1">
+          <button type="button" class="close m-0 text-right" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 col-4 price-tag mt-1" *ngIf="projects.ProjectStatusName">
+          <span [ngStyle]="convertStyleObject(projects.StyleCss)"> {{projects.ProjectStatusName}} </span>
+        </div>
+        <div class="col-lg-9 col-8" *ngIf="projects.CustName">
+          <label class="pt-2"><b>{{ projects.CustName }}</b></label>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="projects.DeliveryDate">
+          <label class="col-lg-4 col-5 fDate">Delivery date: </label>
+          <label class="col-lg-8 col-7 fDate"><b>{{projects.DeliveryDate | date:'yyyy/MM/dd'}}</b></label>
+        </div>
+        <div *ngIf="projects.PaymentDate">
+          <label class="col-lg-4 col-5 fDate">Payment date: </label>
+          <label class="col-lg-8 col-7 fDate"><b>{{projects.PaymentDate | date:'yyyy/MM/dd'}}</b></label>
+        </div>
+        <div class="scrollbar">
+          <div>{{ projects.ProjectDecription }}</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>

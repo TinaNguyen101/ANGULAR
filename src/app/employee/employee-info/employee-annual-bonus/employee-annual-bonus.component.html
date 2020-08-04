@@ -1,0 +1,793 @@
+<div class="mainSearch" style="margin-left: -25px;">
+    <form class="my-3 form-container-main">
+        <div class="w-100 form-container form__content">
+            <div class="form-group form-group-search">
+                <div class="requestbox">
+                    <mat-form-field  [ngStyle]="{width: innerWidth>1200?'auto':'100px'}"
+                        class="formChooseAnnualDate">
+                        <!-- validation type = 1: allow only number -->
+                        <input [formControl]="bonusYear" matInput placeholder="Choose a year" maxlength="4" number
+                            mask="0000">
+                        <mat-error>
+                            <div *ngIf="bonusYear.errors?.yearRequired">Year is required </div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <button type="button" mat-raised-button color="warn" class="ml-2" (click)="GetAllBonus()">
+                        <i class="material-icons md-18 ml-1">search</i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group form-group-rate">
+                <div class="requestbox" style="white-space: nowrap;">
+                    <mat-form-field class="rate-usd"
+                        [ngStyle]="{width: innerWidth>1200?'95px': '70px'}">
+                        <input #rateUSDElement [formControl]="rateUSD" type="text" matInput placeholder="USD rate"
+                            maxlength=12 mask="comma_separator" numberCommaSeparator>
+                        <div class="mat-form-field-subscript-wrapper"
+                            style="position: absolute;width: 160px;text-align: left;top: 32px;">
+                            <div class="mat-error"
+                                *ngIf=" (isSubmitted || rateUSD.touched || rateJPY.touched) && (rateUSD.errors?.customRequired2 || rateJPY.errors?.customRequired2)">
+                                USD and JPY rate is required
+                            </div>
+                        </div>
+
+                    </mat-form-field>
+                    <mat-form-field class="rete-yen" [ngStyle]="{width: innerWidth>1200?'95px': '70px'}">
+                        <input #rateJPYElement [formControl]="rateJPY" type="text" matInput placeholder="JPY rate"
+                            maxlength=12 mask="comma_separator" numberCommaSeparator>
+                        <mat-error></mat-error>
+                    </mat-form-field>
+
+                    <button type="button" mat-raised-button color="success" class="botton-auto-create"
+                        [ngStyle]="{marginLeft: innerWidth > 1200 ? '48px': '10px'}" (click)="autoCreate()">
+                        <i class="material-icons md-18 ml-1">post_add</i>Auto Create
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<mat-drawer-container [hasBackdrop]='true' class="wrap-drawer" style="margin-left: -25px;z-index: 1;">
+
+    <!-- Main table Laptop -->
+    <mat-drawer-content *ngIf="!isMobile" style="position: relative; overflow: hidden; margin-left: 25px;">
+        <div class="m-3">
+            <div class="p-3 mat-elevation-z8"
+                style="background: white;height: calc(100vh - 230px); position: relative !important; margin-bottom: 46px;">
+                <div class="w-100 d-flex mb-2">
+                    <div class="w-50 mr-3">
+                        <span class="py-1 mb-1 px-3 text-white"
+                            style="background: #a250e6; font-weight: 510;">MEMBER</span>
+                    </div>
+                    <div class="w-50 ml-3">
+                        <span class="py-1 mb-1 px-3 text-white" style="background: #a250e6;">LEADER</span>
+                    </div>
+                </div>
+
+                <button mat-mini-fab color="success" (click)="drawercreate.toggle()" class="mat-sm"
+                    style="margin-top: 1px; border-radius: 4px 0  0 4px ; position: absolute; z-index: 9999;right: -16px; top:-15px">
+                    <mat-icon aria-hidden="false">add</mat-icon>
+                </button>
+                <div class="w-100 container-table d-flex">
+                    <div class='text-small table-member bt-3 w-50 mr-3'>
+                        <div class="px-0 w-100 d-flex">
+                            <span class="text-center d-block bacoti border-x border-bottom pt-2" style="width: calc(40% - 3px); height: 32px;">Rating Factor</span>
+                            <span class="d-block text-center border-bottom border-top border-right pt-1" style="width: 20%;">{{AnnualRatingFactor.RatingFactorMember * 100}} %</span>
+                        </div>
+                    </div>
+
+                    <div class='text-small table-member bt-3 w-50 ml-3'>
+                        <div class="px-0 w-100 d-flex">
+                            <span class="text-center pt-2 d-block bacoti border-x border-bottom" style="width: calc(40%); height: 32px;">Rating Factor</span>
+                            <span class="d-block text-center pt-1 border-bottom border-top border-right" style="width: 20%;">{{AnnualRatingFactor.RatingFactorLeader * 100}} %</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="w-100 container-table d-flex">
+                    <!-- Member -->
+                    <mat-table [dataSource]="dataSource" class='text-small table-member bt-3 w-50 mr-3 mb-5'>
+                        <ng-container matColumnDef="ProName">
+                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                <!-- <div class="w-100 px-0 mx-0">
+                                    <div class="w-100 text-center hr-2" style="border-bottom: 1px solid #979797;">
+                                        Rating
+                                        Factor</div>
+                                    <div class="w-100 text-center hr-2">Project Name</div>
+                                </div> -->
+                                <span class="w-100 text-center">Project Name</span>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="Project Name"> <span
+                                    class="w-100 text-left">{{row.ProName}}</span>
+                            </mat-cell>
+                            <mat-footer-cell *matFooterCellDef style="background-color: #008577" style="display: none;">
+                            </mat-footer-cell>
+
+                        </ng-container>
+
+                        <ng-container matColumnDef="Day">
+                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                <!-- <div class="w-100">
+                                    <div class="w-100 text-center hr-1">
+                                        {{AnnualRatingFactor.RatingFactorMember * 100}} %
+                                    </div>
+                                    <div class="w-100 text-center hr-2">Day</div>
+                                </div> -->
+                                <span class="w-100 text-center">Day</span>
+
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="Day">
+                                <span class="w-100 text-center">{{row.Day}}</span>
+                            </mat-cell>
+                            <mat-footer-cell *matFooterCellDef style="background-color: #008577; width: 60% !important;"
+                                class="px-0">
+                                <div class="d-flex w-100 flex-wrap px-0 mx-0">
+                                    <div class="w-100 text-center px-0">
+                                        <span class="w-100 text-center text-white" style="font-weight: 600;">
+                                            Total</span>
+                                    </div>
+                                    <div class="w-100 text-center px-0 mx-0 text-white d-mobile"
+                                        style="border-top: 1px solid #979797;">
+                                        <span class="w-100 text-center" style="font-weight: 600;">Rating
+                                            Factor</span>
+                                    </div>
+                                </div>
+                            </mat-footer-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Bonus">
+                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                <!-- <div class="w-100">
+                                    <div class="w-100 text-center hr-1" style="visibility: hidden;"></div>
+                                    <div class="w-100 text-center hr-2">Bonus</div>
+                                </div> -->
+                                <span class="w-100 text-center">Bonus</span>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="Bonus"> <span *ngIf="row"
+                                    class="w-100 text-right">
+                                    {{renderValueOr0(row.Bonus)}}</span>
+                            </mat-cell>
+                            <mat-footer-cell *matFooterCellDef class="px-0">
+                                <div class="d-flex w-100 flex-wrap px-0 mx-0">
+                                    <div class="w-100 text-center px-0">
+                                        <span class="w-100 text-bold text-center">
+                                            {{renderValueOr0(totalMoney)}}</span>
+                                    </div>
+                                    <div class="w-100 text-center px-0 mx-0 d-mobile"
+                                        style="border-top: 1px solid #979797;">
+                                        <span class="w-100 text-center">{{AnnualRatingFactor.RatingFactorMember * 100}}
+                                            %</span>
+                                    </div>
+                                </div>
+                            </mat-footer-cell>
+
+                        </ng-container>
+
+                        <ng-container matColumnDef="Action">
+                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                <!-- <div class="w-100">
+                                    <div class="w-100 text-center hr-1" style="visibility: hidden;"></div>
+                                    <div class="w-100 text-center hr-2">Action</div>
+                                </div> -->
+                                <span class="w-100 text-center hr-2">Action</span>
+                            </mat-header-cell>
+                            <mat-cell (click)="onEdit(row,'0')" *matCellDef="let row" data-label="Action">
+                                <span class="w-100 text-center" style="color: #008577; cursor: pointer;"><i
+                                        class="material-icons">edit</i></span>
+                            </mat-cell>
+                            <mat-footer-cell *matFooterCellDef style="display: none;"></mat-footer-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                        <mat-row #rowelement *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                        <mat-footer-row class="footer-row" *matFooterRowDef="displayedColumns">
+                        </mat-footer-row>
+
+                    </mat-table>
+                    <!-- Leader -->
+                    <mat-table [dataSource]="dataSourceForLeader" class='text-small table-leader bt-3 w-50 ml-3 mb-5'>
+                        <ng-container matColumnDef="ProNameLeader">
+                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                <!-- <div class="w-100 px-0 mx-0">
+                                    <div class="w-100 hr-2 h-100" style="border-bottom: 1px solid #979797;">
+                                        <div class="h-100 text-center" style="width: 75%;">
+                                            <span class="w-100 text-center">Rating Factor</span>
+                                        </div>
+                                        <div class="d-flex align-items-center text-center "
+                                            style="width: 25%; background: #fff; color: black; height: 31px; border-top: 1px solid #979797;">
+                                            <span class="w-100 text-center d-block"
+                                                style="margin: auto;">{{AnnualRatingFactor.RatingFactorLeader * 100}}
+                                                %</span>
+                                        </div>
+                                    </div>
+                                    <div class="w-100 text-center hr-2 group">Project Name</div>
+                                </div> -->
+                                <span class="w-100 text-center hr-2 group">Project Name</span>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="Project Name"> <span
+                                    class="w-100 text-left">{{row.ProName}}</span>
+                            </mat-cell>
+                            <!-- <mat-footer-cell *matFooterCellDef style="background-color: #008577" style="display: none;">
+                                        </mat-footer-cell> -->
+
+                        </ng-container>
+
+                        <ng-container matColumnDef="BonusLeader">
+                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                <!-- <div class="w-100">
+                                    <div class="w-100 text-center hr-1" style="visibility: hidden;"></div>
+                                    <div class="w-100 text-center hr-2">Bonus</div>
+                                </div> -->
+                                <span class="w-100 text-center hr-2">Bonus</span>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="Bonus"> <span *ngIf="row"
+                                    class="w-100 text-right">
+                                    {{renderValueOr0(row.Bonus)}}</span>
+                            </mat-cell>
+
+                        </ng-container>
+
+                        <ng-container matColumnDef="ActionLeader">
+                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                <!-- <div class="w-100">
+                                    <div class="w-100 text-center hr-1" style="visibility: hidden;"></div>
+                                    <div class="w-100 text-center hr-2">Action</div>
+                                </div> -->
+                                <span class="w-100 text-center hr-2">Action</span>
+                            </mat-header-cell>
+                            <mat-cell (click)="onEdit(row,'1')" *matCellDef="let row" data-label="Action">
+                                <span class="w-100 text-center" style="color: #008577; cursor: pointer;"><i
+                                        class="material-icons">edit</i></span>
+                            </mat-cell>
+                            <!-- <mat-footer-cell *matFooterCellDef style="display: none;"></mat-footer-cell> -->
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumnsForLeader; sticky: true">
+                        </mat-header-row>
+                        <mat-row #rowelement *matRowDef="let row; columns: displayedColumnsForLeader;">
+                        </mat-row>
+                        <!-- <mat-footer-row class="footer-row" *matFooterRowDef="displayedColumnsForLeader"> -->
+                        <!-- </mat-footer-row> -->
+
+                    </mat-table>
+                </div>
+
+            </div>
+        </div>
+    </mat-drawer-content>
+    <!-- End main table -->
+
+    <mat-drawer-content class="drawer-content-mobile" *ngIf="isMobile">
+        <mat-drawer-container class="h-100" [hasBackdrop]='true' style="position: relative;">
+            <mat-drawer-content
+                class="wrap-table-mobile-phone">
+                <button mat-mini-fab color="success" (click)="drawercreate.toggle()" class="mat-sm"
+                    style="margin-top: 1px; border-radius: 4px 0  0 4px ; position: absolute; right: 0; top: 0px ; z-index: 9999">
+                    <mat-icon aria-hidden="false">add</mat-icon>
+                </button>
+
+                <ul class="nav nav-pills mb-1" style="height: 30px; padding-left: 16px;" id="pills-tab" role="tablist">
+                    <li class="nav-item mr-3">
+                        <div class="nav-link active text-center" id="pills-home-tab" data-toggle="pill"
+                            href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">
+                            <p (click)="isTableMember = true" style="margin-top: -10px;">MEMBER</p>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-link text-center" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab"
+                            aria-controls="pills-profile" aria-selected="false">
+                            <p (click)="isTableMember = false" style="margin-top: -10px;">LEADER</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
+                        aria-labelledby="pills-home-tab">
+                        <div class="d-flex p-3 container-main-table-mobile">
+                            <div [ngClass]="{'container-table-mobile-has-content': dataSource && dataSource.data.length !== 0}"
+                                class="w-100 pt-1 container-table container-table-mobile-has-content  d-flex mat-elevation-z8">
+                                <div class="px-3 tab-table" style="position: relative;">
+                                    <div class="text-center text-danger my-3"
+                                        *ngIf="dataSource && dataSource.data.length === 0">No records
+                                        found
+                                    </div>
+                                    <mat-table id="wrapTableMemberMobile"
+                                        [hidden]="dataSource && dataSource.data.length == 0"  
+                                        [dataSource]="dataSource" class='text-small table-leader px-0 bt-3 w-100'>
+                                        <ng-container matColumnDef="ProName">
+                                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                                <div class="w-100 px-0 mx-0">
+                                                    <div class="w-100 text-center hr-2"
+                                                        style="border-bottom: 1px solid #979797;">
+                                                        Rating
+                                                        Factor</div>
+                                                    <div class="w-100 text-center hr-2">Project Name</div>
+                                                </div>
+                                            </mat-header-cell>
+                                            <mat-cell *matCellDef="let row" data-label="Project Name"> <span
+                                                    class="w-100 text-left">{{row.ProName}}</span>
+                                            </mat-cell>
+                                            <mat-footer-cell *matFooterCellDef style="background-color: #008577"
+                                                style="display: none;">
+                                            </mat-footer-cell>
+
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="Day">
+                                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                                <div class="w-100">
+                                                    <div class="w-100 text-center hr-1">
+                                                        {{AnnualRatingFactor.RatingFactorMember * 100}}
+                                                        %
+                                                    </div>
+                                                    <div class="w-100 text-center hr-2">Day</div>
+                                                </div>
+
+                                            </mat-header-cell>
+                                            <mat-cell *matCellDef="let row" data-label="Day">
+                                                <span class="w-100 text-center">{{row.Day}}</span>
+                                            </mat-cell>
+                                            <mat-footer-cell *matFooterCellDef
+                                                style="background-color: #008577; width: 60% !important;" class="px-0">
+                                                <div class="d-flex w-100 flex-wrap px-0 mx-0">
+                                                    <div class="w-100 text-center px-0">
+                                                        <span class="w-100 text-center text-white"
+                                                            style="font-weight: 600;">
+                                                            Total</span>
+                                                    </div>
+                                                    <div class="w-100 text-center px-0 mx-0 text-white d-mobile"
+                                                        style="border-top: 1px solid #979797;">
+                                                        <span class="w-100 text-center" style="font-weight: 600;">Rating
+                                                            Factor</span>
+                                                    </div>
+                                                </div>
+                                            </mat-footer-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="Bonus">
+                                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                                <div class="w-100">
+                                                    <div class="w-100 text-center hr-1" style="visibility: hidden;">
+                                                    </div>
+                                                    <div class="w-100 text-center hr-2">Bonus</div>
+                                                </div>
+                                            </mat-header-cell>
+                                            <mat-cell *matCellDef="let row" data-label="Bonus"> <span *ngIf="row"
+                                                    class="w-100 text-right">
+                                                    {{renderValueOr0(row.Bonus)}}</span>
+                                            </mat-cell>
+                                            <mat-footer-cell *matFooterCellDef class="px-0">
+                                                <div class="d-flex w-100 flex-wrap px-0 mx-0">
+                                                    <div class="w-100 text-right px-0">
+                                                        <span class="w-100 text-bold text-center">
+                                                            {{renderValueOr0(totalMoney) }} </span>
+                                                    </div>
+                                                    <div class="w-100 text-center px-0 mx-0 d-mobile"
+                                                        style="border-top: 1px solid #979797;">
+                                                        <span
+                                                            class="w-100 text-center">{{AnnualRatingFactor.RatingFactorMember * 100}}
+                                                            %</span>
+                                                    </div>
+                                                </div>
+                                            </mat-footer-cell>
+
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="Action">
+                                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                                <div class="w-100">
+                                                    <div class="w-100 text-center hr-1" style="visibility: hidden;">
+                                                    </div>
+                                                    <div class="w-100 text-center hr-2">Action</div>
+                                                </div>
+                                            </mat-header-cell>
+                                            <mat-cell (click)="onEdit(row,'0')" *matCellDef="let row"
+                                                data-label="Action">
+                                                <span class="w-100 text-center"
+                                                    style="color: #008577; cursor: pointer;"><i
+                                                        class="material-icons">edit</i></span>
+                                            </mat-cell>
+                                            <mat-footer-cell *matFooterCellDef style="display: none;">
+                                            </mat-footer-cell>
+                                        </ng-container>
+
+                                        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true">
+                                        </mat-header-row>
+                                        <mat-row #rowelement *matRowDef="let row; columns: displayedColumns;">
+                                        </mat-row>
+                                        <!-- <mat-footer-row class="footer-row" *matFooterRowDef="displayedColumns">
+                                                    </mat-footer-row> -->
+                                    </mat-table>
+                                </div>
+                                <div class="px-3"
+                                [ngClass]="{marginTopChildTable: dataSource && dataSource.data.length != 0}">
+                                    <table class="w-100">
+                                        <tr class="w-50 border-top">
+                                            <td class="w-50 border-right border-right bacoti">Total</td>
+                                            <td class="w-50 border-right text-bold text-right pr-2">
+                                                {{renderValueOr0(totalMoney)}}
+                                            </td>
+                                        </tr>
+                                        <tr class="border-x">
+                                            <td class="w-50 border-top border-right bacoti">Rating Factor</td>
+                                            <td class="w-50 border-top border-bottom text-center border-right">
+                                                {{AnnualRatingFactor.RatingFactorMember * 100}} %
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="mb-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <div class="d-flex p-3 container-main-table-mobile">
+                            <div [ngClass]="{'container-table-mobile-has-content': dataSourceForLeader && dataSourceForLeader.data.length !== 0}"
+                                class="w-100 pt-1 container-table d-flex mat-elevation-z8">
+                                <div class="px-3 tab-table" style="position: relative;">
+                                    <div class="text-center text-danger my-3"
+                                        *ngIf="dataSourceForLeader && dataSourceForLeader.data.length === 0">No records
+                                        found
+                                    </div>
+                                    <mat-table id="wrapTableLeaderMobile"
+                                        [hidden]="dataSourceForLeader && dataSourceForLeader.data.length == 0"
+                                        [dataSource]="dataSourceForLeader"
+                                        class='text-small table-leader px-0 bt-3 w-100'>
+                                        <ng-container matColumnDef="ProNameLeader">
+                                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                                <div class="w-100 px-0 mx-0">
+                                                    <div class="w-100 hr-2 h-100"
+                                                        style="border-bottom: 1px solid #979797;">
+                                                        <div class="h-100 text-center" style="width: 75%;">
+                                                            <span class="w-100 text-center">Rating Factor</span>
+                                                        </div>
+                                                        <div class="d-flex align-items-center text-center "
+                                                            style="width: 25%; background: #fff; color: black; height: 31px; border-top: 1px solid #979797;">
+                                                            <span class="w-100 text-center d-block"
+                                                                style="margin: auto;">{{AnnualRatingFactor.RatingFactorLeader * 100}}
+                                                                %</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="w-100 text-center hr-2 group">Project Name</div>
+                                                </div>
+                                            </mat-header-cell>
+                                            <mat-cell *matCellDef="let row" data-label="Project Name"> <span
+                                                    class="w-100 text-left">{{row.ProName}}</span>
+                                            </mat-cell>
+                                            <mat-footer-cell *matFooterCellDef style="background-color: #008577"
+                                                style="display: none;">
+                                            </mat-footer-cell>
+
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="BonusLeader">
+                                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                                <div class="w-100">
+                                                    <div class="w-100 text-center hr-1" style="visibility: hidden;">
+                                                    </div>
+                                                    <div class="w-100 text-center hr-2">Bonus</div>
+                                                </div>
+                                            </mat-header-cell>
+                                            <mat-cell *matCellDef="let row" data-label="Bonus"> <span *ngIf="row"
+                                                    class="w-100 text-right">
+                                                    {{renderValueOr0(row.Bonus)}}</span>
+                                            </mat-cell>
+                                            <mat-footer-cell *matFooterCellDef
+                                                style="background-color: #008577; width: 60% !important;" class="px-0">
+                                                <div class="d-flex w-100 flex-wrap px-0 mx-0">
+                                                    <div class="w-100 text-center px-0">
+                                                        <span class="w-100 text-center text-white"
+                                                            style="font-weight: 600;">
+                                                            Total</span>
+                                                    </div>
+                                                    <div class="w-100 text-center px-0 mx-0 text-white d-mobile"
+                                                        style="border-top: 1px solid #979797;">
+                                                        <span class="w-100 text-center" style="font-weight: 600;">Rating
+                                                            Factor</span>
+                                                    </div>
+                                                </div>
+                                            </mat-footer-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="ActionLeader">
+                                            <mat-header-cell *matHeaderCellDef class="px-0">
+                                                <div class="w-100">
+                                                    <div class="w-100 text-center hr-1" style="visibility: hidden;">
+                                                    </div>
+                                                    <div class="w-100 text-center hr-2">Action</div>
+                                                </div>
+                                            </mat-header-cell>
+                                            <mat-cell (click)="onEdit(row,'1')" *matCellDef="let row"
+                                                data-label="Action">
+                                                <span class="w-100 text-center"
+                                                    style="color: #008577; cursor: pointer;"><i
+                                                        class="material-icons">edit</i></span>
+                                            </mat-cell>
+                                            <mat-footer-cell *matFooterCellDef class="px-0">
+                                                <div class="d-flex w-100 flex-wrap px-0 mx-0">
+                                                    <div class="w-100 text-center px-0">
+                                                        <span class="w-100 text-bold text-center">
+                                                            {{renderValueOr0(totalMoney)}}</span>
+                                                    </div>
+                                                    <div class="w-100 text-center px-0 mx-0 d-mobile"
+                                                        style="border-top: 1px solid #979797;">
+                                                        <span
+                                                            class="w-100 text-center">{{AnnualRatingFactor.RatingFactorLeader * 100}}
+                                                            %</span>
+                                                    </div>
+                                                </div>
+                                            </mat-footer-cell>
+                                        </ng-container>
+
+                                        <mat-header-row *matHeaderRowDef="displayedColumnsForLeader; sticky: true">
+                                        </mat-header-row>
+                                        <mat-row #rowelement *matRowDef="let row; columns: displayedColumnsForLeader;">
+                                        </mat-row>
+                                        <!-- <mat-footer-row class="footer-row"
+                                                *matFooterRowDef="displayedColumnsForLeader">
+                                            </mat-footer-row> -->
+
+                                    </mat-table>
+                                </div>
+                                <div class="px-3 marginTopChildTable"
+                                [ngClass]="{marginTopChildTable: dataSourceForLeader && dataSourceForLeader.data.length !== 0}">
+                                    <table class="w-100">
+                                        <tr class="w-50 border-top">
+                                            <td class="w-50 border-right border-right bacoti">Total</td>
+                                            <td class="w-50 border-right text-bold text-right pr-2">
+                                                {{renderValueOr0(totalMoney)}}
+                                            </td>
+                                        </tr>
+                                        <tr class="border-x">
+                                            <td class="w-50 border-top border-right bacoti">Rating Factor</td>
+                                            <td class="w-50 border-top border-bottom text-center border-right">
+                                                {{AnnualRatingFactor.RatingFactorLeader * 100}} %
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="mb-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-drawer-content>
+
+            <mat-drawer #drawercreate mode="over" position="end" style="width: 450px; max-width: 90%"
+                (closedStart)="flagEdit = false; resetForm()" opened="false">
+                <div style="position: absolute; z-index: 99999;left: 0; top:0px">
+                    <button mat-mini-fab color="success" #toggleBottonDrawer (click)="drawercreate.close()"
+                        class="mat-sm" style="border-radius: 0px 4px  4px 0px ;">
+                        <mat-icon aria-hidden="false">arrow_forward_ios</mat-icon>
+                    </button>
+                </div>
+                <div class="pl-5 container">
+
+                    <form [formGroup]="FormEditBonus" class="row mt-3">
+
+                        <mat-radio-group (change)="changeTypeMember($event.value)"
+                            class="radio px-0 mb-3 d-flex align-items-end justify-content-between col-11"
+                            formControlName="TypeMember">
+                            <mat-radio-button class="w-50"
+                                *ngFor="let item of [{text:'Member', value:'0'},{text:'Leader', value:'1'}]"
+                                [value]="item.value">
+                                <span>{{item.text}}</span>
+                            </mat-radio-button>
+                        </mat-radio-group>
+
+                        <mat-radio-group class="radio px-0 mb-3 d-flex align-items-end justify-content-between col-11"
+                            formControlName="TypeProject" [(ngModel)]="TypeProject">
+                            <mat-radio-button class="w-50"
+                                *ngFor="let item of [{text:'Project', value:'0'},{text:'Maintenance', value:'1'}]"
+                                [value]="item.value">
+                                <span>{{item.text}}</span>
+                            </mat-radio-button>
+                        </mat-radio-group>
+
+                        <mat-form-field [hidden]="TypeProject == 1" class="px-0 col-11 mb-3">
+
+                            <mat-select disableOptionCentering placeholder="Project Name" #singleSelect
+                                (selectionChange)="setBonusLeader($event.value);getDayAndBonusMember($event.value)"
+                                formControlName="ProjectId">
+                                <div class="row m-0">
+                                    <span class="m-1"><i class="material-icons colorGreen">
+                                            search
+                                        </i></span>
+                                    <input autocomplete="off" matInput placeholder="Filter" class="col-lg-10 col-10"
+                                        value="" [formControl]="projectFilterCtrl">
+                                </div>
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let project of fillterProject | async" [value]="project.Id">
+                                    <span class="ml-2">{{project.ProjectName}}</span>
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>
+                                <div>Project is required</div>
+                            </mat-error>
+
+                        </mat-form-field>
+
+                        <mat-form-field [hidden]="TypeProject == 0" class="px-0 col-11 mb-3">
+                            <mat-select disableOptionCentering placeholder="Project Maintenace Name" #singleSelect
+                                (selectionChange)="setBonusLeader($event.value);getDayAndBonusMember($event.value)"
+                                formControlName="ProjectMaintenanceId">
+                                <div class="row m-0">
+                                    <span class="m-1"><i class="material-icons colorGreen">
+                                            search
+                                        </i></span>
+                                    <input autocomplete="off" matInput placeholder="Filter" class="col-lg-10 col-10"
+                                        value="" [formControl]="custFilterCtrlMaintenace">
+                                </div>
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let project of fillterProjectMaintenace | async"
+                                    [value]="project.Id">
+                                    <span class="ml-2">{{project.ProjectName}}</span>
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>
+                                <div>Project Maintenace is required</div>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <div class="px-0 d-flex align-items-end mb-3 justify-content-between flex-wrap col-11">
+                            <mat-form-field class="px-0 col-12 col-md-7 pr-0 pr-md-3"
+                                [ngClass]="{visibility: FormEditBonus.controls.TypeMember.value=='1'}">
+                                <input formControlName="Day" (keyup)="setBonus()" (change)="setBonus()" type="text"
+                                    matInput placeholder="Day">
+                                <mat-error>
+                                    <div *ngIf="FormEditBonus.controls.Day.errors?.required">Day is required
+                                    </div>
+                                    <div *ngIf="FormEditBonus.controls.Day.errors?.pattern">Day must be up to 2 decimal
+                                        places
+                                    </div>
+                                </mat-error>
+
+                            </mat-form-field>
+                            <div class="col-12 col-md-5 mb-0 px-0 d-flex justify-content-end">
+                                <p class="font-weight-bold">{{renderValueOr0(bonus)}}</p>
+                            </div>
+                        </div>
+
+                        <div class="px-0 col-11 d-flex justify-content-end">
+                            <button type="button" (click)="formSubmit()" class="ml-0 ml-3" mat-raised-button
+                                color="success">
+                                <i class="material-icons md-18 ml-1">save</i>
+                            </button>
+
+                            <button *ngIf="flagEdit" (click)="removeBonus()" type="button" class="ml-0 ml-3"
+                                mat-raised-button color="warn">
+                                <i class="material-icons md-18 ml-1">delete</i>
+                            </button>
+
+                            <button *ngIf="flagEdit" type="button" mat-raised-button color="primary" class="ml-3"
+                                (click)="resetForm()">
+                                <i class="material-icons md-18 ml-1">cached</i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </mat-drawer>
+
+        </mat-drawer-container>
+
+    </mat-drawer-content>
+
+    <!-- Sub drawer Add  -->
+    <mat-drawer *ngIf="!isMobile" #drawercreate mode="over" position="end"
+        style="width: 450px; max-width: 90%;z-index: 99999; ;font-size: 13px;" [ngStyle]="{'top': isMobile?'65px':'0'}"
+        (closedStart)="flagEdit = false; resetForm()" opened="false">
+        <div>
+            <button mat-mini-fab color="success" #toggleBottonDrawer (click)="drawercreate.toggle()" class="mat-sm"
+                style="margin-top: 1px; border-radius: 0px 4px  4px 0px ; position: absolute; z-index: 99999;left: 0; top:-1px">
+                <mat-icon aria-hidden="false">arrow_forward_ios</mat-icon>
+            </button>
+        </div>
+        <div class="pl-5 container">
+
+            <form [formGroup]="FormEditBonus" class="row mt-3">
+
+                <mat-radio-group (change)="changeTypeMember($event.value)"
+                    class="radio px-0 mb-3 d-flex align-items-end justify-content-between col-11"
+                    formControlName="TypeMember">
+                    <mat-radio-button class="w-50"
+                        *ngFor="let item of [{text:'Member', value:'0'},{text:'Leader', value:'1'}]"
+                        [value]="item.value">
+                        <span>{{item.text}}</span>
+                    </mat-radio-button>
+                </mat-radio-group>
+
+                <mat-radio-group class="radio px-0 mb-3 d-flex align-items-end justify-content-between col-11"
+                    formControlName="TypeProject" [(ngModel)]="TypeProject">
+                    <mat-radio-button class="w-50"
+                        *ngFor="let item of [{text:'Project', value:'0'},{text:'Project Maintenance', value:'1'}]"
+                        [value]="item.value">
+                        <span>{{item.text}}</span>
+                    </mat-radio-button>
+                </mat-radio-group>
+
+                <mat-form-field [hidden]="TypeProject == 1" class="px-0 col-11 mb-3">
+
+                    <mat-select disableOptionCentering placeholder="Project Name" #singleSelect
+                        (selectionChange)="setBonusLeader($event.value);getDayAndBonusMember($event.value)"
+                        formControlName="ProjectId">
+                        <div class="row m-0">
+                            <span class="m-1"><i class="material-icons colorGreen">
+                                    search
+                                </i></span>
+                            <input autocomplete="off" matInput placeholder="Filter" class="col-lg-10 col-10" value=""
+                                [formControl]="projectFilterCtrl">
+                        </div>
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let project of fillterProject | async" [value]="project.Id">
+                            <span class="ml-2">{{project.ProjectName}}</span>
+                        </mat-option>
+                    </mat-select>
+                    <mat-error>
+                        <div>Project is required</div>
+                    </mat-error>
+
+                </mat-form-field>
+
+                <mat-form-field [hidden]="TypeProject == 0" class="px-0 col-11 mb-3">
+                    <mat-select disableOptionCentering placeholder="Project Maintenace Name" #singleSelect
+                        (selectionChange)="setBonusLeader($event.value);getDayAndBonusMember($event.value)"
+                        formControlName="ProjectMaintenanceId">
+                        <div class="row m-0">
+                            <span class="m-1"><i class="material-icons colorGreen">
+                                    search
+                                </i></span>
+                            <input autocomplete="off" matInput placeholder="Filter" class="col-lg-10 col-10" value=""
+                                [formControl]="custFilterCtrlMaintenace">
+                        </div>
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let project of fillterProjectMaintenace | async" [value]="project.Id">
+                            <span class="ml-2">{{project.ProjectName}}</span>
+                        </mat-option>
+                    </mat-select>
+                    <mat-error>
+                        <div>Project Maintenace is required</div>
+                    </mat-error>
+                </mat-form-field>
+
+                <div class="px-0 d-flex align-items-end mb-3 justify-content-between col-11">
+                    <mat-form-field class="px-0 col-md-6 pr-3"
+                        [ngClass]="{visibility: FormEditBonus.controls.TypeMember.value=='1'}">
+                        <input formControlName="Day" (keyup)="setBonus()" (change)="setBonus()" type="text" matInput
+                            placeholder="Day">
+                        <mat-error>
+                            <div *ngIf="FormEditBonus.controls.Day.errors?.required">Day is required</div>
+                            <div *ngIf="FormEditBonus.controls.Day.errors?.pattern">Day must be up to 2 decimal places
+                            </div>
+                        </mat-error>
+
+                    </mat-form-field>
+                    <div class="col-md-5 mb-0 px-0 d-flex justify-content-end">
+                        <p class="font-weight-bold">{{renderValueOr0(bonus)}}</p>
+                    </div>
+                </div>
+
+                <div class="px-0 col-11 d-flex justify-content-end">
+                    <button type="button" (click)="formSubmit()" class="ml-0 ml-3" mat-raised-button color="success">
+                        <i class="material-icons md-18 ml-1">save</i>
+                    </button>
+
+                    <button *ngIf="flagEdit" (click)="removeBonus()" type="button" class="ml-0 ml-3" mat-raised-button
+                        color="warn">
+                        <i class="material-icons md-18 ml-1">delete</i>
+                    </button>
+
+                    <button *ngIf="flagEdit" type="button" mat-raised-button color="primary" class="ml-3"
+                        (click)="resetForm()">
+                        <i class="material-icons md-18 ml-1">cached</i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </mat-drawer>
+    <!-- End sub drawer Add -->
+
+</mat-drawer-container>

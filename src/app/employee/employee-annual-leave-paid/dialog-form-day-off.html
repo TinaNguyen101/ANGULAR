@@ -1,0 +1,514 @@
+<div class="dialog form-add" *ngIf="formType=='add'">
+    <div class="dialog-header position-relative pl-3">
+        <p class="py-2 mt-4"> Add Day Off</p>
+        <mat-dialog-actions>
+
+            <div class="col-lg-1 col-1 ml-1 pr-0" style="margin-right: -10px !important;">
+                <button type="button" mat-dialog-close class="close m-0 text-right">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+        </mat-dialog-actions>
+    </div>
+    <mat-dialog-content class="dialog-content py-3 m-0">
+
+        <form [formGroup]="DayOfForm">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-6 mt-3">
+                    <mat-form-field class="w-100 mb-3">
+                        <mat-label>Approved By</mat-label>
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">person</i>
+                        <mat-select disableOptionCentering placeholder="Approve Name" #ApprovedBy
+                            formControlName="ApprovedBy">
+                            <div class="row m-0">
+                                <span class="m-1"><i class="material-icons colorGreen">
+                                        search
+                                    </i></span>
+                                <input (blur)="clearInput('man')" autocomplete="off" matInput id="inputcustFilterCtrl"
+                                    placeholder="Filter" class="col-lg-10 col-10" value=""
+                                    [formControl]="empManFilterCtrl" (ngModelChange)="filterEmp('man')">
+                            </div>
+                            <mat-option *ngFor="let emp of listEmployeeManageFilter" [value]="emp.Id">
+                                <span class="ml-2">{{emp.EmpName}}</span>
+                            </mat-option>
+                        </mat-select>
+
+                        <mat-error>
+                            <div *ngIf="DayOfForm.controls.ApprovedBy.errors?.required">
+                                Approve name is required</div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-100 mb-3">
+                        <mat-label>Employee Name</mat-label>
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">person</i>
+                        <mat-select disableOptionCentering placeholder="Employee Name" #EmpId formControlName="EmpId">
+                            <div class="row m-0">
+                                <span class="m-1"><i class="material-icons colorGreen">
+                                        search
+                                    </i></span>
+                                <input (blur)="clearInput('emp')" autocomplete="off" matInput id="inputcustFilterCtrl"
+                                    placeholder="Filter" class="col-lg-10 col-10" value="" [formControl]="empFilterCtrl"
+                                    (ngModelChange)="filterEmp('emp')">
+                            </div>
+                            <mat-option *ngFor="let emp of allEmpFilter" [value]="emp.EmpId">
+                                <span class="ml-2">{{emp.EmpName}}</span>
+                            </mat-option>
+                        </mat-select>
+
+                        <mat-error>
+                            <div *ngIf="DayOfForm.controls.EmpId.errors?.required">
+                                Employee name is required</div>
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="w-100 d-flex">
+                        <mat-form-field class="w-50 mr-3" style="min-width: 120px !important;">
+                            <mat-label>Approved Date</mat-label>
+                            <input type="text" formControlName="ApprovedDate" #ApprovedDate matInput
+                                [matDatepicker]="picker1" placeholder="yyyy/mm/dd" dateFormat>
+                            <mat-datepicker-toggle matSuffix [for]="picker1" class="colorGreen">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                            <!-- <mat-error>
+                                <div>Approved Date is required </div>
+                            </mat-error> -->
+                        </mat-form-field>
+                        <mat-form-field class="w-50 ml-3" style="min-width: 120px !important;">
+                            <mat-label>Day Off</mat-label>
+                            <input type="text" #DayOff formControlName="DayOff" matInput [matDatepicker]="picker2"
+                                placeholder="yyyy/mm/dd" dateFormat>
+                            <mat-datepicker-toggle matSuffix [for]="picker2" class="colorGreen">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                            <mat-error>
+                                <div>Day Off is required</div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+
+                </div>
+                <div class="col-md-6">
+
+                    <mat-radio-group formControlName="TimeOff" #TimeOff aria-label="Select an option">
+                        <span class="mr-3">
+                            <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-1">alarm</i>
+                            Time Off: </span>
+                        <mat-radio-button color="primary" class="mr-3" [checked]="true" value="4">4h
+                        </mat-radio-button>
+
+                        <mat-radio-button color="primary" [checked]="DayOfForm.controls.TimeOff.value==8" value="8">
+                            8h
+                        </mat-radio-button>
+                        <mat-error>
+                            <div *ngIf="DayOfForm.controls.TimeOff.errors?.required">Time off is required </div>
+                        </mat-error>
+                    </mat-radio-group>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Reason</mat-label>
+                        <textarea formControlName="Reason" style="overflow-x: hidden; width: 100%;" #Reason matInput
+                            maxlength="500" rows="8"></textarea>
+                    </mat-form-field>
+                    <p class="w-100 text-right" style="margin-top: -20px;font-size: 75%;">
+                        {{DayOfForm.controls.Reason.value?DayOfForm.controls.Reason.value.length:'0'}}/500</p>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="button" mat-raised-button color="success" class=""
+                            (click)="submitFormUpdate('create','add')">
+                            <i class="material-icons md-18 ml-1 ">save</i> Create
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </mat-dialog-content>
+
+</div>
+
+
+
+<div #wrapDiaglog class=" dialog form-update" *ngIf="formType=='update'">
+    <div class="dialog-header position-relative px-3">
+        <p class="py-2 mt-4"> {{empSelected.EmpName}} </p>
+        <mat-dialog-actions>
+
+            <div class="col-lg-1 col-1 ml-1 pr-0" style="margin-right: -10px !important;">
+                <button type="button" mat-dialog-close class="close m-0 text-right">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+        </mat-dialog-actions>
+    </div>
+    <mat-dialog-content class="dialog-content mx-0 px-0">
+
+        <div class="container-fluid">
+            <div class="row d-flex  py-2" *ngIf="innerWidth>=1200">
+                <div class="col-12 col-lg-4 formEditWrap pr-4 order-2 order-md-1">
+                    <form [formGroup]="DayOfForm" class="container-fluid">
+                        <div class="row d-flex justify-content-center">
+                            <mat-form-field class="w-100 mb-3">
+                                <mat-label>Approved By</mat-label>
+                                <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">person</i>
+
+                                <mat-select disableOptionCentering placeholder="Approve Name"
+                                    formControlName="ApprovedBy">
+                                    <div class="row m-0">
+                                        <span class="m-1"><i class="material-icons colorGreen">
+                                                search
+                                            </i></span>
+                                        <input (blur)="clearInput('man')" autocomplete="off" matInput
+                                            id="inputcustFilterCtrl" placeholder="Filter" class="col-lg-10 col-10"
+                                            value="" [formControl]="empManFilterCtrl"
+                                            (ngModelChange)="filterEmp('man')">
+                                    </div>
+                                    <mat-option *ngFor="let emp of listEmployeeManageFilter" [value]="emp.Id">
+                                        <span class="ml-2">{{emp.EmpName}}</span>
+                                    </mat-option>
+                                </mat-select>
+
+                                <mat-error>
+                                    <div *ngIf="DayOfForm.controls.ApprovedBy.errors?.required">
+                                        Approve name is required</div>
+                                </mat-error>
+                            </mat-form-field>
+
+
+
+                            <div class="col-12 px-0">
+                                <mat-form-field class="col-12 col-lg-6 pl-0">
+                                    <mat-label>Approved Date</mat-label>
+
+                                    <input type="text" formControlName="ApprovedDate" matInput [matDatepicker]="picker3"
+                                        placeholder="yyyy/mm/dd" dateFormat>
+                                    <mat-datepicker-toggle matSuffix [for]="picker3" class="colorGreen">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker startView="month" [startAt]="selectDayForTextDate"
+                                        panelClass="monthOnly" #picker3>
+                                    </mat-datepicker>
+                                    <!-- <mat-error>
+                                        <div>Approved Date is required</div>
+                                    </mat-error> -->
+                                </mat-form-field>
+                                <mat-form-field class="col-12 col-lg-6 pr-0">
+                                    <mat-label>Day Off</mat-label>
+
+                                    <input type="text" formControlName="DayOff" matInput [matDatepicker]="picker4"
+                                        placeholder="yyyy/mm/dd" dateFormat>
+                                    <mat-datepicker-toggle matSuffix [for]="picker4" class="colorGreen">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker startView="month" [startAt]="selectDayForTextDate"
+                                        panelClass="monthOnly" #picker4></mat-datepicker>
+                                    <mat-error>
+                                        <div>Day Off is required</div>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <mat-radio-group class="w-100" formControlName="TimeOff" aria-label="Select an option">
+                                <span class="mr-3">
+                                    <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">alarm</i>
+                                    Time Off: </span>
+                                <mat-radio-button color="primary" class="mr-3" [checked]="defaultValueRadioTimeOff!=8"
+                                    value="4">4h</mat-radio-button>
+                                <mat-radio-button color="primary" [checked]="defaultValueRadioTimeOff==8" value="8">8h
+                                </mat-radio-button>
+                                <mat-error *ngIf="!DayOfForm.controls.TimeOff.value">
+                                    <div>Time off is required </div>
+                                </mat-error>
+                            </mat-radio-group>
+
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Reason</mat-label>
+                                <textarea formControlName="Reason" style="overflow-x: hidden; width: 100%;" #Reason
+                                    matInput maxlength="500" rows="8"></textarea>
+                            </mat-form-field>
+                            <p class="w-100 text-right" style="margin-top: -20px; font-size: 75%;">
+                                {{DayOfForm.controls.Reason.value?DayOfForm.controls.Reason.value.length:'0'}}/500</p>
+
+                            <div class="d-flex justify-content-between w-100">
+
+
+                                <button type="button" *ngIf="!isUpdateForm" mat-raised-button color="success" class=""
+                                    (click)="submitFormUpdate('create')">
+                                    <i class="material-icons md-18 ml-1 ">save</i> Create
+                                </button>
+                                <div *ngIf="isUpdateForm">
+                                    <button type="button" mat-raised-button color="success" class="mr-3"
+                                        (click)="submitFormUpdate('update')">
+                                        <i class="material-icons md-18 ml-1 ">save</i> Update
+                                    </button>
+                                    <button type="button" mat-raised-button color="warn" class=""
+                                        (click)="deleteDayOff()">
+                                        <i class="material-icons md-18 ml-1 ">delete</i> Delete
+                                    </button>
+                                </div>
+                                <button *ngIf="isUpdateForm" type="button" mat-raised-button color="primary" class="" (click)="resetForm()">
+                                    <i class="material-icons md-18 ml-1">cached</i> Reset
+                                </button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-12 col-lg-8 order-1 order-md-2" style="max-height: 480px;">
+                    <div class="p-3 mat-elevation-z8" style="background: white">
+
+                        <mat-table style="max-height: calc(440px);" class="" [dataSource]="dataSourceChild">
+
+                            <ng-container matColumnDef="ActionC">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <span class="w-100 text-white header-edit-title text-center">Action</span>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Action">
+                                    <span (click)="editDayOf(row)" class="w-100 text-center colorGreen"><i
+                                            class="material-icons">edit</i></span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="DayOffC">
+                                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">Day Off</span>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Day Off">
+                                    <span>{{row.DayOff1 | date:'yyyy/MM/dd'}}</span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="TimeOffC">
+                                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">Time Off</span>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Time Off">
+                                    <span class="w-100 text-center">{{row.TimeOff}}</span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ApprovedByC">
+                                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">Approved
+                                        By</span></mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Approved By">
+                                    <span>{{row.ApprovedName}}</span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ApprovedDateC">
+                                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">Approved
+                                        Date</span></mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Approved Date">
+                                    <span>{{row.ApprovedDate | date:'yyyy/MM/dd'}}</span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ReasonC">
+                                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">Reason</span>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Reason">
+                                    <span>{{row.Reason}}</span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumnsForChildTable;sticky: true">
+                            </mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumnsForChildTable;"></mat-row>
+                        </mat-table>
+                        <div class="text-center text-danger pt-1"
+                            *ngIf="dataSourceChild && dataSourceChild.data.length === 0">No records
+                            found
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <mat-drawer-container *ngIf="innerWidth < 1200" class="h-100 row d-flex " [hasBackdrop]='true' style="min-height: 75vh;">
+                <!-- Main table -->
+
+                <mat-drawer-content class="h-100 my-3" style="position: relative;width: 100%;">
+                    <button mat-mini-fab color="success" class="mat-sm" (click)="resetForm();drawer.toggle()" *ngIf="!drawer.opened" aria-hidden="false"
+                        style="margin-top: 1px; border-radius: 4px 0 0 4px; position: absolute; z-index: 99999999999;right: 0; width: 30px !important    ;">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                    <div class="col-12 col-lg-8 order-1 order-md-2" style="max-width: 100% !important;">
+                        <div class="p-3 mb-3 mat-elevation-z8" style="background: white;width: 100% !important;">
+
+                            <mat-table [dataSource]="dataSourceChild">
+
+                                <ng-container matColumnDef="ActionC">
+                                    <mat-header-cell *matHeaderCellDef>
+                                        <span class="w-100 text-white header-edit-title text-center">Action</span>
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" data-label="Action">
+                                        <span (click)="editDayOf(row); drawer.toggle()" class="w-100 text-center colorGreen"><i
+                                                class="material-icons">edit</i></span>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="DayOffC">
+                                    <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">Day Off</span>
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" data-label="Day Off">
+                                        <span>{{row.DayOff1 | date:'yyyy/MM/dd'}}</span>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="TimeOffC">
+                                    <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">Time Off</span>
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" data-label="Time Off">
+                                        <span class="w-100 text-center">{{row.TimeOff}}</span>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="ApprovedByC">
+                                    <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">Approved
+                                            By</span></mat-header-cell>
+                                    <mat-cell *matCellDef="let row" data-label="Approved By">
+                                        <span>{{row.ApprovedName}}</span>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="ApprovedDateC">
+                                    <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">Approved
+                                            Date</span></mat-header-cell>
+                                    <mat-cell *matCellDef="let row" data-label="Approved Date">
+                                        <span>{{row.ApprovedDate | date:'yyyy/MM/dd'}}</span>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="ReasonC">
+                                    <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">Reason</span>
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" data-label="Reason">
+                                        <span>{{row.Reason}}</span>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumnsForChildTable;sticky: true">
+                                </mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumnsForChildTable;"></mat-row>
+                            </mat-table>
+                            <div class="text-center text-danger pt-1"
+                                *ngIf="dataSourceChild && dataSourceChild.data.length === 0">No records
+                                found
+                            </div>
+                        </div>
+                    </div>
+                </mat-drawer-content>
+
+                <mat-drawer class="drawer-mobile" #drawer mode="over"
+                    style="width: calc(100% - 50px);font-size: 13px; max-width: 400px;" position='end'>
+                    <button mat-mini-fab color="success" class="mat-sm" (click)="drawer.toggle()" *ngIf="drawer.opened" aria-hidden="false"
+                        style="border-radius:0 4px 4px 0; position: absolute; z-index: 999999;left: 0; top:0px; width: 30px !important;">
+                        <mat-icon>arrow_forward_ios</mat-icon>
+                    </button>
+                    <form [formGroup]="DayOfForm" class="m-2">
+                        <div class="row d-flex justify-content-center mt-4 mx-3">
+                            <mat-form-field class="col-12 px-0">
+                                <mat-label>Approved By</mat-label>
+                                <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">person</i>
+
+                                <mat-select disableOptionCentering placeholder="Approve Name"
+                                    formControlName="ApprovedBy">
+                                    <div class="row m-0">
+                                        <span class="m-1"><i class="material-icons colorGreen">
+                                                search
+                                            </i></span>
+                                        <input (blur)="clearInput('man')" autocomplete="off" matInput
+                                            id="inputcustFilterCtrl" placeholder="Filter" class="col-lg-10 col-10"
+                                            value="" [formControl]="empManFilterCtrl"
+                                            (ngModelChange)="filterEmp('man')">
+                                    </div>
+                                    <mat-option class="w-100" *ngFor="let emp of listEmployeeManageFilter"
+                                        [value]="emp.Id">
+                                        <span class="ml-2">{{emp.EmpName}}</span>
+                                    </mat-option>
+                                </mat-select>
+
+                                <mat-error>
+                                    <div *ngIf="DayOfForm.controls.ApprovedBy.errors?.required">
+                                        Approve name is required</div>
+                                </mat-error>
+                            </mat-form-field>
+
+
+
+                            <mat-form-field class="col-12 px-0">
+                                <mat-label>Approved Date</mat-label>
+
+                                <input type="text" formControlName="ApprovedDate" matInput [matDatepicker]="picker3"
+                                    placeholder="yyyy/mm/dd" dateFormat>
+                                <mat-datepicker-toggle matSuffix [for]="picker3" class="colorGreen">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker startView="month" [startAt]="selectDayForTextDate"
+                                    panelClass="monthOnly" #picker3>
+                                </mat-datepicker>
+                                <!-- <mat-error>
+                                    <div>Approved Date is required</div>
+                                </mat-error> -->
+                            </mat-form-field>
+                            <mat-form-field class="col-12 px-0">
+                                <mat-label>Day Off</mat-label>
+
+                                <input type="text" formControlName="DayOff" matInput [matDatepicker]="picker4"
+                                    placeholder="yyyy/mm/dd" dateFormat>
+                                <mat-datepicker-toggle matSuffix [for]="picker4" class="colorGreen">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker startView="month" [startAt]="selectDayForTextDate"
+                                    panelClass="monthOnly" #picker4></mat-datepicker>
+                                <mat-error>
+                                    <div>Day Off is required</div>
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-radio-group class="w-100 d-flex" formControlName="TimeOff" aria-label="Select an option">
+                                <span class="mr-3">
+                                    <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">alarm</i>
+                                    Time Off: </span>
+                                <mat-radio-button color="primary" class="mr-3" [checked]="defaultValueRadioTimeOff!=8"
+                                    value="4">4h</mat-radio-button>
+                                <mat-radio-button color="primary" [checked]="defaultValueRadioTimeOff==8" value="8">8h
+                                </mat-radio-button>
+                                <mat-error *ngIf="!DayOfForm.controls.TimeOff.value">
+                                    <div>Time off is required </div>
+                                </mat-error>
+                            </mat-radio-group>
+
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Reason</mat-label>
+                                <textarea formControlName="Reason" style="overflow-x: hidden; width: 100%;" #Reason
+                                    matInput maxlength="500" rows="8"></textarea>
+                            </mat-form-field>
+                            <p class="w-100 text-right" style="margin-top: -20px; font-size: 75%;">
+                                {{DayOfForm.controls.Reason.value?DayOfForm.controls.Reason.value.length:'0'}}/500</p>
+
+                            <div class="d-flex justify-content-between w-100">
+                                <button type="button" *ngIf="!isUpdateForm" mat-raised-button color="success" class=""
+                                    (click)="submitFormUpdate('create')">
+                                    <i class="material-icons md-18 ml-1 ">save</i>
+                                </button>
+                                <button *ngIf="isUpdateForm" type="button" mat-raised-button color="success"
+                                    class="mr-3" (click)="submitFormUpdate('update')">
+                                    <i class="material-icons md-18 ml-1 ">save</i>
+                                </button>
+                                <button *ngIf="isUpdateForm" type="button" mat-raised-button color="warn" class=""
+                                    (click)="deleteDayOff()">
+                                    <i class="material-icons md-18 ml-1 ">delete</i>
+                                </button>
+
+                                <button *ngIf="isUpdateForm" type="button" mat-raised-button color="primary" class=""
+                                    (click)="resetForm()">
+                                    <i class="material-icons md-18 ml-1">cached</i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </mat-drawer>
+            </mat-drawer-container>
+        </div>
+
+    </mat-dialog-content>
+
+</div>

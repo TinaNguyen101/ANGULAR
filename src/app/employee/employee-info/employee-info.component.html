@@ -1,0 +1,21 @@
+<div class="submenu" *ngIf="idEmployee">
+    <div class="pl-3 title ml-3">
+      <b>{{employee.EmpName }} ({{employee.DepartmentName}}) <span *ngIf="employee.PositionName">ー</span>{{ employee.PositionName }}</b>
+    </div>
+    <ul class="nav nav-tabs" >
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['basic']" routerLinkActive="active">Basic</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['attachfile']" routerLinkActive="active">Attachment Files</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['annualBonus']" routerLinkActive="active">Annual Bonus</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['AnnualKPI']" routerLinkActive="active">Annual KPI</a>
+      </li>
+    </ul>
+  </div>
+  <div class="mt-2"></div>
+  <router-outlet ></router-outlet>

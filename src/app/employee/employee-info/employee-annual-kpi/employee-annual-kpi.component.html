@@ -1,0 +1,111 @@
+<form id="searchForm">
+
+  <div class="form-group col-12 mt-2 PC" style="margin-left: -10px;">
+    <div class="row " style="height: auto;">
+
+      <mat-form-field class="formChooseAnnualDate ">
+        <input id="chooseyear" autofocus [formControl]="searchYear" matInput placeholder="Choose a year" maxlength="4"
+          number numbermask="0000" />
+        <mat-error>
+          <div *ngIf="searchYear.errors?.yearRequired">Year is required </div>
+        </mat-error>
+      </mat-form-field>
+      <div id="btn_warn">
+        <button type="button" mat-raised-button color="warn" class="ml-2" (click)="loadAnnualYear()">
+          <i class="material-icons ">search</i>
+        </button>
+
+      </div>
+      <div class="employeeName">
+        <div class="pt-3 pb-3">
+          <div class="col-lg-12 empName" *ngIf="ChangeEvaluator()">
+            <mat-radio-group (ngModelChange)="changeEmpIdManage()" #group_radio [(ngModel)]="selected"
+              class="example-radio-group" [formControl]="EmpManageId">
+              <mat-radio-button class="example-radio-button " #button [value]="item.Id"
+                *ngFor="let item of departmentList">
+                <div style="font-size: 75%;margin-right:50px;" class="badge">
+                  <span style="line-height: 1.5;padding-left: 2px !important;">
+                    {{item.EmpName}}
+                  </span>
+                </div>
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="submenu1">
+      <ul class="nav nav-tabs ">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['AnnualKPIResult']" routerLinkActive="active">Annual KPI Result</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['AnnualEvaluation']" routerLinkActive="active">Annual Evaluation</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['AnnualReview']" routerLinkActive="active">Annual Review</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="MB w-100">
+    <mat-accordion>
+      <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+        <mat-expansion-panel-header [collapsedHeight]="'64px'" [expandedHeight]="'64px'">
+          <div id="menu">
+            <mat-panel-title>
+              <mat-form-field class="formChooseAnnualDate ">
+                <input id="chooseyear" autofocus [formControl]="searchYear" matInput placeholder="Choose a year"
+                  maxlength="4" number numbermask="0000" />
+                <mat-error>
+                  <div *ngIf="searchYear.errors?.yearRequired">Year is required </div>
+                </mat-error>
+              </mat-form-field>
+              <div id="btn_warn">
+                <button type="button" mat-raised-button color="warn" class="ml-2" (click)="loadAnnualYear()">
+                  <i class="material-icons ">search</i>
+                </button>
+              </div>
+            </mat-panel-title>
+          </div>
+
+        </mat-expansion-panel-header>
+
+        <div class="employeeName">
+          <div class="pt-3 pb-3">
+            <div class="col-lg-12 empName" *ngIf="ChangeEvaluator()">
+              <mat-radio-group (ngModelChange)="changeEmpIdManage()" #group_radio [(ngModel)]="selected"
+                class="example-radio-group" [formControl]="EmpManageId">
+                <mat-radio-button class="example-radio-button " #button [value]="item.Id"
+                  *ngFor="let item of departmentList">
+                  <div style="font-size: 75%;margin-right:50px;" class="badge">
+                    <span style="line-height: 1.5;padding-left: 2px !important;">
+                      {{item.EmpName}}
+                    </span>
+                  </div>
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+
+    </mat-accordion>
+    <div class="submenu2">
+      <ul class="nav nav-tabs ">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['AnnualKPIResult']" routerLinkActive="active">Annual KPI Result</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['AnnualEvaluation']" routerLinkActive="active">Annual Evaluation</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['AnnualReview']" routerLinkActive="active">Annual Review</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</form>
+<div class="mt-2"></div>
+<router-outlet></router-outlet>

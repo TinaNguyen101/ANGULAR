@@ -1,0 +1,224 @@
+<div class="lst" style="height: calc(100vh - 150px);">
+    <!-- Drawer container -->
+    <mat-drawer-container class="" [hasBackdrop]='true'>
+
+        <!-- Sub drawer search -->
+        <mat-drawer #drawer mode="over" style="width: 300px;font-size: 13px">
+            <div>
+                <form [formGroup]="dtFormSearch" (ngSubmit)="onSubmitSearch()">
+
+                    <!-- btn ArrowBack -->
+                    <button mat-mini-fab color="success" class="mat-sm"
+                        style="margin-top: 1px; border-radius: 4px 0 0 4px; position: absolute; z-index: 9999; top: 0px; right: 0; overflow: hidden;"
+                        (click)="drawer.toggle()">
+                        <mat-icon *ngIf="drawer.opened" aria-hidden="false" style="padding-left: 5px;">arrow_back_ios
+                        </mat-icon>
+                    </button>
+
+                    <!-- txt Search Employee Name -->
+                    <mat-form-field class="w-100 p-3">
+                        <input matInput placeholder="Employee Name" formControlName="EmpName">
+                    </mat-form-field>
+                    <br>
+
+                    <!-- txt Search SalaryFrom -->
+                    <mat-form-field class="w-50 p-3">
+                        <input matInput placeholder="SalaryFrom" formControlName="SalaryFrom" number>
+                    </mat-form-field>
+
+                    <!-- txt Search SalaryTo -->
+                    <mat-form-field class="w-50 p-3">
+                        <input matInput placeholder="To" formControlName="SalaryTo" number>
+                    </mat-form-field>
+                    <br>
+                    <br>
+                    <!-- datepicker & calendar Start Date -->
+                    <mat-form-field class="w-50 pl-3" aria-required="false">
+                        <mat-label aria-required="false"> Approval Start </mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="ApprovalDateStart" maxlength="8"
+                            dateFormat number>
+                        <mat-datepicker-toggle matSuffix [for]="picker" class="colorGreen"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                    <!-- datepicker & calendar End Date -->
+                    <mat-form-field class="w-50 pl-2 pr-3">
+                        <mat-label aria-required="false">End</mat-label>
+                        <input matInput [matDatepicker]="picker2" formControlName="ApprovalDateEnd" maxlength="8"
+                            dateFormat number>
+                        <mat-datepicker-toggle matSuffix [for]="picker2" class="colorGreen"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                    <br />
+
+                    <!-- btn Reresh & Search -->
+                    <div class="text-right pr-3 mt-5">
+                        <button type="button" mat-raised-button color="primary" class="ml-2" (click)="refersh()">
+                            <i class="material-icons ">cached</i>
+                        </button>
+                        <button type="submit" mat-raised-button color="warn" class="ml-2" (click)="goToTop()">
+                            <i class="material-icons ">search</i>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </mat-drawer>
+        <!-- End sub drawer search -->
+
+        <!-- Sub drawer Add  -->
+        <mat-drawer #drawercreate mode="over" position="end" style="width: 300px;font-size: 13px">
+            <div>
+                <form [formGroup]="dtFormCreate">
+                    <button mat-mini-fab color="success" class="mat-sm"
+                        style="margin-top: 1px; border-radius: 0 4px 4px 0; position: absolute; z-index: 9999; top: 0px; left: 0; overflow: hidden;"
+                        (click)="drawercreate.toggle()">
+                        <mat-icon *ngIf="drawercreate.opened" aria-hidden="false" class="icon_next">arrow_forward_ios
+                        </mat-icon>
+                    </button><br>
+                    <!-- Template Insert -->
+                    <mat-form-field class="w-100 p-3" style="margin-top: 20px;">
+                        <mat-select placeholder="Employee Name" [(ngModel)]="EmpID" #singleSelect
+                            formControlName="EmpName" [disabled]="!flagEdit">
+                            <div class="row m-0">
+                                <span class="m-1"><i class="material-icons colorGreen">
+                                        search
+                                    </i></span>
+                                <input matInput placeholder="Filter" class="col-lg-10 col-10" value=""
+                                    [formControl]="custFilterCtrl">
+                            </div>
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let emp of filterMember | async" [value]="emp.Id">
+                                <span class="ml-2">{{emp.EmpName}}</span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-error>
+                            <p> Employee Name is required ! </p>
+                        </mat-error>
+                    </mat-form-field>
+                    <br>
+
+                    <!-- txt salary -->
+                    <mat-form-field class="w-100 p-3">
+                        <input matInput placeholder="Salary" formControlName="EmpSalary" number>
+                        <mat-error>
+                            <p> Employee Salary is required ! </p>
+                        </mat-error>
+                    </mat-form-field>
+                    <br>
+
+                    <mat-form-field class="w-100 p-3">
+                        <mat-label>Approval Date</mat-label>
+                        <input type="text" formControlName="ApprovalDate" matInput [matDatepicker]="pickerStart"
+                            placeholder="yyyy/mm/dd" dateFormat id="ApprovalDate">
+                        <mat-datepicker-toggle matSuffix [for]="pickerStart" class="colorGreen"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerStart></mat-datepicker>
+                        <mat-error>
+                            <p *ngIf="dtFormCreate.controls.ApprovalDate.errors?.required">
+                                Approval Date is required !
+                            </p>
+                            <!-- <p>
+                                Approval Date is less than choosen date !
+                            </p> -->
+                        </mat-error>
+
+                    </mat-form-field>
+                    <div class="text-right pr-3">
+                        <button type="button" (click)="OnSubmitData()" mat-raised-button style="width:50px;height:30px;" color="success"
+                            class="ml-2">
+                            <i class="material-icons " style="padding-bottom: 8px;">save</i>
+                        </button>
+                        <button type="button" mat-raised-button color="warn" style="width:50px;height:30px;"
+                            *ngIf="!flagEdit" class="ml-2" (click)="DeleteSalary()">
+                            <i class="material-icons " style="padding-bottom: 8px;">delete</i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </mat-drawer>
+        <!-- End sub drawer Add -->
+
+        <!-- Main table -->
+        <mat-drawer-content class="" style="position: relative;">
+            <button mat-mini-fab color="warn" class="mat-sm"
+                style="margin-top: 1px; border-radius: 0 4px 4px 0; position: absolute; z-index: 9999;"
+                (click)="drawer.toggle()">
+                <mat-icon *ngIf="!drawer.opened" aria-hidden="false">search</mat-icon>
+            </button>
+            <button type="button" class="mat-sm " mat-mini-fab color="success"
+                (click)="onClickAdd()"
+                style="margin-top: 1px; border-radius: 4px 0 0 4px; position: absolute; z-index: 9999;right: 0;">
+                <i class="material-icons md-5" style="margin-top: -2px">add</i>
+            </button>
+            <div class="mat-elevation-z8 mb-3 mr-3 ml-3" style="margin-top:35px">
+                <div class="pt-3 pb-3">
+                    <div class="col-lg-12 contentTable" #parentTable>
+                        <mat-table [dataSource]="dataSource" matSort matSortActive="EmpName" matSortDirection="asc"
+                            matSortDisableClear  disableOptionCentering>
+
+                            <!-- Action -->
+                            <ng-container matColumnDef="Action">
+                                <mat-header-cell *matHeaderCellDef>Action </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Action">
+                                    <a (click)="onEdit(row)" *ngIf="row.isEdit == 1">
+                                        <i class="material-icons" style="color: #008577;">edit</i>
+                                    </a>
+                                    <a disabled *ngIf="row.isEdit == 0">
+                                        <i class="material-icons" style="color: #383b3b;">edit</i>
+                                    </a>
+                                </mat-cell>
+                            </ng-container>
+
+                            <!-- EmpName -->
+                            <ng-container matColumnDef="EmpName">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Employee Name </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Employee Name">
+                                    <a #btn1 data-toggle="modal" data-target="#myModal" class="someclass"
+                                        id="{{row.Id}}">
+                                        {{row.EmpName}}
+                                    </a>
+                                </mat-cell>
+                            </ng-container>
+
+                            <!-- Salary -->
+                            <ng-container matColumnDef="Salary">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Salary </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Salary">
+                                    {{row.Salary}}
+                                </mat-cell>
+                            </ng-container>
+
+                            <!-- ApprovalDate -->
+                            <ng-container matColumnDef="ApprovalDate">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> ApprovalDate
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="ApprovalDate">
+                                    {{row.ApprovalDate | date:'yyyy/MM/dd'}}
+                                </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                        </mat-table>
+
+                        <!-- No records found -->
+                        <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">
+                            No records found
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- paging dataSource -->
+                <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" [pageSize]="25"  
+                        (click)="goToTop()" class="" disableOptionCentering>
+                </mat-paginator>
+
+            </div>
+        </mat-drawer-content>
+        <!-- End main table -->
+
+    </mat-drawer-container>
+    <!-- End drawer container -->
+</div>

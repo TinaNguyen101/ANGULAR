@@ -1,0 +1,48 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap-material-design/dist/css/bootstrap-material-design.css";
+
+@import "node_modules/ngx-bootstrap/datepicker/bs-datepicker.scss";
+
+@import '~@angular/cdk/overlay-prebuilt.css';
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+* {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif !important; 
+  }
+  mat-drawer-content{
+      background-color: #fff;
+  }
+
+  .material-icons{
+    font-family: 'Material Icons' !important;
+  }
+
+.mat-fab.mat-success, .mat-flat-button.mat-success, .mat-mini-fab.mat-success, .mat-raised-button.mat-success {
+    background-color: var(--success);
+    color: #fff;
+}
+
+.mat-fab.mat-sm, .mat-flat-button.mat-sm, .mat-mini-fab.mat-sm, .mat-raised-button.mat-sm {
+    width: inherit !important;
+    line-height: 29px;
+    height: 29px;
+}
+.mat-sm .mat-button-wrapper {
+    padding: 0 0 !important;
+    line-height: 24px;
+}
+
+.nav-link {
+    text-transform: inherit !important;
+}
+
+.nav.flex-column .active{
+    font-weight: 600;
+}
+
+.monthOnly .mat-calendar-period-button {
+    pointer-events: none;
+}
+.monthOnly .mat-calendar-period-button .mat-calendar-arrow {
+    display: none !important;
+}

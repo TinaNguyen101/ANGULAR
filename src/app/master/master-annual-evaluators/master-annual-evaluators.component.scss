@@ -1,0 +1,118 @@
+@import "../../_shared/css/mattable.scss";
+
+.mat-table {
+  overflow: auto;
+}
+
+@media screen and (max-width: 1200px) {
+  .mat-table {
+    max-height: calc(100vh - 185px);
+  }
+
+  .mat-elevation-z8 {
+    max-height: calc(100vh - 160px);
+    padding: 5px !important;
+    margin-bottom: 20px;
+  }
+  mat-cell.mat-cell.cdk-column-Evaluator.mat-column-Evaluator.ng-star-inserted {
+    margin-bottom: 10px;
+  }
+  mat-cell.mat-cell.cdk-column-BeforeYearSearch.mat-column-BeforeYearSearch.ng-star-inserted {
+    margin-bottom: 10px;
+  }
+  .mat-checkbox-inner-container {
+    margin-top: 0px !important;
+  }
+  mat-cell.mat-cell.cdk-column-YearSearch.mat-column-YearSearch.ng-star-inserted {
+    margin-bottom: 0px;
+  }
+  mat-row.mat-row.ng-star-inserted {
+    height: 130px;
+  }
+  mat-row,
+  mat-header-row {
+    min-height: 0px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .mat-table {
+    max-height: calc(100vh - 200px);
+  }
+}
+mat-header-cell.mat-header-cell.ng-star-inserted {
+  justify-content: center;
+  font-size: 14px;
+}
+
+mat-cell.mat-cell.cdk-column-BeforeYearSearch.mat-column-BeforeYearSearch.ng-star-inserted {
+  justify-content: center;
+  flex: 0 0 20% !important;
+}
+
+mat-cell.mat-cell.cdk-column-YearSearch.mat-column-YearSearch.ng-star-inserted {
+  justify-content: center;
+  flex: 0 0 20% !important;
+}
+
+.mat-column-Evaluator {
+  flex: 0 0 60% !important;
+}
+
+::ng-deep.mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background-color: #008577 !important;
+}
+
+element-row {
+  position: relative;
+}
+
+.element-row {
+  cursor: pointer;
+}
+
+.element-row:not(.expanded):hover {
+  background: #f5f5f5;
+}
+
+.element-row.expanded {
+  border-bottom-color: #e4e3e3;
+}
+
+.mat-column-ProjectName {
+  flex: 0 0 25%;
+}
+.mat-column-CustName {
+  flex: 0 0 15%;
+}
+.mat-column-ProjectDate {
+  flex: 0 0 12%;
+}
+.mat-column-ProjectEstimateCost {
+  flex: 0 0 8%;
+}
+.mat-column-ProjectDeliveryDate,
+.mat-column-ProjectPaymentDate {
+  flex: 0 0 8%;
+}
+.mat-column-ProjectStatus {
+  flex: 0 0 8%;
+}
+
+.mat-header-row.detailHeader .mat-header-cell {
+  background-color: #defffb;
+  color: #505050;
+}
+
+.mat-list-option.mat-list-option-small {
+  height: 29px;
+}
+.mat-list-option.mat-list-option-small .badge {
+  line-height: 0.8em !important;
+  font-size: 0.8em !important;
+}
+@media screen and (max-width: 400px) {
+  .txtSearch {
+    width: 35%;
+  }
+}

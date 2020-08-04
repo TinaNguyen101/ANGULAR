@@ -1,0 +1,391 @@
+@import "../../../_shared/css/menu.scss";
+
+.row {
+  margin-top: 5%;
+  width: 100%;
+  height: 20px;
+  margin-left: 1%;
+}
+
+.employeeName .empName {
+  margin-top: 2%;
+  padding: 0px;
+  width: 100%;
+  margin-left: 1%;
+}
+.annualKPI {
+  margin-left: 1%;
+}
+.submenu1 {
+  margin-left: -0.2%;
+}
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #008577 !important;
+}
+#btn_warn {
+  width: 85px;
+  height: 55px;
+  margin-top: 0.7%;
+}
+.colorGreen {
+  color: #009688;
+}
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle,
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #008577 !important;
+}
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: #008577 !important;
+}
+#btn_warn {
+  width: 85px;
+  height: 50%;
+  margin-top: 0.7%;
+}
+::ng-deep .nav-tabs .nav-link,
+.nav-pills .nav-link {
+  padding: 0.5rem 1rem;
+}
+::ng-deep .radio label,
+label.radio-inline {
+  padding-left: 0%;
+  padding-right: 5px;
+}
+.pt-3.pb-3 {
+  margin-top: -0.8%;
+}
+#searchForm {
+  margin-top: -0.4%;
+}
+.empName #group_radio {
+  width: 100% !important;
+}
+.PC {
+  display: block !important;
+}
+.MB {
+  display: none !important;
+}
+
+@media screen and (max-width: 768px) {
+  .row {
+    width: 100%;
+    height: 20px;
+    margin-left: 1%;
+  }
+
+  .employeeName .empName {
+    margin-top: 3%;
+    margin-left: 2%;
+  }
+  .employeeName {
+    margin-top: -20px;
+
+    margin-left: 1%;
+  }
+  .annualKPI {
+    margin-left: 1.2%;
+  }
+
+  .mat-radio-group.mat-radio-button {
+    float: left;
+    margin-right: 25%;
+  }
+  .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #008577 !important;
+  }
+  #btn_warn {
+    width: 85px;
+    height: 55px;
+    margin-top: 1.2%;
+  }
+  .colorGreen {
+    color: #009688;
+  }
+  ::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle,
+  ::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #008577 !important;
+  }
+  ::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #008577 !important;
+  }
+  ::ng-deep .nav-tabs .nav-link,
+  .nav-pills .nav-link {
+    padding: 0.5rem 1rem;
+  }
+  ::ng-deep .radio label,
+  label.radio-inline {
+    padding-left: 0%;
+    padding-right: 5px;
+  }
+  .mat-radio-button {
+    display: inline-block;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0;
+    margin-left: -2%;
+    margin-right: 25%;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .row {
+    width: 100%;
+    height: 20px;
+    margin-left: 1%;
+  }
+  .employeeName {
+    margin-top: -2%;
+    margin-left: -1%;
+    width: 100% !important;
+  }
+  .annualKPI {
+    margin-left: 1.1%;
+  }
+  .mat-radio-group.mat-radio-button {
+    float: left;
+    margin-right: 3%;
+  }
+  .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #008577 !important;
+  }
+  #btn_warn {
+    width: 85px;
+    height: 55px;
+    margin-top: 1.2%;
+  }
+  // .submenu1 {
+  //   margin-top: 5%;
+  // }
+  .colorGreen {
+    color: #009688;
+  }
+  ::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle,
+  ::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #008577 !important;
+  }
+  ::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #008577 !important;
+  }
+  ::ng-deep .nav-tabs .nav-link,
+  .nav-pills .nav-link {
+    padding: 0.5rem 1rem;
+  }
+  ::ng-deep .radio label,
+  label.radio-inline {
+    padding-left: 0%;
+    padding-right: 5px;
+  }
+  .mat-radio-button {
+    display: inline-block;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0;
+    width: 25%;
+  }
+  #searchForm {
+    margin-top: 8%;
+  }
+}
+@media screen and (max-width: 768px) {
+  #searchForm {
+    margin-top: 0px;
+  }
+  .employeeName {
+    margin-top: 10px;
+    margin-left: 0.2%;
+  }
+  .pt-3.pb-3 {
+    margin-top: -7%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .row {
+    margin-top: 2%;
+  }
+  .employeeName {
+    margin-top: -20px;
+  }
+}
+//screen IP6
+@media screen and (max-width: 375px) {
+  .employeeName .empName {
+    margin-top: 2%;
+  }
+  .annualKPI {
+    margin-left: 1.1%;
+  }
+  .mat-radio-group.mat-radio-button {
+    width: 75%;
+    float: left;
+    margin-right: 3%;
+  }
+  .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #008577 !important;
+  }
+  #btn_warn {
+    width: 85px;
+    height: 55px;
+    margin-top: 1.2%;
+  }
+  .colorGreen {
+    color: #009688;
+  }
+  ::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle,
+  ::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #008577 !important;
+  }
+  ::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #008577 !important;
+  }
+  ::ng-deep .nav-tabs .nav-link,
+  .nav-pills .nav-link {
+    padding: 0.5rem 1rem;
+  }
+  ::ng-deep .radio label,
+  label.radio-inline {
+    padding-left: 0%;
+    padding-right: 5px;
+  }
+  .mat-radio-button {
+    display: inline-block;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0;
+    width: 75%;
+  }
+  #searchForm {
+    margin-top: 22% !important;
+  }
+}
+@media screen and (max-width: 768px) {
+  #searchForm {
+    margin-top: 11%;
+  }
+  .employeeName {
+    margin-top: 10px;
+  }
+}
+//screen IP6
+@media screen and (max-width: 375px) {
+  .mat-radio-button {
+    display: inline-block;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0;
+    width: 75%;
+  }
+  .submenu2 {
+    margin-top: 5px;
+  }
+  .employeeName {
+    margin-top: -20px;
+  }
+}
+@media screen and (max-width: 667px) {
+  .MB {
+    display: block !important;
+  }
+  .PC {
+    display: none !important;
+  }
+}
+@media screen and (max-width: 667px) {
+  .mat-radio-button {
+    display: inline-block;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0;
+    width: 25%;
+  }
+  .submenu2 {
+    margin-top: 5px;
+  }
+  .employeeName {
+    margin-top: -20px;
+  }
+
+  #chooseyear {
+    position: relative;
+    flex: auto;
+    min-width: 0;
+    width: 120px;
+    font-size: smaller;
+  }
+  #btn_warn {
+    width: 85px;
+    height: 55px;
+    margin-top: 2%;
+  }
+}
+@media screen and (max-width: 375px) {
+  .mat-radio-button {
+    display: inline-block;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0;
+    width: 75%;
+  }
+  .submenu2 {
+    margin-top: 5px;
+  }
+  #menu {
+    width: 150px;
+  }
+}
+@media screen and (max-width: 375px) {
+  .mat-form-field-infix {
+    display: block;
+    position: relative;
+    flex: auto;
+    min-width: 0;
+    width: 120px;
+    font-size: smaller;
+  }
+  #chooseyear {
+    position: relative;
+    flex: auto;
+    min-width: 0;
+    width: 120px;
+    font-size: smaller;
+  }
+  .MB {
+    display: block !important;
+  }
+  .PC {
+    display: none !important;
+  }
+  #btn_warn {
+    width: 40px;
+    height: 30px;
+    margin-top: 4%;
+  }
+  element.style {
+    height: none;
+  }
+
+  .mat-expansion-panel-header {
+    height: 100px;
+  }
+}
+@media screen and (max-width: 375px) {
+  .mat-form-field {
+    display: inline-block;
+    position: relative;
+    text-align: left;
+    width: 75%;
+  }
+  .MB {
+    display: block !important;
+  }
+  .PC {
+    display: none !important;
+  }
+  #btn_warn {
+    width: 40px;
+    height: 30px;
+    margin-top: 3%;
+  }
+  element.style {
+    height: none;
+  }
+  .mat-expansion-panel-header#mat-expansion-panel-header-0 {
+    height: 100px;
+  }
+  .submenu2 {
+    margin-top: 5px;
+  }
+}

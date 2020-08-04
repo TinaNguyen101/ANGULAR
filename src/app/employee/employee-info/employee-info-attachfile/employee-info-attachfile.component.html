@@ -1,0 +1,107 @@
+<div class="main-attach">
+        <div class="col-lg-7 pl-0 pb-1 mb-2 pr-0 ml-2 mr-2" id="btnAll">
+                <input type="file" name="files[]" multiple="" ng-disabled="disabled" id="lbl_upLoadFile"
+                  (click)="onClickOpenFile($event)" (change)="onFileSelected($event)" #FileInput>
+                <button mat-raised-button class="btn-success" (click)="FileInput.click()">
+                  <i class="material-icons pb-1 icon">attachment</i>
+                  Add Files
+                </button>
+                <button mat-raised-button class="btn-primary ml-2" (click)="onUpLoad()">
+                  <i class="material-icons pb-1 icon">cloud_upload</i>
+                  Start Upload
+                </button>
+                <button mat-raised-button class="btn-warning ml-2" (click)="onCancel()">
+                  <i class="material-icons pb-1 icon">not_interested</i>
+                  Cancel
+                </button>
+              </div>
+              
+               <div class="container" (window:resize)="onResize()">               
+                <a id="temp" #temp style="display: none"></a>
+                <div class="row text-danger pt-1 pl-5" *ngIf="duplicate">
+                  The selected file is duplicated.
+                </div>
+                <div class="row text-danger pt-1 pl-5" *ngIf="flagError">
+                  {{errorGlobal}}
+                </div>
+                <div class="mat-elevation-z8 mt-3 mr-3 mb-3 ">
+                  <div class="pt-3 pb-3">
+                    <div class="col-lg-12 contentTable" #parentTable>
+                      <mat-table [dataSource]="dataSource" matSort matSortActive="CreatedDate" matSortDirection="desc"
+                        matSortDisableClear>
+                        <ng-container matColumnDef="Action">
+                          <mat-header-cell *matHeaderCellDef>Action </mat-header-cell>
+                          <mat-cell *matCellDef="let row;">
+                            <div *ngIf="row.CreatedDate; else btnUpload_Cancel">
+                              <button mat-icon-button #btnDelete (click)="onDelete(row.Id,row.AttachmentFileName)" id="{{row.Id}}"
+                                style="width: 22px;" class="ml-2 mr-2">
+                                <i class="tiny material-icons pt-1 icon delete" style="font-size: 22px;">delete</i>
+                              </button>
+                             
+                              <app-download #btnDownload [disabled]="showProgress" fileName="{{row.AttachmentFileName}}"
+                               [flag]="0" id="{{row.EmpId}}" isEnable="{{row.iosExcelWordHideDL}}" (downloadStatus)="downloadStatus($event)"></app-download>
+                               <p *ngIf="showProgress" align="end" style="font-size: xx-small;"> {{percentage}}%</p>
+                            </div>
+                            <ng-template #btnUpload_Cancel>
+                              <button mat-icon-button id="{{row.AttachmentFileName}}"
+                                (click)="onUpLoad_Single(row.AttachmentFileName)" #btnUpLoad_OneFile style="width: 22px;"
+                                class="ml-2 mr-2">
+                                <i class="material-icons pt-1 icon  upload" style="font-size: 22px;">cloud_upload</i>
+                              </button>
+                              <button mat-icon-button (click)="onCancel_Single(row.AttachmentFileName)" style="width: 22px;">
+                                <i class="material-icons pt-1 icon cancel" style="font-size: 22px;">cancel</i>
+                              </button>
+                            </ng-template>
+                          </mat-cell>
+                        </ng-container>
+              
+                        <ng-container matColumnDef="AttachmentFileName">
+                          <mat-header-cell class="pl-4" *matHeaderCellDef mat-sort-header>File Name </mat-header-cell>
+                          <mat-cell *matCellDef="let row">
+                            {{row.AttachmentFileName}}
+                          </mat-cell>
+              
+                        </ng-container>
+                        
+                        <ng-container matColumnDef="CreatedDate">
+                          <mat-header-cell class="pl-2 td_UpDate pr-2" *matHeaderCellDef mat-sort-header>Update Date
+                          </mat-header-cell>
+                          <mat-cell class="pl-2 td_UpDate pr-2" mat-cell *matCellDef="let row">
+              
+                            <div *ngIf="!row.CreatedDate; else CreatedDate1" class="w-100">
+                              <div *ngIf="!checkRunProcess(row.AttachmentFileName)">
+                                <mat-progress-bar value="10" mode="determinate"></mat-progress-bar>
+                              </div>
+                              <mat-progress-bar *ngIf="checkRunProcess(row.AttachmentFileName)" mode="indeterminate">
+                              </mat-progress-bar>
+                              <div *ngIf="checkShowError(row.AttachmentFileName)" class="row text-danger justify-content-center">
+                                {{error}}
+                              </div>
+                            </div>
+                            <ng-template #CreatedDate1>
+                              <div class="w-100" *ngIf="!mobile" >
+                                <mat-progress-bar value="100" mode="determinate"></mat-progress-bar>
+                                <div class="row  justify-content-center">
+                                  {{row.CreatedDate | date: 'yyyy/MM/dd'}}
+                                </div>
+                                <div *ngIf="checkShowError(row.AttachmentFileName)" class="row text-danger justify-content-center" >
+                                  {{error}}
+                                </div>
+                              </div>
+                              <div class="w-100" *ngIf="mobile" > {{row.CreatedDate | date: 'yyyy/MM/dd'}}</div>
+                            </ng-template>
+                          </mat-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="displayedColumns ;sticky: true"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </mat-row>
+                      </mat-table>
+                      <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">No records
+                        found
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              
+              </div> 
+</div>

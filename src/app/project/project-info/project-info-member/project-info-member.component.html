@@ -1,0 +1,188 @@
+
+<mat-drawer-container class="container-drawner">
+
+  <mat-drawer-content>
+
+    <div>
+      <!-- <button mat-raised-button class="btn-btn-success add_ShowPopup"  (click)="drawer.toggle()">
+        <i class="material-icons pb-1 icon">person_add</i>
+      </button> -->
+      <button mat-mini-fab color="success" class="mat-sm" style="height:36px; border-radius: 0 4px 4px 0; position: absolute; z-index: 9999;font-size: 1.2rem!important"
+       (click)="Add_Click()">
+          <mat-icon *ngIf="!drawer.opened" aria-hidden="false"style="padding-left:1px;font-size:18px !important">person_add</mat-icon>
+      </button>
+    </div>   
+
+    <!-- Start Card Member in Project ---------------------------------------------------------------------------------------- -->
+    <div class="divFlascard row pc" style="float: left">
+
+      <mat-drawer-container class="flascard-container" *ngFor="let projectMember of projectMember"
+        (mouseenter)="drawerFlashCard.toggle() " (mouseleave)="drawerFlashCard.toggle(false)">
+
+        <mat-drawer #drawerFlashCard class="mat-Draw">
+          <button mat-fab color="warn" (click)="onDeleteMember(btnDeleteMaintenanceMemmer)">
+            <i class="material-icons" style="font-size: larger">delete_outline</i>
+          </button>
+        </mat-drawer>
+
+        <mat-drawer-content class="content">
+          <mat-card class="example-card">
+            <div class="price-tag" [ngStyle]="convertStyleObject(projectMember.StyleCss)">
+              <span #btnDeleteMaintenanceMemmer id="{{projectMember.Id}}">{{projectMember.ProjectPositionName}}</span>
+            </div>
+            <ng-template [ngIf]="projectMember.EmpImage" [ngIfElse]="notShow">
+              <img class="avatar" mat-card-image src="{{projectMember.EmpImage}}">
+            </ng-template>
+            <ng-template #notShow>
+              <img class="avatar" mat-card-image *ngIf="projectMember.EmpGender === 0"
+                src="../../../../assets/images/avatar_male.png">
+              <img class="avatar" mat-card-image *ngIf="projectMember.EmpGender === 1"
+                src="../../../../assets/images/avatar_female.png">
+            </ng-template>
+            <p class="fullname">{{projectMember.EmpName}}</p>
+            <mat-card-content class="content-flash-card">
+              <i class="material-icons">perm_phone_msg</i>
+              {{projectMember.EmpMobile1}}
+              <br>
+              <i class="material-icons">email</i>
+              {{projectMember.EmpEmail1}}
+            </mat-card-content>
+          </mat-card>
+        </mat-drawer-content>
+
+        <div class="bottom_item row"></div>
+      </mat-drawer-container>
+    </div>
+    <!-- End Card Member in Project PC---------------------------------------------------------------------------------------- -->
+ 
+
+    <!-- Start Card Member in Project Mobile---------------------------------------------------------------------------------------- -->
+    <div class="mobile pl-2" >
+        <mat-drawer-container class="flascard-container" *ngFor="let projectMember of projectMember">
+          <div style="position: relative" 
+          (touchend)="(openedProjectMaintenance && openedProjectMaintenance == projectMember) ? openedProjectMaintenance = null : openedProjectMaintenance = projectMember">
+  
+          <div  class="mat-Draw" [@toolbarLMobile]="(openedProjectMaintenance && openedProjectMaintenance == projectMember) ? 'show' : 'hide'" 
+         #drawerCard_member_mobile class="btn-danger justify-content-center row "
+          (click)="onDeleteMember(btnDeleteMaintenanceMemmer)" > 
+          <i  *ngIf="openedProjectMaintenance != null && openedProjectMaintenance == projectMember" 
+           class="material-icons del_btn" 
+          >delete</i>         
+        </div>
+        <div  *ngIf="openedProjectMaintenance != null && openedProjectMaintenance == projectMember" 
+        style="position: absolute; top: 0; bottom: 0px; left: 0; right: 0; background-color: rgb(0, 0, 0); opacity: 0.3">
+
+        </div>
+      
+        <!-- <mat-drawer-content #myCard> -->
+          
+          <div class="pr-1">           
+            <div class="in1line " >
+              <div class="row col-11 ml-4  borderMobile"  ></div>
+              <div class="price-tag   col-4" [ngStyle]="convertStyleObject(projectMember.StyleCss)">
+                <span #btnDeleteMaintenanceMemmer id="{{projectMember.Id}}">{{projectMember.ProjectPositionName}}</span>
+              </div>
+              <div class="card-name   col-8 justify-content-end">
+                <p class="fullname">{{projectMember.EmpName}}</p>
+              </div>
+            </div>
+            <br>
+            <div class="content-flash-card  ">
+                <div class="email   col-8  ">
+                    <i class="material-icons">email</i>
+                    <span>{{projectMember.EmpEmail1}}</span>
+                  </div>
+              <div class="phone  col-4 justify-content-end">
+                <i class="material-icons">perm_phone_msg</i>
+                <span>{{projectMember.EmpMobile1}}</span>
+              </div>
+            
+            </div>
+          </div>     
+        
+        <div class="bottom_item row col-12"></div>
+      </div>
+    </mat-drawer-container>
+    </div>
+    <!-- End Card Member in Project Mobile---------------------------------------------------------------------------------------- -->
+  </mat-drawer-content>
+  
+    
+  <!-- Start Popup Employee ---------------------------------------------------------------------------------------- -->
+  <mat-drawer #drawer class="drawer">
+    <div class="mat-elevation-z8 example-container ">
+      <table mat-table [dataSource]="Arr_Employee">
+        <ng-container matColumnDef="select">
+          <div class="checkbox_Employee">
+            <th mat-header-cell *matHeaderCellDef class="checkBoxMat">
+              <div *ngIf="mode == true; else Disable_CheckBox" > 
+                <div class="in1line">
+                  <mat-checkbox (change)="masterToggle($event)"
+                            [checked]="isAllSelected()"
+                            [disabled]="mode">
+                  </mat-checkbox>
+                </div>            
+              </div>    
+              <ng-template #Disable_CheckBox>   
+                  <div class="in1line">
+                    <mat-checkbox (change)="masterToggle($event)"
+                            [checked]="isHasSelected()"
+                            [indeterminate]="isHasSelected() && !isAllSelected()">
+                    </mat-checkbox>   
+                  </div>                           
+              </ng-template>
+            </th>
+            <td mat-cell *matCellDef="let row" class="pr-1">
+              <mat-checkbox [checked]="row.checked" 
+                (change)="onCheckedChanged($event, row)">
+              </mat-checkbox>
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </div>        
+        </ng-container>
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef>
+            Position
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element.PositionName}} </td>
+          <td mat-footer-cell *matFooterCellDef>
+            <button mat-raised-button class="btn-btn-success add" (click)="onAddMember()">
+              <i class="material-icons pb-1 icon">person_add</i>
+              Add
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.EmpName}} </td>
+          <td mat-footer-cell *matFooterCellDef>
+            <mat-form-field class="">
+              <mat-select [(value)]="selected" (selectionChange)="onChange($event)" disableOptionCentering>
+                <mat-option *ngFor="let pos of dataProjectPosition" [value]="pos.Id" (click)="selectPositon(btnselect)"
+                  #btnselect id="{{pos.Id}}">{{pos.ProjectPositionName}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="close">
+          <th mat-header-cell *matHeaderCellDef>
+              <button mat-mini-fab color="success" class="mat-sm" style="height:36px; border-radius: 4px 0 0 4px; position: absolute; z-index: 9999; top: 0px; right: 0; overflow: hidden;font-size: 1.2rem !important" (click)="drawer.toggle()">
+                  <mat-icon *ngIf="drawer.opened" aria-hidden="false" style="padding-left: 5px;margin-bottom: 2px">arrow_back_ios</mat-icon>
+              </button>
+          </th>
+          <td mat-cell *matCellDef="let element"></td>
+          <td mat-footer-cell *matFooterCellDef>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+        </tr>
+        <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true">
+        </tr>
+        <div class="bottom_item"></div>
+      </table>
+    </div>
+  </mat-drawer>
+  <!-- End Popup Employee ---------------------------------------------------------------------------------------- -->
+
+</mat-drawer-container>

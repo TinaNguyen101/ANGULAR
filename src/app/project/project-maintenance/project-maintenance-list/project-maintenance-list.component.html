@@ -1,0 +1,238 @@
+<mat-drawer-container  [hasBackdrop]='true' style="height: calc(100vh - 200px)">
+  <mat-drawer #drawer mode="over" class="drawer">
+    <div>
+      <!----------SEARCH START -->
+      <form class="formSearch" [formGroup]="form" (ngSubmit)="onSubmitData()">
+        <mat-form-field class="w-100 p-3">
+          <input matInput placeholder="Maintaince Name" formControlName="MaintenanceName">
+        </mat-form-field>
+        <div class="w-100 p-3" fxLayout="row wrap" fxLayoutWrap fxLayoutGap="5%">
+          <mat-form-field fxFlex="47%">
+            <input matInput [matDatepicker]="picker" placeholder="Start Date From" class="form-control"
+              (dateChange)="orgValueChange(StartDate.value)" #StartDate
+              maxlength="8" formControlName="StartDate" dateFormat >
+            <mat-datepicker-toggle class="colorGreen" matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field fxFlex="47%">
+            <input matInput [matDatepicker]="picker2" placeholder="To" class="form-control" formControlName="EndDate"
+              (keyup)="commons.allowDateonly($event)" maxlength="8" dateFormat
+              #EndDate>
+            <mat-datepicker-toggle class="colorGreen" matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <mat-form-field class="w-35 p-3">
+          <mat-select formControlName="ProjectStatusName" placeholder="Status">
+            <mat-option></mat-option>
+            <mat-option *ngFor="let status of MstProjectStatus" [value]="status.ProjectStatusName">
+              {{status.ProjectStatusName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br />
+        <div class="text-right pr-3">
+          <button type="button" mat-raised-button color="primary" class="ml-2" (click)="refersh()">
+            <i class="material-icons ">cached</i>
+          </button>
+          <button type="submit" mat-raised-button color="warn" class="ml-2" (click)="goToTop()">
+            <i class="material-icons ">search</i>
+          </button>
+        </div>
+      </form>
+      <!----------SEARCH END -->
+      <button mat-mini-fab color="success" class="mat-sm"
+        style="margin-top: 1px; border-radius: 4px 0 0 4px; position: absolute; z-index: 9999; top: 0px; right: 0; overflow: hidden;"
+        (click)="drawer.toggle()">
+        <mat-icon *ngIf="drawer.opened" aria-hidden="false" style="padding-left: 5px;">arrow_back_ios</mat-icon>
+      </button>
+    </div>
+  </mat-drawer>
+  <mat-drawer-content #divtop style="overflow-y: scroll;height: calc(100vh - 200px)">
+    <div  >
+       <!----------BUTTON START-->
+      <div class="pb-4 fixed-top">
+        <div style="float: left">
+          <button mat-mini-fab color="warn" class="mat-sm"
+            style="margin-top: 1px; border-radius: 0 4px 4px 0; position: absolute; z-index: 9999;"
+            (click)="drawer.toggle()">
+            <mat-icon *ngIf="!drawer.opened" aria-hidden="false">search</mat-icon>
+          </button>
+        </div>
+        <div class="pr-3" style="float: right">
+          <button type="button" mat-raised-button color="success" [routerLink]="['create']">
+            <i class="material-icons md-5 pr-1">add</i>Create
+          </button>
+        </div>
+      </div>
+       <!----------BUTTON END-->
+
+      <!----------LIST START-->
+      <div class="container py-5 h-100">
+        <div class="time-line">
+          <div  class="time-line__section" *ngFor="let projectMaintenance of projectMaintenances; trackBy: search; let index =index;" (window:resize)="onResize()">
+              <!----------VIEW　PC START -->
+              <div *ngIf="!mobile" fxLayout="row"  class="section__date" 
+              (mouseover)="(openedProjectMaintenance && openedProjectMaintenance == projectMaintenance) ? openedProjectMaintenance = null : openedProjectMaintenance = projectMaintenance"
+              (mouseout)="(openedProjectMaintenance && openedProjectMaintenance == projectMaintenance) ? openedProjectMaintenance = null : openedProjectMaintenance = projectMaintenance"
+              >
+                  <!----ODD-->
+                <div  *ngIf="index % 2 != 0 " [@toolbarR]="(openedProjectMaintenance && openedProjectMaintenance == projectMaintenance) ? 'show' : 'hide'"   
+                  class="box__icon" align="Start" [ngStyle]="convertStyleObject(projectMaintenance.StyleCss)">
+                   <div class="mat-Draw" [routerLink]="['info', projectMaintenance.Id]" fxLayout="column" fxFill  fxLayoutAlign="center">
+                      <i class="material-icons">edit</i>
+                    </div>
+                  </div>
+                  <!----EVEN-->
+                   <div *ngIf="index % 2 == 0" [@toolbarL]="(openedProjectMaintenance && openedProjectMaintenance == projectMaintenance) ? 'show' : 'hide'" 
+                   class="box__icon" align="Start" [ngStyle]="convertStyleObject(projectMaintenance.StyleCss)">
+                    <div class="mat-Draw" [routerLink]="['info', projectMaintenance.Id]" fxLayout="column" fxFill  fxLayoutAlign="center">
+                      <i class="material-icons">edit</i>
+                    </div>
+                  </div>
+                  <div class="date__box"  fxFlex="100%">
+                      <!-- <div *ngIf="openedProjectMaintenance != null && openedProjectMaintenance == projectMaintenance"
+                      style="position: absolute; top: 0px; bottom: 0px; left: 0%; right: 0%;  background-color: rgb(0, 0, 0); opacity: 0.3;">
+                    </div> -->
+                    <div fxLayout="column" fxLayoutWrap class="box__date">
+                      <div fxLayout="row" fxFlex="100%" fxLayoutWrap>
+                        <div class="name" fxFlex="57%">
+                          <div>
+                            <span> {{ projectMaintenance.MaintenanceName}} </span>
+                          </div>
+                        </div>
+                        <div class="date" fxFlex="43%">
+                          <div align="end" >
+                            <span>{{ projectMaintenance.StartDate | date: 'yyyy/MM/dd' }} ∼
+                              {{ projectMaintenance.EndDate | date: 'yyyy/MM/dd' }} </span>
+                          </div>
+                          <div align="end" *ngIf="projectMaintenance.EstimateCost && projectMaintenance.EstimateManDay">
+                            <span class="contentEstimate" color="primary"
+                              *ngIf="projectMaintenance.CostCurrencySymboy !='đ'">【{{ projectMaintenance.CostCurrencySymboy}}{{ projectMaintenance.EstimateCost| number : fractionSize}}／{{ projectMaintenance.EstimateManDay| number : fractionSize}}
+                              Man-day】</span>
+                            <span class="contentEstimate" color="primary"
+                              *ngIf="projectMaintenance.CostCurrencySymboy =='đ'">【{{ projectMaintenance.EstimateCost| number : fractionSize}}{{ projectMaintenance.CostCurrencySymboy}}／{{ projectMaintenance.EstimateManDay| number : fractionSize}}
+                              Man-day】</span>
+                          </div>
+                          <div align="end" *ngIf="projectMaintenance.EstimateCost && !projectMaintenance.EstimateManDay">
+                            <span class="contentEstimate" color="primary"
+                              *ngIf="projectMaintenance.CostCurrencySymboy !='đ'">【{{ projectMaintenance.CostCurrencySymboy}}{{ projectMaintenance.EstimateCost| number : fractionSize}}】</span>
+                            <span class="contentEstimate" color="primary"
+                              *ngIf="projectMaintenance.CostCurrencySymboy =='đ'">【{{ projectMaintenance.EstimateCost| number : fractionSize}}{{ projectMaintenance.CostCurrencySymboy}}】</span>
+                          </div>
+                          <div align="end" *ngIf="!projectMaintenance.EstimateCost && projectMaintenance.EstimateManDay">
+                            <span class="contentEstimate" color="primary"
+                              *ngIf="projectMaintenance.CostCurrencySymboy !='đ'">【{{ projectMaintenance.EstimateManDay| number : fractionSize}}
+                              Man-day】</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div fxLayout="row" fxFlex="100%" fxLayoutWrap>
+                        <div class="name" fxFlex="63%">
+  
+                          <div>
+                            <div class="content">
+                              <span *ngIf="projectMaintenance.DeliveryDate">Delivery Date : </span>
+                              <span
+                                *ngIf="projectMaintenance.DeliveryDate">{{ projectMaintenance.DeliveryDate | date: 'yyyy/MM/dd' }}
+                              </span>
+                            </div>
+                            <div class="content">
+                              <span *ngIf="projectMaintenance.PaymentDate">Payment Date : </span>
+                              <span
+                                *ngIf="projectMaintenance.PaymentDate">{{ projectMaintenance.PaymentDate | date: 'yyyy/MM/dd' }}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="date" fxFlex="37%" fxLayout="row" fxLayoutAlign="end end">
+                          <div>
+                            <mat-chip-list>
+                              <mat-chip [ngStyle]="convertStyleObject(projectMaintenance.StyleCss)">
+                                {{ projectMaintenance.ProjectStatusName}}</mat-chip>
+                            </mat-chip-list>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                  </div>
+              </div> 
+             
+               <!----------VIEW　PC END -->
+
+               <!----------VIEW　MOBILE START -->
+            <div *ngIf="mobile" fxLayout="row"  class="section__date" 
+            (touchend)="(openedProjectMaintenance && openedProjectMaintenance == projectMaintenance) ? openedProjectMaintenance = null : openedProjectMaintenance = projectMaintenance">
+                <div [@toolbarLMobile]="(openedProjectMaintenance && openedProjectMaintenance == projectMaintenance) ? 'show' : 'hide'" 
+                class="box__icon" align="Start" [ngStyle]="convertStyleObject(projectMaintenance.StyleCss)">
+                 <div class="mat-Draw" [routerLink]="['info', projectMaintenance.Id]" fxLayout="column" fxFill  fxLayoutAlign="center">
+                   <i *ngIf="openedProjectMaintenance != null && openedProjectMaintenance == projectMaintenance"  class="material-icons">edit</i>
+                 </div>
+               </div>
+               
+                <div class="date__box__Mobile">
+                  <div fxLayout="column" fxLayoutWrap class="box__date">
+                      <div *ngIf="openedProjectMaintenance != null && openedProjectMaintenance == projectMaintenance"
+                      style="position: absolute; top: 0px; bottom: 50px; left: 10%; right: 10%;  background-color: rgb(0, 0, 0); opacity: 0.3;">
+                    </div>
+                    <div>
+                      <span> {{ projectMaintenance.MaintenanceName}} </span>
+                    </div>
+                    <div class="date">
+                      <span>{{ projectMaintenance.StartDate | date: 'yyyy/MM/dd' }} ∼
+                        {{ projectMaintenance.EndDate | date: 'yyyy/MM/dd' }} </span>
+                    </div>
+                    <div *ngIf="projectMaintenance.EstimateCost && projectMaintenance.EstimateManDay">
+                        <span class="contentEstimate" color="primary"
+                          *ngIf="projectMaintenance.CostCurrencySymboy !='đ'">【{{ projectMaintenance.CostCurrencySymboy}}{{ projectMaintenance.EstimateCost| number : fractionSize}}／{{ projectMaintenance.EstimateManDay| number : fractionSize}}
+                          Man-day】</span>
+                        <span class="contentEstimate" color="primary"
+                          *ngIf="projectMaintenance.CostCurrencySymboy =='đ'">【{{ projectMaintenance.EstimateCost| number : fractionSize}}{{ projectMaintenance.CostCurrencySymboy}}／{{ projectMaintenance.EstimateManDay| number : fractionSize}}
+                          Man-day】</span>
+                      </div>
+                      <div  *ngIf="projectMaintenance.EstimateCost && !projectMaintenance.EstimateManDay">
+                        <span class="contentEstimate" color="primary"
+                          *ngIf="projectMaintenance.CostCurrencySymboy !='đ'">【{{ projectMaintenance.CostCurrencySymboy}}{{ projectMaintenance.EstimateCost| number : fractionSize}}】</span>
+                        <span class="contentEstimate" color="primary"
+                          *ngIf="projectMaintenance.CostCurrencySymboy =='đ'">【{{ projectMaintenance.EstimateCost| number : fractionSize}}{{ projectMaintenance.CostCurrencySymboy}}】</span>
+                      </div>
+                      <div  *ngIf="!projectMaintenance.EstimateCost && projectMaintenance.EstimateManDay">
+                        <span class="contentEstimate" color="primary"
+                          *ngIf="projectMaintenance.CostCurrencySymboy !='đ'">【{{ projectMaintenance.EstimateManDay| number : fractionSize}}
+                          Man-day】</span>
+                      </div>
+                    <div>
+                      <div class="content">
+                        <span *ngIf="projectMaintenance.DeliveryDate">Delivery Date : </span>
+                        <span
+                          *ngIf="projectMaintenance.DeliveryDate">{{ projectMaintenance.DeliveryDate | date: 'yyyy/MM/dd' }}
+                        </span>
+                      </div>
+                      <div class="content">
+                        <span *ngIf="projectMaintenance.PaymentDate">Payment Date : </span>
+                        <span
+                          *ngIf="projectMaintenance.PaymentDate">{{ projectMaintenance.PaymentDate | date: 'yyyy/MM/dd' }}</span>
+                      </div>
+                    </div>
+                    <div class="date" fxFlex="35%" fxLayout="row" fxLayoutAlign="end end">
+                      <div>
+                        <mat-chip-list>
+                          <mat-chip [ngStyle]="convertStyleObject(projectMaintenance.StyleCss)">
+                            {{ projectMaintenance.ProjectStatusName}}</mat-chip>
+                        </mat-chip-list>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div> 
+            <!----------VIEW　MOBILE END -->
+            <div class="section__description">
+                {{ projectMaintenance.MaintenanceContent}}
+              </div>
+          </div>
+        </div>
+      </div>
+      <!----------LIST END-->
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

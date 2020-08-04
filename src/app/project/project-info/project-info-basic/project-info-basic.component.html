@@ -1,0 +1,188 @@
+<div *ngIf="!projectId" class="pb-10 hiddenClass">
+</div>
+<form [formGroup]="dtForm" class="col-lg-12 col-md-12 col-12" [ngClass]="{'ng-submitted': submitted}" (ngSubmit)="onSubmitData()">
+    <input type="hidden" formControlName="id" />
+    <div class="row  justify-content-sm-center">
+        <div class="col-xl-5 col-lg-5 col-sm-11">
+            <div class="row">
+                <div class="col-lg-12">
+                    <mat-form-field class="example-full-width w-100">
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">info</i>
+                        <input matInput placeholder="Project Name" #projectName formControlName="projectName"
+                            maxlength="200">
+                        <mat-error>
+                            <div *ngIf="dtForm.controls.projectName.errors?.required">Project name is required</div>
+                        </mat-error>
+                        <mat-hint align="end">{{projectName.value.length}} / 200</mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <mat-form-field class="w-100">
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">person</i>
+                        <mat-select placeholder="Customer" #singleSelect formControlName="custName">
+                            <div class="row m-0">
+                                <span class="m-1"><i class="material-icons colorGreen">
+                                        search
+                                    </i></span>
+                                <input matInput placeholder="Filter" class="col-lg-10 col-10" value=""
+                                    [formControl]="custFilterCtrl">
+                            </div>
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let cust of filteredCust | async" [value]="cust.Id">
+                                <span class="ml-2">{{cust.CustName}}</span>
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field class="w-100">
+                        <mat-label>Start Date</mat-label>
+                        <input type="text" formControlName="startDate" matInput [matDatepicker]="picker"
+                            placeholder="yyyy/mm/dd" (ngModelChange)="checkValidDate(1)" dateFormat >
+                        <mat-datepicker-toggle matSuffix [for]="picker" class="colorGreen"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error>
+                            <div *ngIf="dtForm.controls.startDate.errors?.compareDate">Start date is less than end date </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field class="w-100">
+                        <mat-label>End Date</mat-label>
+                        <input type="text" formControlName="endDate" matInput [matDatepicker]="picker2"
+                            placeholder="yyyy/mm/dd" (ngModelChange)="checkValidDate(0)" dateFormat>
+                        <mat-datepicker-toggle matSuffix [for]="picker2" class="colorGreen"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error>
+                            <div *ngIf="dtForm.controls.endDate.errors?.compareDate">End date is greater than start date </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field class="w-100">
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">person</i>
+                        <input mask="comma_separator" class="text-right" formControlName="estimateManday" matInput
+                            maxlength="4" placeholder="Estimate Manday" numberCommaSeparator>
+                        <mat-error>
+                            <div *ngIf="dtForm.controls.estimateManday.errors?.pattern">
+                                Estimate Man Day must be numeric</div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field style="width: 82%">
+                        <mat-label>Estimate Cost</mat-label>
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">attach_money</i>
+                        <input mask="comma_separator" type="text" class="text-right" formControlName="estimateCost" #estimateCost
+                            matInput maxlength="12" numberCommaSeparator (blur)="checkShowHideValid()" >
+                        <mat-error>
+                            <div
+                                *ngIf="dtForm.controls.estimateCost.errors?.symboyRequired">
+                                Currency symbol is required
+                            </div>
+                        </mat-error>
+
+                    </mat-form-field>
+                    <mat-form-field style="width: 18%">
+                        <mat-select formControlName="currentSymboy" class="pl-1" #currentSymboy
+                            (ngModelChange)="checkValidEstimateCost()">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let item of lstCurrentSymboy" [value]="item.Id">
+                                {{item.CostCurrencySymboy}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error>
+                            <div *ngIf="dtForm.controls.currentSymboy.errors?.symboyRequired"> </div>
+                    </mat-error>
+                    </mat-form-field>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field class="w-100">
+                        <mat-label>Payment Date</mat-label>
+                        <input matInput [matDatepicker]="picker3" placeholder="yyyy/mm/dd" formControlName="paymentDate"
+                            dateFormat>
+                        <mat-datepicker-toggle matSuffix [for]="picker3" class="colorGreen"></mat-datepicker-toggle>
+                        <mat-datepicker #picker3></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field class="w-100">
+                        <mat-label>Delivery Date</mat-label>
+                        <input matInput [matDatepicker]="picker4" placeholder="yyyy/mm/dd"
+                            formControlName="deliveryDate" dateFormat>
+                        <mat-datepicker-toggle matSuffix [for]="picker4" class="colorGreen"></mat-datepicker-toggle>
+                        <mat-datepicker #picker4></mat-datepicker>
+                        <mat-error>
+                            <div *ngIf="dtForm.controls.deliveryDate.errors?.required">Delivery date is required</div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-7  col-lg-7 col-sm-11 ">
+            <div class="row">
+                <div class="col-lg-12">
+                    <mat-radio-group class="example-radio-group" formControlName="projectStatus"
+                        [(ngModel)]="defaultCheck">
+                        <mat-radio-button class="example-radio-button mr-3" #button [value]="item.Id"
+                            *ngFor="let item of lstStatus; let i = index">
+                            <div style="font-size: 75%" class="badge" [ngStyle]="convertStyleObject(item.StyleCss)">
+                                <span style="line-height: 1.5;padding-left: 2px !important;">
+                                    {{item.ProjectStatusName}}
+                                </span></div>
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-xl-8">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutAlign="left">
+                        <mat-form-field appearance="outline" flex-gt-sm fxFlex="100%">
+                            <mat-label>Project decription</mat-label>
+                            <textarea formControlName="projectDecription" style="overflow-x: hidden" #projectDecription matInput maxlength="4000"
+                                rows="14"></textarea>
+                            <mat-hint align="end">{{projectDecription.value.length}} / 4000</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-xl-8 text-right">
+                    <div *ngIf="projectId">
+                        <button type="button" mat-raised-button color="primary" (click)="goBack()"
+                            class="col-md-2 col-sm-2 mr-2">
+                            <i class="material-icons md-18 ml-1">arrow_back</i> Back
+                        </button>
+                        <button type="submit" mat-raised-button color="success" (click)="goToTop()"
+                            class="col-md-2 col-sm-2 mr-2">
+                            <i class="material-icons md-18 ml-1">save</i> Edit
+                        </button>
+                        <button type="button"  (click)="deleteProject()" mat-raised-button color="warn" class="col-md-2 col-sm-2">
+                            <i class="material-icons md-18 ml-1">delete</i> Delete
+                        </button>
+                    </div>
+
+                    <div *ngIf="!projectId">
+                        <button type="button" mat-raised-button color="primary" (click)="goBack()" class="col-md-2 mx-md-2 col-sm-2 mr-2">
+                            <i class="material-icons md-18 ml-1">arrow_back</i> Back
+                        </button>
+                        <button type="submit" mat-raised-button color="success" (click)="goToTop()" class="col-md-2 mx-md-2 col-sm-2 my-1">
+                            <i class="material-icons md-18 ml-1">save</i> Create
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

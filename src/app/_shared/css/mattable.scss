@@ -1,0 +1,105 @@
+@media screen and (max-width: 1200px) {
+    .mat-table {
+      border: 0;
+      vertical-align: middle
+    }
+  
+    .mat-table caption {
+      font-size: 1em;
+    }
+    
+    .mat-table .mat-header-row {
+      display: none
+    }
+    .mat-table .mat-row {
+      border-bottom: 5px solid #ddd;
+      display: block;
+    }
+    /*
+    .mat-table .mat-row:nth-child(even) {background: #CCC}
+    .mat-table .mat-row:nth-child(odd) {background: #FFF}
+    */
+    .mat-table .mat-cell {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: 0.9em;
+      text-align: right;
+      font-weight: bold;
+      min-height:28px;
+      margin-bottom: 4%;
+      padding-left: 0px;
+      padding-right: 4px;
+    }
+    .mat-table .mat-cell:before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      text-transform: uppercase;
+      font-weight: normal;
+      
+      font-size: .85em;
+    }
+    .mat-table .mat-cell:last-child {
+      border-bottom: 0;
+    }
+      .mat-table .mat-cell:first-child {
+      margin-top: 4%;
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .mat-header-cell {
+      background-color: #008577;
+      color: #fff
+    }
+    .mat-sort-header-arrow{
+      color: #fff
+    }
+    .mat-table .mat-cell:first-child,.mat-table .mat-header-cell:first-child {
+      border-left: 1px solid #979797;
+    }
+    .mat-table .mat-cell, .mat-header-cell {
+      border-right: 1px solid #979797;
+    }
+
+    .mat-header-cell {
+      border-bottom: 1px solid #979797;
+      border-top: 1px solid #979797;
+      font-weight: 600;
+    }
+
+    .mat-table .mat-header-row{
+      border-bottom-width: 0px;
+    }
+
+    mat-cell:first-of-type, mat-footer-cell:first-of-type, mat-header-cell:first-of-type {
+      padding-left: 8px;
+    }
+    mat-cell, mat-footer-cell, mat-header-cell {
+      padding-left: 8px;
+    }
+  }
+
+  mat-row, mat-header-row{
+    min-height:22px;
+    align-items: stretch;
+    border-color: #979797;
+  }
+
+  mat-cell, mat-header-cell{
+    min-height:32px;
+  }
+
+  .text-small .mat-cell {
+    font-size: 0.9em;
+  }
+
+  mat-cell:last-of-type, mat-footer-cell:last-of-type, mat-header-cell:last-of-type {
+    padding-right: 4px;
+  }
+  mat-cell, mat-footer-cell, mat-header-cell {
+    padding-right: 4px;
+  }

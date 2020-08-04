@@ -1,0 +1,226 @@
+<div class="form-group col-12 mt-2" style="margin-left: -10px" *ngIf="isSearchted">
+    <div class="col-10 mb-3" *ngIf="(year >= yearNow)">
+        <button id="btnsave" type="submit" mat-raised-button color="success" style="margin-left: -1.1%;"
+            (click)="submitData()">
+            <i class="material-icons md-18 ml-1 ">save</i> Save
+        </button>
+    </div>
+    <div class="main-form">
+        <div class="mat-elevation-z8 ">
+            <!-- PC -->
+            <div class="PC">
+                <div class="col-lg-12 contentTable" #parentTable>
+                    <mat-table [dataSource]="dataSource">
+                        <ng-container matColumnDef="KPIHeading">
+                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            <mat-cell *matCellDef="let row" [attr.data-label]="KPIHeading">
+                                <b *ngIf="row.KpidetailId == 0" style="color:#009688;">
+                                    {{row.KPIHeading}}
+                                </b>
+                                <span *ngIf="row.KpidetailId != 0">
+                                    {{row.KPIHeading}}
+                                </span>
+                            </mat-cell>
+                            <mat-footer-cell *matFooterCellDef style="background-color: #008577; color: aliceblue;">
+                                <b>Xếp Loại</b>
+                            </mat-footer-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="Score">
+                            <mat-header-cell *matHeaderCellDef>Score</mat-header-cell>
+                            <mat-cell *matCellDef="let row; let i = index" [attr.data-label]="Score"
+                                (dblclick)="setSelectClick(i,row,2)">
+                                <div *ngIf="row.KpidetailId == 0">
+                                    <span *ngIf="KPIHeadingTotal != 0 && row.Kpiid==1">
+                                        {{KPIHeadingTotal}}
+                                    </span>
+                                    <span *ngIf="KPIHeadingTotal == 0 && row.Kpiid==1">
+                                        {{row.Score}}
+                                    </span>
+                                    <span *ngIf="KPIHeadingTotal2 != 0 && row.Kpiid==2">
+                                        {{KPIHeadingTotal2}}
+                                    </span>
+                                    <span *ngIf="KPIHeadingTotal2 == 0 && row.Kpiid==2">
+                                        {{row.Score}}
+                                    </span>
+                                    <span *ngIf="row.Kpiid==3 && !checkSelectClick(row,i,2)">
+                                        {{row.Score}}
+                                    </span>
+                                    <input autofocus (change)="getValueInput(row,Score,i)" [id]="'input-' + i "
+                                        (blur)="removeClick()" *ngIf="checkSelectClick(row,i,2) && row.Kpiid==3"
+                                        style="width: 60px;" maxlength="3" [value]="row.Score | number  " number
+                                        mask="comma_separator" #Score />
+                                </div>
+                                <div *ngIf="row.KpidetailId != 0">
+                                    <span *ngIf="!checkSelectClick(row,i,2)">
+                                        {{row.Score}}
+                                    </span>
+                                    <input autofocus (change)="getValueInput(row,Score,i)" [id]="'input-' + i "
+                                        (blur)="removeClick()" *ngIf="checkSelectClick(row,i,2)" style="width: 60px;"
+                                        maxlength="3" [value]="row.Score | number  " number mask="comma_separator"
+                                        #Score />
+                                </div>
+                            </mat-cell>
+                            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="EvaluationContent">
+                            <mat-header-cell *matHeaderCellDef>Content</mat-header-cell>
+                            <mat-cell *matCellDef="let row; let i = index" [attr.data-label]="EvaluationContent"
+                                (dblclick)="setSelectClick(i,row,3)">
+                                <div class="w-100 h-100" *ngIf="row.KpidetailId == 0">
+                                    <span *ngIf="!checkSelectClick(row,i,3)  && row.Kpiid==3">
+                                        {{row.EvaluationContent}}
+                                    </span>
+                                    <textarea [id]="'input-' + i " (blur)="removeClick()" (change)="
+                                        getValueContentInput(row,Content,i)" maxlength="500" rows="3"
+                                        *ngIf="checkSelectClick(row,i,3)  && row.Kpiid==3" style="border: none;"
+                                        [value]="row.EvaluationContent" class="w-100 h-100" #Content>{{row.EvaluationContent}}
+                                    </textarea>
+                                </div>
+                                <div *ngIf="row.KpidetailId != 0" class="w-100 h-100">
+                                    <span *ngIf="!checkSelectClick(row,i,3)">
+                                        {{row.EvaluationContent}}
+                                    </span>
+                                    <div class="w-100 h-100">
+                                        <textarea [id]="'input-' + i " (blur)="removeClick()" class=" w-100 h-100"
+                                            (change)="getValueContentInput(row,Content,i)" maxlength="500" rows="3"
+                                            *ngIf="checkSelectClick(row,i,3)" style="border: none;"
+                                            [value]="row.EvaluationContent"
+                                            #Content>{{row.EvaluationContent}}</textarea>
+                                    </div>
+                                </div>
+                            </mat-cell>
+                            <mat-footer-cell *matFooterCellDef>
+                                <span *ngIf="KPIClassificationResultDto.Classification">
+                                    {{KPIClassificationResultDto.Classification}}
+                                </span>
+                            </mat-footer-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                        <mat-footer-row *matFooterRowDef="displayedColumns"></mat-footer-row>
+                    </mat-table>
+                </div>
+            </div>
+            <!-- MB -->
+            <div class="MB w-100">
+                <div class="example-box row cardSingle" style="margin-right:1px !important"
+                    *ngFor="let item of lstAnnualKPIResult; let i = index " cdkDrag>
+                    <div id="accordion" class="w-100">
+                        <mat-accordion>
+                            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                                <mat-expansion-panel-header [collapsedHeight]="'64px'" [expandedHeight]="'64px'">
+                                    <mat-panel-title>
+                                        <div class="d-flex align-items-center col-12">
+                                            <div class="d-flex align-items-center col-9 mb-2 CardTitle mt-2 px-0"
+                                                data-toggle="collapse" [attr.data-target]="'#heading_' + i"
+                                                aria-expanded="false" [attr.aria-label]="'heading_'+i">
+                                                <div class="KPIHeading">
+                                                    <b *ngIf="item.KpidetailId == 0" style="color:#009688;">
+                                                        {{item.KPIHeading}}
+                                                    </b>
+                                                    <span *ngIf="item.KpidetailId != 0">
+                                                        {{item.KPIHeading}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-3 mt-2 d-flex justify-content-end p-0">
+                                                <div class="Score" style="text-align: right;"
+                                                    (dblclick)="setSelectClick(i,item,2)">
+                                                    <div class="w-100 h-100" *ngIf="item.KpidetailId == 0">
+                                                        <span *ngIf="KPIHeadingTotal != 0 && item.Kpiid == 1">
+                                                            {{KPIHeadingTotal}}
+                                                        </span>
+                                                        <span *ngIf="KPIHeadingTotal == 0 && item.Kpiid == 1">
+                                                            {{item.Score}}
+                                                        </span>
+                                                        <span *ngIf="KPIHeadingTotal2 != 0 && item.Kpiid == 2">
+                                                            {{KPIHeadingTotal2}}
+                                                        </span>
+                                                        <span *ngIf="KPIHeadingTotal2 == 0 && item.Kpiid == 2">
+                                                            {{item.Score}}
+                                                        </span>
+                                                        <span *ngIf="item.Kpiid == 3 && !checkSelectClick(item,i,2)">
+                                                            {{item.Score}}
+                                                        </span>
+                                                        <input [id]="'input-' + i " (blur)="removeClick()" (change)="
+                                                            getValueInput(item,Score,i)"
+                                                            *ngIf="checkSelectClick(item,i,2) && item.Kpiid == 3"
+                                                            style="width: 60px;" maxlength="3"
+                                                            [value]="item.Score | number  " number
+                                                            mask="comma_separator" #Score />
+                                                    </div>
+                                                    <div class="w-100 h-100" *ngIf="item.KpidetailId != 0">
+                                                        <div *ngIf="!checkSelectClick(item,i,2) ">
+                                                            {{item.Score}}
+                                                        </div>
+                                                        <input [id]="'input-' + i " (blur)="removeClick() " autofocus
+                                                            (change)="
+                                                            getValueInput(item,Score,i)"
+                                                            *ngIf="checkSelectClick(item,i,2)" style="width: 60px;"
+                                                            maxlength="3" [value]="item.Score | number  " number
+                                                            mask="comma_separator" #Score />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+
+                                <div class="d-flex col-12 align-items-center justify-content-start">
+                                    <div class="Score" (dblclick)="setSelectClick(i,item,3)">
+                                        <div class="w-100 h-100" *ngIf="item.KpidetailId == 0">
+                                            <span *ngIf="!checkSelectClick(item,i,3) && item.Kpiid==3">
+                                                {{item.EvaluationContent}}
+                                            </span>
+                                            <textarea [id]="'input-' + i " focus-me="true" (blur)="removeClick()"
+                                                (change)="
+                                                getValueContentInput(item,Content,i)" maxlength="500" rows="3"
+                                                *ngIf="checkSelectClick(item,i,3)  && item.Kpiid==3"
+                                                style="border: none;" [value]="item.EvaluationContent"
+                                                #Content>{{item.EvaluationContent}}</textarea>
+                                        </div>
+                                        <div class="w-100 h-100" *ngIf="item.KpidetailId != 0">
+                                            <div *ngIf="!checkSelectClick(item,i,3) && item.EvaluationContent">
+                                                {{item.EvaluationContent}}
+                                            </div>
+                                            <div *ngIf="!checkSelectClick(item,i,3) && !item.EvaluationContent"
+                                                style="border: none;width: 60px;height: 30px;">
+                                                {{item.EvaluationContent}}
+                                            </div>
+                                            <div>
+                                                <textarea [id]="'input-' + i " focus-me="true" (blur)="removeClick()"
+                                                    (change)="
+                                                    getValueContentInput(item,Content,i)" maxlength="500" rows="3"
+                                                    *ngIf="checkSelectClick(item,i,3)" style="border: none;"
+                                                    [value]="item.EvaluationContent"
+                                                    #Content>{{item.EvaluationContent}}</textarea>
+                                            </div>
+                                        </div>
+                                    </div><br />
+                                </div>
+                            </mat-expansion-panel>
+
+                        </mat-accordion>
+                    </div>
+                </div>
+                <div class="card-footer ">
+                    <div class="">
+                        <div class="d-flex align-items-center col-12">
+                            <div class="d-flex align-items-center col-9 mb-2 CardTitle mt-2 px-0">
+                                <b style=" color:#008577;">
+                                    Xếp Loại
+                                </b>
+                            </div>
+                            <div class="col-3 mt-2 d-flex justify-content-end p-0">
+                                <span *ngIf="KPIClassificationResultDto.Classification">
+                                    {{KPIClassificationResultDto.Classification}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

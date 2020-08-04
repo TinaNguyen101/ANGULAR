@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-sm  navbar-dark bg-primary py-0 mr-auto"  *ngIf="currentUser" >
+    <a class="navbar-brand" href="#">HPB</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+  
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home" routerLinkActive="active"(click)="ToggleNavBar()">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/project" routerLinkActive="active"(click)="ToggleNavBar()">Projects</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/employee" routerLinkActive="active"(click)="ToggleNavBar()">Human resources</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/accounting" routerLinkActive="active"(click)="ToggleNavBar()">Accounting</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/report" routerLinkActive="active"(click)="ToggleNavBar()">Report</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/master" routerLinkActive="active"(click)="ToggleNavBar()">Master</a>
+        </li>
+      </ul>
+  </div>
+  <ul class="navbar-nav mr-auto">
+    <li class="nav-item">
+      <a href="#" class="nav-link" (click)="logout()">Logout</a>
+    </li>
+  </ul>
+  </nav>  
+<div class="container-fluid p-0">
+<router-outlet></router-outlet>
+</div>
+<footer class="mt-3 fixed-bottom">
+    <p class="text-xs-center bg-primary text-light p-2 m-0">© Copyright 2019. All rights reserved.</p>
+</footer>

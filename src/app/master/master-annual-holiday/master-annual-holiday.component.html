@@ -1,0 +1,187 @@
+<!-- PC -->
+<div class= "pc">
+    <div class="col-6 mb-3" >
+        <mat-form-field class="formChooseAnnualHoliday mr-3 ml-3">
+            <input [formControl]="searchYear" width="30px" matInput placeholder="Choose a year" maxlength="4" number
+                numbermask="0000"/>
+            <mat-error>
+                <div *ngIf="searchYear.errors?.required">Year is required </div>
+            </mat-error>
+        </mat-form-field>
+
+        <button type="button" mat-raised-button color="warn" class="ml-2" (click)="loadAnnualHoliday()">
+            <i class="material-icons ">search</i>
+        </button>        
+    </div>
+    <div class="row "  >        
+        <div class="col-xl-8 col-lg-8 col-sm-11">
+            <div class="mt-1">
+                <div class="mat-elevation-z8 m-3 ">
+                    <div class="pt-3 pb-3">
+                        <div class="col-lg-12 contentTable" #parentTable>
+                              <mat-table [dataSource]="dataSource" matSort matSortActive="Holiday" matSortDirection="desc"
+                                matSortDisableClear>
+                                <ng-container matColumnDef="Action">
+                                    <mat-header-cell *matHeaderCellDef>Action </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" data-label="Action">
+                                      <a (click) ="LoadEdit_AnnualHoliday(row.Id)" style="color: #009688; cursor: pointer;"><i class="material-icons" >edit</i></a> &nbsp;&nbsp;&nbsp;
+                                      <a (click) ="DeleteAnnualHoliday(row.Id)"><i class="material-icons" id="delete" style="color:#f44336; cursor: pointer;">delete</i></a>
+                                    </mat-cell>
+                                </ng-container>
+                                <!-- Holiday -->
+                                <ng-container matColumnDef="Holiday">
+                                  <mat-header-cell *matHeaderCellDef  > Holiday </mat-header-cell>
+                                  <mat-cell *matCellDef="let row" data-label="Holiday" >{{row.Holiday1 | date:'yyyy/MM/dd'}}</mat-cell>
+                                </ng-container>
+                                <!-- Comment -->
+                                <ng-container matColumnDef="Comment">
+                                  <mat-header-cell *matHeaderCellDef > Comment </mat-header-cell>
+                                  <mat-cell *matCellDef="let row" data-label="Comment"> {{row.Comment}} </mat-cell>
+                                </ng-container>                                                                                                                                                                                                                                             
+                
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;">
+                                </mat-row>
+                              </mat-table>
+                              <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">No records
+                                found
+                              </div>
+                        </div>
+                    </div>                   
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-sm-11 left-form">
+            <form [formGroup]="dtFormHoliday" (ngSubmit)="onSubmitData()">                
+                <div class="row">
+                    <mat-form-field class="w-50 holiday"  aria-required="false">
+                      <mat-label aria-required="false">Date</mat-label>
+                      <input matInput [matDatepicker]="picker" formControlName="HolidayDay" dateFormat>
+                      <mat-datepicker-toggle matSuffix [for]="picker" class="colorGreen"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                      <mat-error>
+                        <div *ngIf="dtFormHoliday.controls.HolidayDay.errors?.required">Holiday is required </div>
+                    </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="row">
+                    <mat-form-field class="comment " appearance="outline" flex-gt-sm fxFlex="100%">
+                        <mat-label>Comment</mat-label>
+                        <textarea formControlName="Comment" style="overflow-x: hidden" #Comment matInput maxlength="500"
+                            rows="8"></textarea>
+                        <mat-hint align="end">{{Comment.value.length}} / 500</mat-hint>
+                        <mat-error class="error">
+                            <div *ngIf="dtFormHoliday.controls.Comment.errors?.required">Comment is required </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="row">
+                    <div class="group-button text-right" >
+                        <button type="button" mat-raised-button color="primary" (click)="refresh()" >
+                            <i class="material-icons md-18 ml-1">cached</i> Refresh
+                        </button>
+                        <button type="submit" mat-raised-button color="success" (click)="goToTop()" >
+                            <i class="material-icons md-18 ml-1">save</i> Save
+                        </button>
+                    </div>
+                    
+                </div>
+            </form>                     
+        </div>
+    </div>    
+</div>
+<!-- Mobile _ Ipad -->
+<div class= "mobile">
+    <div class="row div-search" >
+        <mat-form-field >
+            <input [formControl]="searchYear" matInput placeholder="Choose a year" maxlength="4" number
+                numbermask="0000"/>
+            <mat-error>
+                <div *ngIf="searchYear.errors?.required">Year is required </div>
+            </mat-error>
+        </mat-form-field>
+
+        <button type="button" id="btn-search" mat-raised-button color="warn" class="ml-2" (click)="loadAnnualHoliday()">
+            <i class="material-icons ">search</i>
+        </button>        
+    </div>
+
+    <div class="row">
+        <div class="col-xl-3 col-lg-3 col-sm-11 left-form">
+            <form [formGroup]="dtFormHoliday" (ngSubmit)="onSubmitData()">                
+                <div class="row" style="height: 50px; margin-bottom: 5px;">
+                    <mat-form-field class="w-50 holiday"  aria-required="false">
+                      <mat-label aria-required="false">Date</mat-label>
+                      <input matInput [matDatepicker]="pickerMb" formControlName="HolidayDay"  dateFormat>
+                      <mat-datepicker-toggle matSuffix [for]="pickerMb" class="colorGreen"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerMb></mat-datepicker>
+                      <mat-error>
+                        <div *ngIf="dtFormHoliday.controls.HolidayDay.errors?.required">Holiday is required </div>
+                    </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="row" style="margin-top: 15px;">
+                    <mat-form-field class="comment " appearance="outline" flex-gt-sm fxFlex="100%">
+                        <mat-label>Comment</mat-label>
+                        <textarea formControlName="Comment" style="overflow-x: hidden" #Commentmb matInput maxlength="500"
+                            rows="4"></textarea>
+                        <mat-hint align="end">{{Commentmb.value.length}} / 500</mat-hint>
+                        <mat-error>
+                            <div *ngIf="dtFormHoliday.controls.Comment.errors?.required">Comment is required </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="row">
+                    <div class="group-button text-right" >
+                        <button type="button" mat-raised-button color="primary" (click)="refresh()" >
+                            <i class="material-icons md-18 ml-1">cached</i> Refresh
+                        </button>
+                        <button type="submit" mat-raised-button color="success" (click)="goToTop()" >
+                            <i class="material-icons md-18 ml-1">save</i> Save
+                        </button>
+                    </div>
+                    
+                </div>
+            </form>                     
+        </div>
+    </div>
+    <div class="row "  >        
+        <div class="col-xl-8 col-lg-8 col-sm-11">
+                <div class="mt-1">
+                    <div class="mat-elevation-z8 ">
+                        <div class="pt-3 pb-3">
+                            <div class="col-lg-12 contentTable" #parentTable>
+                                  <mat-table [dataSource]="dataSource" matSort matSortActive="Holiday" matSortDirection="desc"
+                                    matSortDisableClear>
+                                    <ng-container matColumnDef="Action">
+                                        <mat-header-cell *matHeaderCellDef>Action </mat-header-cell>
+                                        <mat-cell *matCellDef="let row" data-label="Action">
+                                          <a (click) ="LoadEdit_AnnualHoliday(row.Id)" style="color: #009688; cursor: pointer;"><i class="material-icons" >edit</i></a> &nbsp;&nbsp;&nbsp;
+                                          <a (click) ="DeleteAnnualHoliday(row.Id)"><i class="material-icons" id="delete" style="color:#f44336; cursor: pointer;">delete</i></a>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <!-- Holiday -->
+                                    <ng-container matColumnDef="Holiday">
+                                      <mat-header-cell *matHeaderCellDef mat-sort-header > Holiday </mat-header-cell>
+                                      <mat-cell *matCellDef="let row" data-label="Holiday" >{{row.Holiday1 | date:'yyyy/MM/dd'}}</mat-cell>
+                                    </ng-container>
+                                    <!-- Comment -->
+                                    <ng-container matColumnDef="Comment">
+                                      <mat-header-cell *matHeaderCellDef mat-sort-header> Comment </mat-header-cell>
+                                      <mat-cell *matCellDef="let row" data-label="Comment"> {{row.Comment}} </mat-cell>
+                                    </ng-container>                                                                                                                                                                                                                                             
+                    
+                                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                    <mat-row *matRowDef="let row; columns: displayedColumns;">
+                                    </mat-row>
+                                  </mat-table>
+                                  <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">No records
+                                    found
+                                  </div>
+                            </div>
+                        </div>                   
+                    </div>
+                </div>
+        </div>            
+    </div>    
+</div>

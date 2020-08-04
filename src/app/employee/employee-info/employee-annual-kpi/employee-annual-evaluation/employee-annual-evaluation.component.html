@@ -1,0 +1,27 @@
+<form [formGroup]="EvaluationForm" (ngSubmit)="onSubmitAnnualEvaluationResult()">
+    <div class="row" id="btn_save" *ngIf="(year >= yearNow)">
+        <button type="submit" mat-raised-button color="success" class="ml-2" (click)="submitData()">
+            <i class="material-icons md-18 ml-1 ">save</i> Save
+        </button>
+    </div>
+    <div class="main-form " >
+        <div class=" row" >
+            <div class="col-12 col-xl-6 "  *ngFor="let item of listAnnualEvaluation; let i = index">
+                <mat-label class="w-100" style="color:#008577 ;">
+                    {{item.EvaluationHeading}}
+                </mat-label>
+
+
+                <mat-form-field floatLabel="always" appearance="outline" class="w-100">
+                    <textarea style=" border-color: #008577;" #EvaluationContent maxlength="1000" matInput rows="5"
+                        formControlName="{{i+1}}" [ngModel]="item.EvaluationContent">
+                                                        {{item.EvaluationContent}}
+                                                </textarea>
+                    <mat-hint align="end">{{EvaluationContent.value.length}} / 1000</mat-hint>
+
+                </mat-form-field>
+            </div>
+        </div>
+
+    </div>
+</form>

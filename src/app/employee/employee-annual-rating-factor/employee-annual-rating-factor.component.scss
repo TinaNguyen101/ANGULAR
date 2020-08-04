@@ -1,0 +1,126 @@
+@import "../../_shared/css/mattable.scss";
+.mat-header-cell, .mat-cell,.scrollbar,.fDate{
+  font-size: 13px !important;
+}
+::ng-deep mat-header-cell.mat-header-cell.cdk-column-EmployeeName.mat-column-EmployeeName.ng-star-inserted{
+  width: 20%;
+}
+.btn-success:hover {
+  color: #fff;
+  background-color: #2a9744;
+  border-color: #22a541;
+}
+.btn-success {
+  color: #fff;
+  background-color: #28a743;
+  border-color: #28a745;
+}
+.example-sidenav-content{
+  min-height: 600px;
+}
+.btnFixed{
+  position: fixed;
+ padding-bottom: 30px;
+  z-index: 999;
+}
+mat-drawer-container{
+  position: fixed;
+  width: 100%;
+  //overflow-y: hidden;
+}
+::ng-deep .mat-column-RatingYearLeader1 {
+  justify-content: center;
+}
+::ng-deep .mat-column-RatingYearLeader2 {
+  justify-content: center;
+}
+::ng-deep .mat-column-RatingYearMember1 {
+  justify-content: center;
+}
+::ng-deep .mat-column-RatingYearMember2 {
+  justify-content: center;
+}
+.mat-column-EmployeeName {
+  flex: 0 0 20% !important;
+}
+.mat-header-cell-RatingYearLeader1 {
+  flex: 0 0 40% !important;
+  justify-content: center;
+}
+.mat-header-cell-RatingYearLeader2 {
+  flex: 0 0 40% !important;
+  justify-content: center;
+}
+.modal-content .modal-header {
+  background-color: #008577;
+  padding: 0px ;
+  border-bottom: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.modal-content .modal-body {
+  padding: 20px 24px 24px;
+}
+.btnClose{
+  align-items: baseline;
+}
+.price-tag span{
+  display: inline-block;
+  width: 120px;
+  color: #fff;
+  text-align: left !important;
+  padding-left: 5px;
+	background-image: linear-gradient(-45deg, #ffffff 15px, transparent 15px), linear-gradient(-135deg, #ffffff 15px, transparent 15px);
+}
+
+.scrollbar {
+  height: 250px;
+  overflow-y: scroll;
+  background-color: #F5F5F5;
+  white-space: pre-wrap
+}
+
+.custDetail{
+  font-size: 12px;
+  text-align: right;
+}
+
+#cost{
+  float: right !important;
+  padding-right: 5px;
+  padding-top:5px;
+}
+.contentTable{
+  overflow-y: auto;
+  max-height: calc(100vh - 220px);
+}
+
+.mat-header-row{
+  width: 100%;
+  position: sticky;
+  top: 0;
+}
+::ng-deep.mat-paginator .mat-paginator-page-size-label{
+  display: none;
+}
+
+.colorGreen { color: #009688; }
+
+@media screen and (max-width: 960px) {
+  .hiddenClass {
+    height: 10px !important;
+  }
+  .contentTable{
+    margin: 0 !important;
+    margin-top: 15px !important;
+  }
+  mat-paginator{
+    position: relative;
+  }
+  .custDetail{
+    font-size: 12px;
+  }
+  .contentTable{
+    max-height: calc(100vh - 300px);  
+  }
+}

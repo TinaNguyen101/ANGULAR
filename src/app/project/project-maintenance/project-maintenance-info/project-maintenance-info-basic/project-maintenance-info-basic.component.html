@@ -1,0 +1,173 @@
+<form [formGroup]="form" (ngSubmit)="onSubmitData()"  [ngClass]="{'ng-submitted': submitted}"  >
+        <div class="example-container pr-4 pb-5">
+                <div fxLayout="row wrap" fxLayout.xs="column" fxLayout.sm="column"  fxLayout.md="row" fxLayout.lg="row" fxFlex fxLayoutWrap
+                        [ngStyle.xs]="{'display': 'grid'}" [ngStyle.sm]="{'display': 'grid'}"
+                        [ngStyle.md]="{'display': 'flex'}" [ngStyle.lg]="{'display': 'flex'}"
+                        [ngStyle.xl]="{'display': 'flex'}">
+                        <div fxFlex="45%" style="margin-bottom: 3%">
+                                <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutAlign="left">
+                                        <mat-form-field fxFlex="95%">
+                                                <i matPrefix class="material-icons md-18 colorGreen pr-2">info</i>
+                                                <mat-label>Maintenance Name</mat-label>
+                                                <input formControlName="MaintenanceName" #MaintenanceName matInput
+                                                        maxlength="200">
+                                                <mat-hint align="end">{{MaintenanceName.value.length}} / 200</mat-hint>
+                                                <mat-error>
+                                                        <div *ngIf="form.controls.MaintenanceName.errors?.required">MaintenanceName is required</div>
+                                                </mat-error>
+
+                                        </mat-form-field>
+                                </div>
+                                <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="5%"
+                                        fxLayoutAlign="left">
+                                        <mat-form-field fxFlex="45%">
+                                                <mat-label>Start Date</mat-label>
+                                                <input type="text" specialIsAlphaNumeric formControlName="startDate"
+                                                        matInput [matDatepicker]="picker" placeholder="yyyy/mm/dd" (ngModelChange) ="checkValidDate(1)"
+                                                         #startDate 
+                                                         dateFormat>
+                                                <mat-error>
+                                                        <div *ngIf="form.controls.startDate.errors?.required">Start Date is required</div>
+                                                        <div *ngIf="form.controls.startDate.errors?.compareDate">Start date is less than end date </div>
+                                                </mat-error>
+                                                <mat-datepicker-toggle class="colorGreen" matSuffix [for]="picker">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field>
+                                        <mat-form-field fxFlex="45%">
+                                                <mat-label>End Date</mat-label>
+                                                <input type="text" formControlName="endDate" matInput
+                                                        [matDatepicker]="picker2" placeholder="yyyy/mm/dd" (ngModelChange) ="checkValidDate(0)"
+                                                        #endDate
+                                                        dateFormat >
+                                                <mat-error>
+                                                        <div *ngIf="form.controls.endDate.errors?.required">End Date is required</div>
+                                                        <div *ngIf="form.controls.endDate.errors?.compareDate">End date is greater than start date </div>
+                                                </mat-error>
+                                                <mat-datepicker-toggle class="colorGreen" matSuffix [for]="picker2">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #picker2></mat-datepicker>
+                                        </mat-form-field>
+                                </div>
+                                <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="5%"
+                                        fxLayoutAlign="left">
+                                        <mat-form-field fxFlex="45%">
+                                                <i matPrefix class="material-icons md-18 colorGreen pr-2">person</i>
+                                                <mat-label>Estimate ManDay</mat-label>
+                                                <input mask="comma_separator" type="text" maxlength="6"
+                                                        class="example-right-align" formControlName="EstimateManDay"
+                                                        numberCommaSeparator
+                                                        matInput maxlength="6" >
+                                        </mat-form-field>
+                                        <div class="input-group" fxFlex="45%">
+                                                <mat-form-field fxFlex="82%">
+                                                        <i matPrefix
+                                                                class="material-icons md-18 colorGreen pr-2">attach_money</i>
+                                                        <mat-label>Estimate Cost</mat-label>
+                                                        <input mask="comma_separator" type="text" (blur)="checkShowHideValid()" 
+                                                                class="example-right-align"
+                                                                formControlName="estimateCost" matInput maxlength="12"  #estimateCost
+                                                                numberCommaSeparator>
+                                                        <mat-error>
+                                                                <div *ngIf="form.controls.estimateCost.errors?.symboyRequired"> Currency symbol is required</div>
+                                                        </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="input-group-append" fxFlex="18%" >
+                                                        <mat-select  *ngIf="detectmob()" class="CostCurrencySelect" (ngModelChange) ="checkValidEstimateCost()"
+                                                                formControlName="CostCurrency" #CostCurrency  style="margin-top: 1px">  
+                                                                <mat-option></mat-option>
+                                                                <mat-option *ngFor="let cost of MstCostCurrency"
+                                                                        [value]="cost.Id">
+                                                                        {{cost.CostCurrencySymboy}}</mat-option>
+                                                        </mat-select>
+                                                        <mat-select  *ngIf="!detectmob()" class="CostCurrencySelect" (ngModelChange) ="checkValidEstimateCost()"
+                                                                formControlName="CostCurrency" #CostCurrency  >  
+                                                                <mat-option></mat-option>
+                                                                <mat-option *ngFor="let cost of MstCostCurrency"
+                                                                        [value]="cost.Id">
+                                                                        {{cost.CostCurrencySymboy}}</mat-option>
+                                                        </mat-select>
+                                                        <mat-error>
+                                                                        <div *ngIf="form.controls.CostCurrency.errors?.symboyRequired"> </div>
+                                                                </mat-error>
+                                                </mat-form-field>
+                                        </div>
+                                </div>
+                                <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="5%" 
+                                        fxLayoutAlign="left">
+                                        <mat-form-field fxFlex="45%">
+                                                <mat-label>Delivery Date</mat-label>
+                                                <input formControlName="DeliveryDate" matInput [matDatepicker]="picker3"
+                                                        placeholder="yyyy/mm/dd" dateFormat >
+                                                <mat-datepicker-toggle class="colorGreen" matSuffix [for]="picker3">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #picker3></mat-datepicker>
+                                        </mat-form-field>
+                                        <mat-form-field fxFlex="45%">
+                                                <mat-label>Payment Date</mat-label>
+                                                <input formControlName="paymentDate" matInput [matDatepicker]="picker4"
+                                                        placeholder="yyyy/mm/dd" dateFormat>
+                                                <mat-datepicker-toggle class="colorGreen" matSuffix [for]="picker4">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #picker4></mat-datepicker>
+                                        </mat-form-field>
+                                </div>
+                        </div>
+                        <div fxFlex="55%"  >
+                                <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap 
+                                        fxLayoutAlign="left">
+                                        <mat-radio-group [(ngModel)]="defaultCheck"  class="radio" formControlName="MaintenanceStatusId" fxFlex="100%" [(ngModel)]="defaultCheck">
+                                                <mat-radio-button *ngFor="let item of MstProjectStatus"  style="padding-right: 0%"
+                                                        [value]="item.Id">
+                                                        <div style="font-size: 75%" class="badge"
+                                                                [ngStyle]="convertStyleObject(item.StyleCss)" >
+                                                                <span style="line-height: 1.5;padding-left: 5px !important;">
+                                                                        {{item.ProjectStatusName}}
+                                                                    </span>
+                                                               </div>
+                                                </mat-radio-button>
+                                        </mat-radio-group>
+                                </div>
+                                <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutAlign="left"  >
+                                        <mat-form-field appearance="outline" fxFlex="100%">
+                                                <mat-label>Maintenance Content</mat-label>
+                                                <textarea formControlName="maintenanceContent" #maintenanceContent style="overflow-x: hidden"
+                                                        matInput maxlength="4000" rows="10"></textarea>
+                                                <mat-error>
+                                                        <div *ngIf="f.maintenanceContent.errors?.required"> Maintenance Content is required</div>
+                                                </mat-error>
+                                                <mat-hint align="end">{{maintenanceContent.value.length}} / 4000
+                                                </mat-hint>
+                                        </mat-form-field>
+                                </div>
+                                <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="2%"
+                                        fxLayoutAlign="end stretch">
+                                        <div *ngIf="projectMaintenanceId"> <button fxFlex type="button" (click)="Back()"
+                                                        mat-raised-button color="primary" class="btnWidth">
+                                                        <i class="material-icons md-18 pr-1">arrow_back</i>Back</button>
+                                        </div>
+                                        <div *ngIf="projectMaintenanceId"> <button fxFlex type="submit" (click)="goToTop()"
+                                                        mat-raised-button color="success" class="btnWidth">
+                                                        <i class="material-icons md-18 pr-1">save</i>Edit</button>
+                                        </div>
+                                        <div *ngIf="projectMaintenanceId"> <button fxFlex type="button" 
+                                                        (click)="deleteProjectMaintenance()" mat-raised-button
+                                                        color="warn" class="btnWidth">
+                                                        <i class="material-icons md-18 pr-1">delete</i>Delete</button>
+                                        </div>
+
+                                        <div *ngIf="!projectMaintenanceId"> <button fxFlex type="button"  (click)="Back()"
+                                                        mat-raised-button color="primary" class="btnWidth">
+                                                        <i class="material-icons md-18 pr-1">arrow_back</i>Back</button>
+                                        </div>
+                                        <div *ngIf="!projectMaintenanceId"> <button fxFlex type="submit" (click)="goToTop()"
+                                                        mat-raised-button color="success" class="btnWidth">
+                                                        <i class="material-icons md-18 pr-1">save</i>Create</button>
+                                        </div>
+
+                                </div>
+
+                        </div>
+                </div>
+        </div>
+</form>

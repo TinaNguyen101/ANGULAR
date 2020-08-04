@@ -1,0 +1,202 @@
+<div class="lst" style="height: calc(100vh - 150px);">
+    <!-- Drawer container -->
+    <mat-drawer-container class="h-100" [hasBackdrop]='true'>
+
+        <!-- Sub drawer -->
+        <mat-drawer #drawer mode="over" style="width: 300px;font-size: 13px" position='end'>
+            <div>
+                <form [formGroup]="dtFormSearch" (ngSubmit)="onSubmitSearch()">
+
+                    <!-- btn ArrowBack -->
+                    <button mat-mini-fab color="warn" class="mat-sm"
+                        style="margin-top: 1px; border-radius: 0 4px 4px 0; position: absolute; z-index: 9999; top: 0px; overflow: hidden;"
+                        (click)="drawer.toggle()">
+                        <mat-icon *ngIf="drawer.opened" aria-hidden="false">
+                            arrow_forward_ios
+                        </mat-icon>
+                    </button>
+
+                    <!-- txt Search Employee Name -->
+                    <mat-form-field class="w-100 p-3">
+                        <input matInput placeholder="Employee Name" formControlName="EmpName">
+                    </mat-form-field>
+                    <br>
+
+                    <!-- txt Search Employee Address -->
+                    <mat-form-field class="w-100 p-3">
+                        <input matInput placeholder="Address" formControlName="EmpAddress">
+                    </mat-form-field>
+                    <br>
+
+                    <!-- txt Search Employee Gender -->
+                    <mat-form-field class="w-100 p-3">
+                        <mat-select placeholder="Gender" formControlName="EmpGender">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let item of lstGender " [value]="item.Id">
+                                {{item.GenderName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+
+                    <!-- cbx Search EmpStatus -->
+                    <mat-form-field class="w-100 p-3">
+                        <mat-select placeholder="Status" formControlName="EmpStatusId">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let item of lstEmplomentStatus " [value]="item.Id">
+                                {{item.EmpStatus}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+
+                    <!-- cbx Search Employee DepartmentName -->
+                    <mat-form-field class="w-100 p-3">
+                        <mat-select placeholder="Department" formControlName="DeptId">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let item of lstDepartment " [value]="item.Id">
+                                {{item.DepartmentName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+
+                    <!-- datepicker & calendar Start Date -->
+                    <mat-form-field class="w-50 pl-3" aria-required="false">
+                        <mat-label aria-required="false">Start Date From</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="EmpStartDate" maxlength="8" dateFormat
+                            number mask="00000000">
+                        <mat-datepicker-toggle matSuffix [for]="picker" class="colorGreen"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                    <!-- datepicker & calendar End Date -->
+                    <mat-form-field class="w-50 pl-2 pr-3">
+                        <mat-label aria-required="false">To</mat-label>
+                        <input matInput [matDatepicker]="picker2" formControlName="EmpEndDate" maxlength="8" dateFormat
+                            number mask="00000000">
+                        <mat-datepicker-toggle matSuffix [for]="picker2" class="colorGreen"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                    <br>
+
+                    <!-- btn Reresh & Search -->
+                    <div class="text-right pr-3">
+                        <button type="button" mat-raised-button color="primary" class="ml-2" (click)="refersh()">
+                            <i class="material-icons ">cached</i>
+                        </button>
+                        <button type="submit" mat-raised-button color="warn" class="ml-2" (click)="goToTop()">
+                            <i class="material-icons ">search</i>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </mat-drawer>
+        <!-- End sub drawer -->
+
+        <!-- Main table -->
+        <mat-drawer-content class="h-100" style="position: relative;">
+            <button mat-mini-fab color="warn" class="mat-sm"
+                style="margin-top: 1px; border-radius: 4px 0  0 4px ; position: absolute; z-index: 9999;right: 0;"
+                (click)="drawer.toggle()">
+                <mat-icon *ngIf="!drawer.opened" aria-hidden="false">search</mat-icon>
+            </button>        
+            <button [routerLink]="['create']" mat-mini-fab color="success" class="mat-sm"
+                style="margin-top: 1px; margin-right: 40px; border-radius: 4px; position: absolute; z-index: 9999;right: 0; width: 100px !important">
+                <mat-icon>add</mat-icon>Create
+            </button>     
+            <div class="mat-elevation-z8 mb-3 ml-3 mr-3 " style="margin-top: 35px">
+                <div class="pt-3 pb-3">
+                    <div class="col-lg-12 contentTable" #parentTable>
+                        <mat-table [dataSource]="dataSource" matSort matSortActive="EmpName" matSortDirection="asc"
+                            matSortDisableClear>
+
+                            <!-- Action -->
+                            <ng-container matColumnDef="Action">
+                                <mat-header-cell *matHeaderCellDef>Action </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Action">
+                                    <a [routerLink]="['info', row.Id]">
+                                        <i class="material-icons">edit</i>
+                                    </a>
+                                </mat-cell>
+                            </ng-container>
+
+                            <!-- EmpName -->
+                            <ng-container matColumnDef="EmpName">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Employee Name </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Employee Name">
+                                    <a #btn1 data-toggle="modal" data-target="#myModal" class="someclass"
+                                        id="{{row.Id}}">
+                                        {{row.EmpName}}
+                                    </a>
+                                </mat-cell>
+                            </ng-container>
+
+                            <!-- Gender -->
+                            <ng-container matColumnDef="EmpGender">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Gender </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Gender">
+                                    {{row.EmpGender === 1 ? 'Female' : 'Male'}}
+                                </mat-cell>
+
+                            </ng-container>
+
+                            <!-- EmpStatusId -->
+                            <ng-container matColumnDef="EmpStatusId">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Status">
+                                    {{row.EmpStatus}}
+                                </mat-cell>
+                            </ng-container>
+
+                            <!-- Department -->
+                            <ng-container matColumnDef="DeptId">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Department </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Department">
+                                    {{row.DepartmentName}}
+                                </mat-cell>
+                            </ng-container>
+
+                            <!-- EmpStartDate -->
+                            <ng-container matColumnDef="EmpStartDate">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Start Date
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Start Date">
+                                    {{row.EmpStartDate | date:'yyyy/MM/dd'}}
+                                </mat-cell>
+                            </ng-container>
+
+                            <!-- EmpAddress -->
+                            <ng-container matColumnDef="EmpAddress">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Address </mat-header-cell>
+                                <mat-cell *matCellDef="let row" data-label="Address">
+                                    {{row.EmpAddress}}
+                                </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                        </mat-table>
+
+                        <!-- No records found -->
+                        <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">
+                            No records found
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- paging dataSource -->
+                <mat-paginator [pageSizeOptions]="[5, 10, 15, 25, 50, 100]" [pageSize]="10" (click)="goToTop()" class="">
+                </mat-paginator>
+
+
+            </div>
+        </mat-drawer-content>
+        <!-- End main table -->
+
+    </mat-drawer-container>
+    <!-- End drawer container -->
+</div>

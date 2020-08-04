@@ -1,0 +1,180 @@
+@import "../../../_shared/css/mattable.scss";
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+.btn-primary:hover {
+    color: #fff;
+    background-color: #0069D8;
+    border-color: #0062cc;
+}
+.btn-warning:hover {
+    color: #212529;
+    background-color: #e0a800;
+    border-color: #d39e00;
+}
+.btn-warning {
+    color: #212529;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+.btn-dark:hover {
+    color: #fff;
+    background-color: #23272b;
+    border-color: #1d2124;
+}
+.btn-dark {
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+}
+.btn-danger:hover {
+    color: #fff;
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+.btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+.btn-success:hover {
+    color: #fff;
+    background-color: #2a9744;
+    border-color: #22a541;
+}
+.btn-success {
+    color: #fff;
+    background-color: #28a743;
+    border-color: #28a745;
+}
+.table td {
+    vertical-align: middle;   
+}
+tr th{
+    color: #fff;
+    background-color: #008577
+}
+button {
+    &:focus {
+        outline: none;
+    }
+}
+#lbl_upLoadFile{
+    display: none;
+}
+#btnAll{
+  display: flex; 
+}
+table {
+    width: 100%;
+  }
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+.icon{
+    font-size: 1rem;
+}
+
+.mat-column-AttachmentFileName a{  
+  padding-top: 1%;
+  padding-bottom: 0.5%;
+}
+.mat-column-Action{  
+  padding-top: 0.5%;
+  padding-bottom: 0.5%;
+}
+.mat-header-cell.mat-column-Action{  
+  justify-content: center;
+}
+.mat-column-CreatedDate{  
+ justify-content: center;
+}
+
+//material
+.material-icons.cancel { color: rgb(255, 0, 106); }
+.material-icons.download { color: rgb(0, 174, 255); }
+.material-icons.upload { color: rgb(132, 0, 255); }
+.material-icons.delete { color: rgb(255, 0, 0); }
+::ng-deep .mat-progress-bar-fill::after {
+    background-color:#008577;
+}
+
+::ng-deep .mat-progress-bar-buffer {
+    background: #d2fffb;
+}
+::ng-deep .mat-progress-bar.indeterminate {
+    height: 6px;
+    width: 80px;
+}
+
+.determinate {
+    width: 100%;
+}
+.indeterminate {
+  width: 100%;
+}
+.mat-elevation-z8{
+    margin-left: 0px; 
+    overflow-y: auto;
+    overflow-x: hidden;  
+}
+.main-attach{
+    width: 100%;   
+}
+
+@media screen and (min-width: 1025px) {
+.container{
+    float: left;
+}
+.mat-column-Action{  
+    flex: 0 0 85px !important;
+
+}
+.mat-column-CreatedDate{  
+    flex: 0 0 110px !important;
+}
+.mat-table {
+  overflow: auto;
+  max-height: calc(100vh - 380px) ;
+}
+element-row {
+  position: relative;
+}
+      
+.element-row {
+  cursor: pointer;
+}
+}
+@media screen and (max-width: 1025px) {
+    td{
+        font-size: 0.7rem!important;
+    }
+    .icon{
+        font-size: 1rem;
+    }
+    #btnAll{
+        font-size: 0.9rem!important;
+        max-width: 95%;
+    }
+    .th_UpDate{
+        width: 5%!important;
+    }
+}
+@media screen and (max-width: 769px) {       
+    td{
+        font-size: 0.7rem!important;
+    }
+    .icon{
+        font-size: 1rem;
+    }
+    #btnAll{
+        font-size: 0.9rem!important;
+        max-width: 95%;
+    }
+    .th_UpDate{
+        width: 5%!important;
+    }
+}

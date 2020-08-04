@@ -1,0 +1,398 @@
+<div class="dialog dialog-image-bonus container-dialog" *ngIf="userSelected.DeptId == 2">
+    <div
+        class="dialog-header container-dialog position-relative d-block d-lg-flex align-items-center px-2 py-1 p-lg-2 justify-content-between">
+        <p class="my-0 my-lg-3" style="white-space: normal;"> Monthly Image bonus</p>
+        <div class="d-flex justify-content-lg-end justify-content-start mr-4 flex-nowrap">
+            <div class="text-right d-flex d-lg-block">
+                <div>{{userSelected.EmpName}} </div>
+                <div> <span class="d-inline d-lg-none"> (</span>{{yearMonthFomat}}<span
+                        class="d-inline d-lg-none">)</span></div>
+            </div>
+        </div>
+        <mat-dialog-actions class="position-absolute btn-close-dialog">
+            <div>
+                <button type="button" mat-dialog-close class="close m-0 text-right">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </mat-dialog-actions>
+
+    </div>
+
+    <mat-dialog-content #wrapMonthlyOvertime class="container-dialog dialog-content px-3 pt-1 pb-3 pb-lg-0 m-0">
+        <div class="form-wrap w-100">
+            <form style="font-size: 14px;" [formGroup]="formImageBonus" class="w-100 mb-0">
+                <div class="w-100">
+                    <!-- Form -->
+                    <div class="w-100">
+                        <div class="d-flex w-100 flex-wrap flex-lg-nowrap align-items-center justify-content-between">
+                            <mat-form-field class="w-100 w-lg-50 pr-0 pr-lg-3">
+                                <i matPrefix style="font-size: 16px;"
+                                    class="material-icons md-18 colorGreen iconSmall pr-2">info_outline</i>
+                                <input [readonly]="isDisable" mask="comma_separator" (keyup)="onChangeTotalImage($event)"                                
+                                    (change)="getTotalImageBonus(); onChangeTotalImage($event)" class="text-right"
+                                    formControlName="TotalImageInMonth" matInput maxlength="4"
+                                    placeholder="Total Image in month" numberCommaSeparator>
+                                <mat-error>
+                                    <div *ngIf="formImageBonus.controls.TotalImageInMonth.errors?.required">
+                                        Total Image in month is required </div>
+                                </mat-error>
+                            </mat-form-field>
+                            <div class="w-100 w-lg-50 d-flex justify-content-between">
+                                [{{TotalImageBasic}} Target / {{TotalImageBonus||0}} Bonus]
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 flex-wrap flex-lg-nowrap align-items-center justify-content-between">
+                            <mat-form-field class="w-100 w-lg-50 pr-0 pr-lg-3">
+                                <i matPrefix style="font-size: 16px;"
+                                    class="material-icons  material-icons-outlined md-18 colorGreen iconSmall pr-2">info_outline</i>
+                                <input [readonly]="isDisable" mask="comma_separator" (keyup)="reloadImageFirstweed($event)"
+                                    (change)="getTotalImageBonus(); onChangeTotalImage(); reloadImageFirstweed($event)"
+                                    class="text-right" formControlName="ImageLastWeek" matInput maxlength="4"
+                                    placeholder="Image (Saturday & Sunday)" numberCommaSeparator>
+                                <mat-error>
+                                    <div *ngIf="formImageBonus.controls.ImageLastWeek.errors?.required">
+                                        Image (Saturday & Sunday) is required </div>
+                                    <div *ngIf="formImageBonus.controls.ImageLastWeek.errors?.valueNotValid">
+                                        Image (Saturday & Sunday) is not valid</div>
+                                </mat-error>
+                            </mat-form-field>
+                            <div class="w-100 w-lg-50 d-flex justify-content-between">
+                                <p>Unit Price:
+                                    ({{(lstMstImageUnitPrice&&lstMstImageUnitPrice[0]?.UnitPrice ||0) | number: '1.0'}}
+                                    đ)</p>
+                                <p> {{ (SatAndSunBonus  || 0) | number: '1.0'}}
+                                    đ</p>
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 flex-wrap flex-lg-nowrap align-items-center justify-content-between">
+                            <mat-form-field class="w-100 w-lg-50 pr-0 pr-lg-3">
+                                <i matPrefix style="font-size: 16px;"
+                                    class="material-icons md-18 colorGreen iconSmall pr-2">info_outline</i>
+                                <input [readonly]="isDisable" mask="comma_separator" (keyup)="reloadImageLastweed($event)"
+                                    (change)="getTotalImageBonus(); onChangeTotalImage(); reloadImageLastweed($event)"
+                                    class="text-right" formControlName="ImageFirstWeek" matInput maxlength="4"
+                                    placeholder="Image (Monday to Friday)" numberCommaSeparator>
+                                <mat-error>
+                                    <div *ngIf="formImageBonus.controls.ImageFirstWeek.errors?.required">
+                                        Image (Monday to Friday) is required </div>
+                                    <div *ngIf="formImageBonus.controls.ImageFirstWeek.errors?.valueNotValid">
+                                        Image (Monday to Friday) is not valid</div>
+                                </mat-error>
+                            </mat-form-field>
+                            <div class="w-100 w-lg-50 d-flex justify-content-between">
+                                <p>Unit Price:
+                                    ({{(lstMstImageUnitPrice&&lstMstImageUnitPrice[1]?.UnitPrice ||0) | number: '1.0'}}
+                                    đ)</p>
+                                <p> {{ (MonToFriBonus || 0) | number: '1.0'}}
+                                    đ</p>
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 flex-wrap flex-lg-nowrap align-items-center justify-content-between">
+                            <div class="w-100 w-lg-50 pr-0 pr-lg-3">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Comment</mat-label>
+                                    <textarea [readonly]="isDisable" formControlName="Comment" style="overflow-x: hidden; width: 100%;"
+                                        matInput maxlength="500" rows="5"></textarea>
+                                </mat-form-field>
+                                <p class="w-100 text-right" style="margin-top: -20px;font-size: 75%;">
+                                    {{formImageBonus.controls.Comment.value?formImageBonus.controls.Comment.value.length:'0'}}/500
+                                </p>
+                            </div>
+                            <div class="w-100 w-lg-50 d-flex flex-wrap align-items-between">
+                                <div class="w-100 d-flex justify-content-between">
+                                    <p class="font-weight-bold">Total:</p>
+                                    <p class="font-weight-bold">{{ (+SatAndSunBonus) + (+MonToFriBonus) | number: '1.0' }} đ</p>
+                                </div>
+                                <div class="w-100 d-flex justify-content-end">
+                                    <button [disabled] = "isDisable" type="button" *ngIf="!isEdit" (click)="onSubmitForm(false)"
+                                        mat-raised-button color="success" class="py-1 ml-2">
+                                        <i class="material-icons md-18 ml-1 ">save</i> Create
+                                    </button>
+                                    <button [disabled] = "isDisable" type="button" *ngIf="isEdit" (click)="onSubmitForm(true)" mat-raised-button
+                                        color="success" class="py-1 ml-2">
+                                        <i class="material-icons md-18 ml-1 ">save</i> Edit
+                                    </button>
+                                    <button [disabled] = "isDisable" type="button" mat-raised-button (click)="onDeleteImageBonus()"
+                                        *ngIf="isEdit" color="warn" class="py-1 ml-2">
+                                        <i class="material-icons md-18 ml-1 ">delete</i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+
+    </mat-dialog-content>
+
+</div>
+
+<div class="dialog dialog-monthly-overtime" *ngIf="userSelected.DeptId == 1">
+    <div class="container-dialog"
+        class="dialog-header position-relative d-block d-md-flex align-items-center px-2 py-1 p-md-2 justify-content-between">
+        <p class="my-0 my-md-3" style="white-space: normal;"> Monthly Overtime</p>
+        <div class="d-flex justify-content-md-end justify-content-start mr-4 flex-nowrap">
+            <div class="text-right d-flex d-md-block">
+                <div>{{userSelected.EmpName}} </div>
+                <div> <span class="d-inline d-md-none"> (</span>{{yearMonthFomat}}<span
+                        class="d-inline d-md-none">)</span></div>
+            </div>
+        </div>
+        <mat-dialog-actions class="position-absolute btn-close-dialog">
+            <div>
+                <button type="button" mat-dialog-close class="close m-0 text-right">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </mat-dialog-actions>
+
+    </div>
+    <mat-dialog-content #wrapMonthlyOvertime id="wrapMonthlyOvertime" class="dialog-content p-2 m-0">
+        <div class="form-wrap">
+            <form [formGroup]="formMonthlyOvertime" class="container-fluid">
+                <div class="row">
+                    <!-- Form -->
+                    <div class="col-12 col-xl-4 ">
+                        <div class="d-flex w-100">
+                            <mat-radio-group autofocus class="radio w-100 d-flex" formControlName="TypeProject">
+                                <mat-radio-button [disabled] = "isDisable" class="mr-3" (change)="changeListProject($event)"
+                                    *ngFor="let item of [{text:'Project', value:'0'},{text:'Project Mainternance', value:'1'}]"
+                                    [value]="item.value">
+                                    <span>{{item.text}}</span>
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <mat-form-field class="w-100">
+                                <mat-label>Project
+                                    {{formMonthlyOvertime.controls.TypeProject.value =='1' ? 'Mainternance': ''}}
+                                </mat-label>
+                                <mat-select [disabled] = "isDisable" disableOptionCentering placeholder="Project"
+                                    formControlName="ProjectId">
+                                    <div class="row m-0">
+                                        <span class="m-1"><i class="material-icons colorGreen">
+                                                search
+                                            </i></span>
+                                        <input autocomplete="off" (blur)="clearInput()" #filterName matInput
+                                            placeholder="Filter" class="col-lg-10 col-10" value=""
+                                            [formControl]="custFilterCtrl" (ngModelChange)="filterProject()" />
+                                    </div>
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let project of listProjectFilter" [value]="project.Id">
+                                        <span class="ml-2">{{project.ProjectName}}</span>
+                                    </mat-option>
+                                </mat-select>
+
+                                <!-- <mat-select [disabled] = "isDisable" disableOptionCentering placeholder="Project Mainternance"
+                                    *ngIf="formMonthlyOvertime.controls.TypeProject.value =='1'"
+                                    formControlName="ProjectId">
+                                    <div class="row m-0">
+                                        <span class="m-1"><i class="material-icons colorGreen">
+                                                search
+                                            </i></span>
+                                        <input autocomplete="off" (blur)="clearInput()" #filterName matInput
+                                            placeholder="Filter" class="col-lg-10 col-10" value=""
+                                            [formControl]="custFilterCtrl" (ngModelChange)="filterProject()" />
+                                    </div>
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let project of listProjectFilter" [value]="project.Id">
+                                        <span class="ml-2">{{project.ProjectName}}</span>
+                                    </mat-option>
+                                </mat-select> -->
+
+
+                                <mat-error>
+                                    <div *ngIf="formMonthlyOvertime.controls.ProjectId.errors?.required">
+                                        Project
+                                        {{formMonthlyOvertime.controls.TypeProject.value =='1' ? 'Mainternance': ''}} is
+                                        required</div>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="d-flex w-100 mb-3 flex-wrap flex-md-nowrap align-items-center">
+                            <mat-form-field class="w-100 w-md-50 max-width-form-field pr-0 pr-md-2">
+                                <mat-label>Overtime Date</mat-label>
+                                <input [readonly]="isDisable" (blur)="getWageOvertime(10)" (change)="getWageOvertime()" type="text"
+                                    formControlName="OvertimeDate" matInput [matDatepicker]="picker2"
+                                    placeholder="yyyy/mm/dd" dateFormat>
+                                <mat-datepicker-toggle matSuffix [for]="picker2" class="colorGreen">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker2></mat-datepicker>
+                                <mat-error>
+                                    <div>Overtime Date is required </div>
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="w-100 w-md-50 max-width-form-field pl-0 pl-md-2">
+                                <mat-label>Payment Date</mat-label>
+                                <input [readonly]="isDisable" type="text" formControlName="PaymentDate" matInput [matDatepicker]="picker3"
+                                    placeholder="yyyy/mm/dd" dateFormat>
+                                <mat-datepicker-toggle matSuffix [for]="picker3" class="colorGreen">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker3></mat-datepicker>
+                                <mat-error>
+                                    <div>Payment Date is required </div>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="d-flex w-100 mb-3 align-items-center">
+                            <div class="w-100 d-flex flex-nowrap justify-content-between">
+                                <p class="mb-0">Wage:</p>
+                                <p class="mb-0">{{ (wageIT || 0) | number: '1.0'}} đ</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <mat-form-field class="w-50 pr-2">
+                                <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">alarm</i>
+                                <input [readonly]="isDisable" appHourMin (ngModelChange)="checkValueTime($event, 0)" (blur)="getWageOvertime(10)"
+                                    (change)="getWageOvertime()" class="text-right" formControlName="TimeFrom" matInput
+                                    maxlength="5" placeholder="Time From">
+                                <mat-error>
+                                    <div *ngIf="formMonthlyOvertime.controls.TimeFrom.errors?.required">
+                                        Time From is required </div>
+                                    <div *ngIf="formMonthlyOvertime.controls.TimeFrom.errors?.valueNotValid">
+                                        Time From is less than Time To </div>
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="w-50 pl-2">
+                                <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">alarm</i>
+                                <input [readonly]="isDisable" appHourMin (ngModelChange)="checkValueTime($event, 1)" (blur)="getWageOvertime()"
+                                    (change)="getWageOvertime()" class="text-right" formControlName="To" matInput
+                                    maxlength="5" placeholder="To">
+                                <mat-error>
+                                    <div *ngIf="formMonthlyOvertime.controls.To.errors?.required">
+                                        Time To is required </div>
+                                    <div *ngIf="formMonthlyOvertime.controls.To.errors?.valueNotValid">
+                                        Time To is greater than Time From </div>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="d-flex w-100 justify-content-end">
+                            <button [disabled] = "isDisable" type="button" *ngIf="isEditIT" (click)="onResetFormOvertime()" mat-raised-button
+                                color="primary" class="py-1 ml-2">
+                                <i class="material-icons md-18 ml-1 ">cached</i> Reset
+                            </button>
+                            <button [disabled] = "isDisable" type="button" *ngIf="!isEditIT" (click)="onSubmitFormOvertime(false)"
+                                mat-raised-button color="success" class="py-1 ml-2">
+                                <i class="material-icons md-18 ml-1 ">save</i> Create
+                            </button>
+                            <button [disabled] = "isDisable" type="button" *ngIf="isEditIT" (click)="onSubmitFormOvertime(true)"
+                                mat-raised-button color="success" class="py-1 ml-2">
+                                <i class="material-icons md-18 ml-1 ">save</i> Edit
+                            </button>
+                            <button [disabled] = "isDisable" type="button" mat-raised-button (click)="onDeleteMonthlyOvertime()" *ngIf="isEditIT"
+                                color="warn" class="py-1 ml-2">
+                                <i class="material-icons md-18 ml-1 ">delete</i> Delete
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Table -->
+                    <div class="col-12 col-xl-8">
+                        <div class="w-100 wrap-table matgin-top-table mat-elevation-z8 my-2 mx-0 py-3">
+
+                            <div #parentTable class="w-100 max-height-table-lv1">
+
+                                <div class="px-3 w-100">
+                                    <mat-table [dataSource]="dataSourceMonthlyOvertime" class="max-height-table-lv2">
+
+                                        <ng-container matColumnDef="ProjectName">
+                                            <mat-header-cell *matHeaderCellDef>
+                                                <span class="text-center w-100"> Name </span>
+                                            </mat-header-cell>
+                                            <mat-cell data-label="Name" *matCellDef="let item">
+                                                <span class="text-left w-100">{{item.ProName}}</span>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="Otdate">
+                                            <mat-header-cell *matHeaderCellDef>
+                                                <span class="text-center w-100"> OT Date </span>
+                                            </mat-header-cell>
+                                            <mat-cell data-label="OT Date" *matCellDef="let item">
+                                                <span
+                                                    class="text-right w-100">{{ item.Otdate | date:'yyyy/MM/dd'}}</span>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="PaymentDate">
+                                            <mat-header-cell *matHeaderCellDef>
+                                                <span class="text-center w-100"> Payment Date </span>
+                                            </mat-header-cell>
+                                            <mat-cell data-label="Payment Date" *matCellDef="let item">
+                                                <span
+                                                    class="text-right w-100">{{ item.PaymentDate | date:'yyyy/MM/dd'}}</span>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="Time">
+                                            <mat-header-cell *matHeaderCellDef>
+                                                <span class="text-center w-100"> Time From-To </span>
+                                            </mat-header-cell>
+                                            <mat-cell data-label="Time From-To" *matCellDef="let item">
+                                                <span class="text-center w-100">{{ item.StartTime.slice(0,5) }} -
+                                                    {{ item.EndTime.slice(0,5) }}</span>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="Wage">
+                                            <mat-header-cell *matHeaderCellDef>
+                                                <span class="text-center w-100"> Wage </span>
+                                            </mat-header-cell>
+                                            <mat-cell data-label="Wage" *matCellDef="let item">
+                                                <span class="text-right w-100">{{ item.Wage | number: '1.0'}} đ</span>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="Action">
+                                            <mat-header-cell *matHeaderCellDef>
+                                                <span class="text-center w-100"> Action </span>
+                                            </mat-header-cell>
+                                            <mat-cell data-label="Action" *matCellDef="let item">
+                                                <span [ngStyle]="{textAlign: innerWidth>1200?'center':'right' }"
+                                                    class="w-100"><i (click)="onEditRowIT(item)"
+                                                       [ngClass]="{colorGreen: !isDisable, 'cursor-pointer':!isDisable}" class="material-icons btn-edit">edit</i></span>
+                                            </mat-cell>
+                                        </ng-container>
+
+                                        <mat-header-row *matHeaderRowDef="displayedColumnsMonthlyOvertime;sticky: true">
+                                        </mat-header-row>
+                                        <mat-row *matRowDef="let row; columns: displayedColumnsMonthlyOvertime;">
+                                        </mat-row>
+
+
+                                    </mat-table>
+
+                                    <!-- No records found -->
+                                    <div class="text-center text-danger pt-1"
+                                        *ngIf="dataSourceMonthlyOvertime && dataSourceMonthlyOvertime.data.length === 0">
+                                        No records found
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="w-100 d-flex justify-content-end mt-1">
+                                <div class="d-flex justify-content-between px-3 total-row-table">
+                                    <span class="font-weight-bold">Total</span>
+                                    <span class="font-weight-bold pr-2">{{totalMonthlyIT | number: '1.0' }} đ</span>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+
+    </mat-dialog-content>
+
+</div>

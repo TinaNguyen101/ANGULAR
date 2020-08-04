@@ -1,0 +1,33 @@
+<div class="" style="height: calc(100vh - 80px)">
+    <mat-drawer-container class="h-100"[hasBackdrop]='true'>
+        <mat-drawer #drawer mode="over" style="width: 200px;">
+            <div>
+                <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="project" routerLinkActive="active" (click)="drawer.toggle()">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="customer" routerLinkActive="active" (click)="drawer.toggle()">Customer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="employee" routerLinkActive="active" (click)="drawer.toggle()">Human resources</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="accounting" routerLinkActive="active" (click)="drawer.toggle()">Accounting</a>
+                </li>
+                </ul>
+                <button mat-mini-fab color="success" class="mat-sm" style="margin-top: 1px; border-radius: 4px 0 0 4px; position: absolute; z-index: 9999; top: 0px; right: 0; overflow: hidden;" (click)="drawer.toggle()">
+                    <mat-icon *ngIf="drawer.opened" aria-hidden="false" style="padding-left: 5px;">arrow_back_ios</mat-icon>
+                </button>
+            </div>
+        </mat-drawer>
+        <mat-drawer-content style="position: relative; overflow: unset">
+            <button mat-mini-fab color="success" class="mat-sm" style="margin-top: 1px; border-radius: 0 4px 4px 0; position: absolute; z-index: 9999;" (click)="drawer.toggle()">
+                <mat-icon *ngIf="!drawer.opened" aria-hidden="false">arrow_forward_ios</mat-icon>
+            </button>
+            <div class="pt-2 h-100" style="padding-left: 25px">
+                <router-outlet></router-outlet>
+            </div>
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>

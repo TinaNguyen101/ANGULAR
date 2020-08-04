@@ -1,0 +1,228 @@
+<div #scrollContent style="overflow-y: auto; margin-left: -25px !important;"  class="warap m-0 p-0 pl-4">
+
+  <form #divSearch class="mr-3 form-header">
+    <div class="px-0 left">
+      <div class="hasForm">
+        <mat-form-field style="width: 130px !important">
+          <input 
+            #reportMonthElement 
+            [formControl]="reportMonth" 
+            matInput 
+            [matDatepicker]="reportDatePicker" 
+            yearmonthFormat  
+            placeholder="Choose a month">
+          <mat-datepicker-toggle matSuffix [for]="reportDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #reportDatePicker 
+            startView="multi-year" 
+            previousEnabled="false" 
+            class="monthOnly"
+            panelClass="monthOnly" 
+            (yearSelected)="chosenYearHandler($event)"
+            (monthSelected)="chosenMonthHandler($event, reportDatePicker)"></mat-datepicker>
+          <mat-error>
+            <div *ngIf="reportMonth.errors?.monthRequired">Month is required </div>
+            <div *ngIf="reportMonth.errors?.monthFormat">Month is invalid </div>
+          </mat-error>
+        </mat-form-field>
+
+        <button type="submit" class="ml-3" mat-raised-button color="warn" (click)="loadProject()">
+          <i class="material-icons md-18 ml-1">search</i>
+        </button>
+      </div>
+      <div class="notForm">
+        <button type="button" class="ml-0 ml-md-3" mat-raised-button color="success"
+          (click)="downloadFileEmployeeVehicle()">
+          <i class="material-icons md-18 ml-1">save_alt</i>Vehicle List
+        </button>
+
+        <button type="button" class="ml-3" mat-raised-button color="success" (click)="downloadFileEmployeeList()">
+          <i class="material-icons md-18 ml-1">save_alt</i> Employee List
+        </button>
+      </div>
+    </div>
+
+    <div class="px-0 right">
+
+      <div class="hasForm">
+        <div class="lable pl-0 mr-0 mt-3 px-0">Annual By:</div>
+        <mat-radio-group class="radio mr-1 mt-3 px-0" [formControl]="reportByAnnual" [(ngModel)]="reportAnnualByValue">
+          <mat-radio-button *ngFor="let item of [{text:'Month', value:'m'},{text:'Year', value:'y'}]"
+            [value]="item.value">
+            <span>{{item.text}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+
+        <div>
+          <mat-form-field class="mr-3 ml-3" [hidden]="reportAnnualByValue != 'm'">
+            <input 
+              #reportMonthElementAnnual 
+              [formControl]="reportMonthAnnual" 
+              matInput
+              [matDatepicker]="reportDatePickerAnnual" 
+              placeholder="Choose a month"
+              yearmonthFormat>
+            <mat-datepicker-toggle matSuffix [for]="reportDatePickerAnnual"></mat-datepicker-toggle>
+            <mat-datepicker #reportDatePickerAnnual 
+              startView="multi-year" 
+              previousEnabled="false" 
+              class="monthOnly"
+              panelClass="monthOnly" 
+              (yearSelected)="chosenYearAnnualHandler($event)"
+              (monthSelected)="chosenMonthAnnualHandler($event, reportDatePickerAnnual)"></mat-datepicker>
+            <mat-error>
+              <div *ngIf="reportMonthAnnual.errors?.monthRequired">Month is required </div>
+              <div *ngIf="reportMonthAnnual.errors?.monthFormat">Month is required </div>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="mr-3 ml-3 " [hidden]="reportAnnualByValue != 'y'">
+            <input width="30px" 
+              [formControl]="reportYearAnnual" 
+              matInput placeholder="Choose a year" maxlength="4" number mask="0000">
+            <mat-error>
+              <div *ngIf="reportYearAnnual.errors?.yearRequired">Year is required </div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+      <div class="notForm">
+        <button style="height: 36px" type="button" class="mr-3" #btndownloadFileAnnual mat-raised-button color="success"
+          (click)="downloadFileAnnual()">
+          <i class="material-icons ml-1">save_alt</i> Annual Leave Paid
+        </button>
+        <button [disabled]="reportAnnualByValue != 'y'" style="height: 36px" type="button" mat-raised-button class="" color="success"
+          (click)="downloadFileKPI()">
+          <i class="material-icons ml-1">save_alt</i> KPI
+        </button>
+      </div>
+
+    </div>
+
+  </form>
+
+
+
+
+  <div class="mr-3">
+    <div class="p-3 mb-3 mat-elevation-z8" style="background: white">
+      <mat-table [style.max-height.px]="tableResultMaxHeight" [dataSource]="dataSource" class='text-small'>
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="Action">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox [color]="red" class="text-center w-100"
+              (change)="$event ? masterToggle() : null ; toggleCountSumTable()"
+              [checked]="selection.hasValue() && isHasSelecter()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </mat-header-cell>
+          <mat-cell data-label="Select" *matCellDef="let row">
+            <mat-checkbox class="text-center w-100" (click)="$event.stopPropagation()"
+              (change)="$event ? selection.toggle(row) : null ; toggleCountSumTable()"
+              [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </mat-cell>
+          <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+        </ng-container>
+
+        <!-- No Column -->
+        <ng-container matColumnDef="No">
+          <mat-header-cell *matHeaderCellDef> <span class="text-center w-100">No.</span></mat-header-cell>
+          <mat-cell data-label="No." *matCellDef="let employee"> <span class="text-center w-100">{{employee.No}}</span>
+          </mat-cell>
+          <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="EmpName">
+          <mat-header-cell *matHeaderCellDef> <span class="text-center w-100">Employee Name</span></mat-header-cell>
+          <mat-cell data-label="Name" *matCellDef="let employee"> {{employee.EmpName}}</mat-cell>
+          <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+        </ng-container>
+
+        <!-- License plate Column -->
+        <ng-container matColumnDef="LicensePlate">
+          <mat-header-cell *matHeaderCellDef> <span class="text-center w-100"> License Palte </span>
+          </mat-header-cell>
+          <mat-cell data-label="License Palte" *matCellDef="let employee"> <span class="text-center w-100">
+              {{employee.LicensePlate}} </span> </mat-cell>
+          <mat-footer-cell *matFooterCellDef>Sum</mat-footer-cell>
+
+
+        </ng-container>
+
+        <!-- Motorcycle Column -->
+        <ng-container matColumnDef="VehicleType1">
+          <mat-header-cell *matHeaderCellDef> <span class="text-center w-100"> Motorcycle<br />
+            
+              ({{ (VehicleTotal?VehicleTotal.ParkingFee1:null) | number: '4.0'}} đ) </span>
+          </mat-header-cell>
+          <mat-cell data-label="Motorcycle" *matCellDef="let employee"> <span class="text-center w-100">
+              {{employee.VehicleType1}} </span> </mat-cell>
+          <mat-footer-cell *matFooterCellDef>Motorcycle</mat-footer-cell>
+
+        </ng-container>
+
+        <!-- Scooter Column -->
+        <ng-container matColumnDef="VehicleType2">
+          <mat-header-cell *matHeaderCellDef> <span class="text-center w-100">Scooter <br /> ({{ (VehicleTotal?VehicleTotal.ParkingFee2:0) | number: '4.0'}}
+              đ) </span>
+          </mat-header-cell>
+          <mat-cell data-label="Scooter" *matCellDef="let employee"> <span class="text-center w-100">
+              {{employee.VehicleType2}} </span></mat-cell>
+          <mat-footer-cell *matFooterCellDef>Scooter</mat-footer-cell>
+        </ng-container>
+
+        <!-- Comment  Column -->
+        <ng-container matColumnDef="VehicleComment">
+          <mat-header-cell *matHeaderCellDef> <span class="text-center w-100"> Comment </span></mat-header-cell>
+          <mat-cell class="text-right" data-label="Comment" *matCellDef="let employee"> {{employee.VehicleComment}} </mat-cell>
+          <mat-footer-cell *matFooterCellDef>Comment</mat-footer-cell>
+        </ng-container>
+
+        <!-- Footer config -->
+
+        <ng-container class="table-footer" *matFooterRowDef="">
+          <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">No records
+            found
+          </div>
+          <table  *ngIf="dataSource && dataSource.data.length !== 0">
+            <tr class="d-mobile text-white" style="background-color: #008577;">
+              <td class="d-moblie text-center px-0">Motorcycle</td>
+              <td class="d-moblie text-center px-0">Scooter</td>
+              <td class="d-moblie text-center px-0">TỔNG CỘNG</td>
+
+            </tr>
+            <tr>
+              <td class="sumcountTitle d-pc text-center px-0" rowspan="2">TỔNG CỘNG</td>
+              <td class="sumcount1 text-center px-0"><b>{{VehicleTotal.CountVehicleType1}}</b></td>
+              <td class="sumcount2 text-center px-0"><b>{{VehicleTotal.CountVehicleType2}}</b></td>
+              <td rowspan="2" class="sumcount text-center px-0"><b>{{VehicleTotal.totalFee | number: '4.0'}} đ</b></td>
+            </tr>
+            <tr>
+              <td class="text-center px-0"><b>{{VehicleTotal.TotalParkingFee1 | number: '4.0'}} đ</b></td>
+              <td class="text-center px-0"><b>{{VehicleTotal.TotalParkingFee2 | number: '4.0'}} đ</b></td>
+            </tr>
+
+          </table>
+        </ng-container>
+        <!-- <mat-heder-row *matHeaderRowDef></mat-heder-row> -->
+        <ng-container *matHeaderRowDef="">
+          <div class="pr-1 header-mobile"  *ngIf="dataSource && dataSource.data.length !== 0">
+            <b>SELECT ALL</b>
+            <mat-checkbox class="px-0" class="text-right"
+              (change)="$event ? masterToggle() : null ; toggleCountSumTable()"
+              [checked]="selection.hasValue() && isHasSelecter()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </div>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+      </mat-table>
+
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,206 @@
+<div class="lst" style="height: calc(100vh - 150px)">
+  <mat-drawer-container class="h-100" [hasBackdrop]='true'>
+    <!--start drawer search -->
+    <mat-drawer #drawer mode="over" style="width: 300px;font-size: 13px">
+      <div>
+        <form [formGroup]="dtFormSearch" (ngSubmit)="onSubmitSearch()">
+          <button mat-mini-fab color="success" class="mat-sm"
+            style="margin-top: 1px; border-radius: 4px 0 0 4px; position: absolute; z-index: 9999; top: 0px; right: 0; overflow: hidden;"
+            (click)="drawer.toggle()">
+            <mat-icon *ngIf="drawer.opened" aria-hidden="false" style="padding-left: 5px;">arrow_back_ios</mat-icon>
+          </button>
+          <mat-form-field class="w-100 p-3">
+            <input matInput placeholder="Task Name" formControlName="TaskName">
+          </mat-form-field>
+          <br>
+          <mat-form-field class="w-50 pl-3" aria-required="false">
+            <mat-label aria-required="false">Start Date </mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="StartDate" maxlength="8" dateFormat>
+            <mat-datepicker-toggle matSuffix [for]="picker" class="colorGreen"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field class="w-50 pl-2 pr-3">
+            <mat-label aria-required="false">End Date</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="EndDate" maxlength="8" dateFormat>
+            <mat-datepicker-toggle matSuffix [for]="picker2" class="colorGreen"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+          <br>
+          <div class="text-right pr-3">
+            <button type="button" mat-raised-button color="primary" style="width:50px;height:30px;" class="ml-2"
+              (click)="refershSearchForm()">
+              <i class="material-icons " style="padding-bottom: 8px;">cached</i>
+            </button>
+            <button type="submit" mat-raised-button color="warn" style="width:50px;height:30px;" class="ml-2"
+              (click)="goToTop()">
+              <i class="material-icons " style="padding-bottom: 8px;">search</i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-drawer>
+    <!-- end drawer search -->
+
+    <!-- start drawer create -->
+    <mat-drawer #drawercreate mode="over" position="end" style="width: 300px;font-size: 13px">
+      <div>
+        <form [formGroup]="dtFormCreate" (ngSubmit)="OnSubmitData()">
+          <button mat-mini-fab color="success" class="mat-sm"
+            style="margin-top: 1px; border-radius: 0 4px 4px 0; position: absolute; z-index: 9999; top: 0px; left: 0; overflow: hidden;"
+            (click)="drawercreate.toggle()">
+            <mat-icon *ngIf="drawercreate.opened" aria-hidden="false" class="icon_next" style="padding-left: 5px; ">
+              arrow_back_ios</mat-icon>
+          </button><br>
+          <mat-form-field class="w-100 px-3 mt-3 mb-0 pb-1">
+            <mat-select placeholder="Employee Name" #singleSelect formControlName="EmpName">
+              <div class="row m-0">
+                <span class="m-1"><i class="material-icons colorGreen">
+                    search
+                  </i></span>
+                <input matInput placeholder="Filter" class="col-lg-10 col-10" value="" [formControl]="custFilterCtrl">
+              </div>
+              <mat-option></mat-option>
+              <mat-option *ngFor="let emp of filterMember | async" [value]="emp.EmpId">
+                <span class="ml-2">{{emp.EmpName}}</span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="w-100 px-3 pt-2 pb-3">
+            <input matInput placeholder="Task Name" #TaskName maxlength="500" formControlName="TaskName"
+              (blur)="onblur()">
+            <mat-error>
+              <div *ngIf="dtFormCreate.controls.TaskName.errors?.required">Task Name is required !</div>
+            </mat-error>
+            <mat-hint align="end">{{TaskName.value.length}} / 500</mat-hint>
+          </mat-form-field>
+          <br>
+          <mat-form-field class="w-50 pl-3">
+            <mat-label>Start Date</mat-label>
+            <input type="text" formControlName="StartDate" matInput [matDatepicker]="pickerStart"
+              (ngModelChange)="checkValidDate(1)" placeholder="yyyy/mm/dd" dateFormat id="StartDate">
+            <mat-datepicker-toggle matSuffix [for]="pickerStart" class="colorGreen"></mat-datepicker-toggle>
+            <mat-datepicker #pickerStart></mat-datepicker>
+            <mat-error>
+              <div *ngIf="dtFormCreate.controls.StartDate.errors?.compareDate">Start date is less than End date. </div>
+            </mat-error>
+          </mat-form-field>
+          <br> 
+            <mat-form-field class="w-50 pl-3">
+                <mat-label>Start Date</mat-label>
+                <input type="text" formControlName="StartDate" matInput [matDatepicker]="pickerStart" (ngModelChange)="checkValidDate(1)" 
+                    placeholder="yyyy/mm/dd" dateFormat id="StartDate" >
+                <mat-datepicker-toggle matSuffix [for]="pickerStart" class="colorGreen"></mat-datepicker-toggle>
+                <mat-datepicker #pickerStart></mat-datepicker> 
+                <mat-error>
+                  <div *ngIf="dtFormCreate.controls.StartDate.errors?.compareDate">Start date is less than end date. </div>
+              </mat-error>               
+            </mat-form-field>         
+          <mat-form-field class="w-50 pl-2 pr-3" >
+              <mat-label>End Date</mat-label>
+              <input type="text" formControlName="EndDate" matInput [matDatepicker]="pickerEnd" #endDate (ngModelChange)="checkValidDate(0)" 
+                  placeholder="yyyy/mm/dd" dateFormat >
+              <mat-datepicker-toggle matSuffix [for]="pickerEnd" class="colorGreen" ></mat-datepicker-toggle>
+              <mat-datepicker #pickerEnd></mat-datepicker>    
+              <mat-error>
+                  <div *ngIf="dtFormCreate.controls.EndDate.errors?.compareDate">End date is greater than start date. </div>
+              </mat-error>            
+          </mat-form-field>
+          <div class="d-flex">
+            <mat-form-field class="p-3 w-75">
+              <input matInput placeholder="Duration" class="text-right w-100" (keypress)="validDecimal($event,duration)" formControlName="Duration" #duration>
+              <mat-error class="w-100">
+                <div *ngIf="dtFormCreate.controls.Duration.errors?.pattern">
+                  Duration must be up to 1 decimal places!
+                </div>
+              </mat-error>
+            </mat-form-field>
+            <div class="btn-duration">
+              <button type="button" color="success" (click)="loadDataEndDate()" class="btn-forward mat-sm">
+                <i class="fas fa-calculator"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="text-right pr-3">
+            <button type="submit" mat-raised-button style="width:50px;height:30px;" color="success" class="ml-2">
+              <i class="material-icons " style="padding-bottom: 8px;">save</i>
+            </button>
+            <button type="button" mat-raised-button color="warn" style="width:50px;height:30px;" class="ml-2"
+              (click)="deleteTask(id)">
+              <i class="material-icons " style="padding-bottom: 8px;">delete</i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-drawer>
+    <!-- end drawer create   -->
+
+    <!-- drawer content -->
+    <mat-drawer-content class="h-100" style="position: relative;">
+      <button mat-mini-fab color="warn" class="mat-sm "
+        style="margin-top: 1px; border-radius: 0 4px 4px 0; position: absolute; z-index: 9999;"
+        (click)="drawer.toggle()">
+        <mat-icon *ngIf="!drawer.opened" aria-hidden="false">search</mat-icon>
+      </button>
+      <button type="button" class="mat-sm btn-add" mat-mini-fab color="success" (click)="drawercreate.toggle()"
+        style="margin-top: 1px; border-radius: 4px 0 0 4px; position: absolute; z-index: 9999;right: 0;">
+        <i class="material-icons md-5 ">add</i>
+      </button>
+      <div class="pt-4 mt-1">
+        <div class="mat-elevation-z8 m-3">
+          <div class="pt-3 ">
+            <div class=" contentTable" #parentTable>
+              <mat-table [dataSource]="dataSource" matSort matSortActive="StartDate" matSortDirection="desc"
+                matSortDisableClear>
+                <ng-container matColumnDef="Action">
+                  <mat-header-cell *matHeaderCellDef>Action </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="Action">
+                    <a (click)="LoadEditTask(row.Id)"><i class="material-icons"
+                        style="color: #009688; cursor: pointer;  ">edit</i></a>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="EmpName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Employee Name </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="Employee Name">{{row.EmpName}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="TaskName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Task Name </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="Task Name"> {{row.TaskName}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="StartDate">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="Start Date"> {{row.StartDate  | date:'yyyy/MM/dd'}}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="EndDate">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> End Date </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="End Date">{{row.EndDate  | date:'yyyy/MM/dd'}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Duration">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Duration </mat-header-cell>
+                  <mat-cell *matCellDef="let row" data-label="Duration"><span> {{row.Duration }} d</span>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;">
+                </mat-row>
+              </mat-table>
+              <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">No records
+                found
+              </div>
+            </div>
+          </div>
+          <mat-paginator [pageSizeOptions]="[ 15, 25, 50,100]" [pageSize]="15" class="">
+          </mat-paginator>
+        </div>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

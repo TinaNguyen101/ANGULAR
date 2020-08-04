@@ -1,0 +1,151 @@
+@import "../../_shared/css/mattable.scss";
+::ng-deep .mat-radio-container {
+  .mat-radio-outer-circle {
+    border-color: #008577 !important;
+  }
+  .mat-radio-inner-circle {
+    background-color: #008577 !important;
+  }
+  .mat-ripple-element.mat-radio-persistent-ripple {
+    background-color: #008577 !important;
+  }
+  mat-radio-button {
+    label {
+      padding-left: 0px !important;
+    }
+  }
+}
+
+.max-height-table-lv1 {
+  max-height: 250px;
+  overflow-y: auto;
+}
+.max-height-table-lv2 {
+  max-height: unset;
+}
+.total-row-table {
+  width: 25%;
+}
+@media screen and (min-width: 1200px) {
+  .dialog-monthly-overtime {
+    .mat-column {
+      // ['ProjectName', 'Otdate', 'Time', 'Wage', 'Action'];
+      &-ProjectName {
+        flex: 0 0 30% !important;
+      }
+      &-Otdate {
+        flex: 0 0 15% !important;
+      }
+      &-PaymentDate {
+        flex: 0 0 15% !important;
+      }
+      &-Time {
+        flex: 0 0 15% !important;
+      }
+      &-Wage {
+        flex: 0 0 15% !important;
+      }
+
+      &-Action {
+        flex: 0 0 10% !important;
+      }
+    }
+  }
+  .dialog-monthly-overtime {
+    width: 1255px;
+  }
+  .container-dialog {
+    max-width: 700px !important;
+    min-width: 600px !important;
+  }
+  .btn-close-dialog {
+    right: 10px;
+  }
+  .max-width-form-field {
+    max-width: 192px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .total-row-table {
+    width: 35%;
+  }
+  .btn-close-dialog {
+    right: 10px;
+    top: 0;
+  }
+  .matgin-top-table {
+    margin-top: 33px !important;
+  }
+  .max-height-table-lv1 {
+    max-height: calc(100vh - 475px);
+  }
+}
+
+@media screen and (max-width: 1050px) {
+  .max-height-table-lv1 {
+    max-height: calc(100vh - 355px);
+  }
+  .max-height-table-lv2 {
+    max-height: calc(100vh - 410px);
+  }
+}
+
+@media screen and (max-width: 780px) {
+  .total-row-table {
+    width: 50%;
+  }
+  .max-height-table-lv1 {
+    max-height: calc(100vh - 385px);
+  }
+  .max-height-table-lv2 {
+    max-height: calc(100vh - 490px);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .total-row-table {
+    width: 65%;
+  }
+  .max-height-table-lv1 {
+    max-height: calc(100vh - 360px);
+  }
+  .max-height-table-lv2 {
+    max-height: calc(100vh - 368px);
+  }
+}
+
+::ng-deep label.mat-radio-label:first-of-type {
+  padding-left: 0px !important;
+}
+.colorGreen {
+  color: #008577;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+
+::ng-deep .wrapdialog {
+  .mat-dialog-container {
+    padding: 0px;
+    .dialog-header {
+      background-color: #008577;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 50px;
+    }
+  }
+}
+@media all and (max-height: 500px) {
+  .wrap-table {
+    height: 53vh;
+  }
+  .max-height-table-lv1 {
+    max-height: calc(100vh - 65px);
+  }
+  .max-height-table-lv2 {
+    max-height: calc(100vh - 220px);
+  }
+}

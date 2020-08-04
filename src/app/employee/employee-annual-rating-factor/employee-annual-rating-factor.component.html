@@ -1,0 +1,101 @@
+<div class="form-group col-12 mt-2" style="height: calc(100vh - 220px);">
+    <div class="col-10 mb-3">
+        <mat-form-field class="formChooseAnnualDate mr-3 ml-3">
+            <input autofocus [formControl]="searchYear" width="30px" matInput placeholder="Choose a year" maxlength="4" number
+                numbermask="0000"/>
+            <mat-error>
+                <div *ngIf="searchYear.errors?.required">Year is required </div>
+            </mat-error>
+        </mat-form-field>
+
+        <button type="button" mat-raised-button color="warn" class="ml-2" (click)="loadAnnualRatingFactor()">
+            <i class="material-icons ">search</i>
+        </button>
+        <button type="submit" mat-raised-button color="success" class="ml-2" (click)="submitData()">
+            <i class="material-icons md-18 ml-1 ">save</i> Save
+        </button>
+    </div>
+    <div class="mat-elevation-z8 " *ngIf="isSearchted">
+        <div class="pt-3 pb-3">
+            <div class="col-lg-12 contentTable" #parentTable>
+                <mat-table [dataSource]="dataSource">
+
+                    <!-- EmpName -->
+                    <ng-container matColumnDef="EmployeeName">
+                        <mat-header-cell *matHeaderCellDef> Employee Name </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Employee Name">
+                            <a #btn1 class="someclass" id="{{row.Id}}">
+                                {{row.EmpName}}
+                            </a>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- RatingYear Hidden -->
+                    <ng-container matColumnDef="RatingYearMember1">
+                        <mat-header-cell *matHeaderCellDef style="display: none"> RatingYearMember </mat-header-cell>
+                        <mat-cell *matCellDef="let row" [attr.data-label]="RatingYearMember1">
+                            {{row.lastRatingFactorMember*100}}<span *ngIf="row.lastRatingFactorMember">%</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- RatingYear -->
+                    <ng-container matColumnDef="RatingYearLeader1">
+                        <mat-header-cell *matHeaderCellDef> {{yearHeader-1}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" [attr.data-label]="RatingYearLeader1">
+                            {{row.lastRatingFactorLeader*100}}<span *ngIf="row.lastRatingFactorLeader">%</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- RatingYear Hidden -->
+                    <ng-container matColumnDef="RatingYearMember2">
+                        <mat-header-cell *matHeaderCellDef style="display: none">
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" [attr.data-label]="RatingYearMember2"
+                            (dblclick)="setSelectClick(row.EmpId,4,row.year)">
+
+                            <span *ngIf="!checkSelectClick(row,4)">
+                                {{(row.RatingFactorMember*100) | number: '1.0-0'}}
+                                <span *ngIf="row.RatingFactorMember">%</span>
+                            </span>
+
+                            <input autofocus (blur)="setValueDataSource($event, row.EmpId,4)" *ngIf="checkSelectClick(row,4)"
+                                [value]="row.RatingFactorMember*100 | number: '1.0-0'" number mask="comma_separator"
+                                style="width: 60px;" maxlength="3" />
+
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- RatingYear -->
+                    <ng-container matColumnDef="RatingYearLeader2">
+                        <mat-header-cell *matHeaderCellDef>{{yearHeader}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" [attr.data-label]="RatingYearLeader2"
+                            (dblclick)="setSelectClick(row.EmpId,5,row.year)">
+
+                            <span *ngIf="!checkSelectClick(row,5)">
+                                {{(row.RatingFactorLeader*100) | number: '1.0-0'}}
+                                <span *ngIf="row.RatingFactorLeader">%</span>
+                            </span>
+
+                            <input autofocus (blur)="setValueDataSource($event, row.EmpId,5)" *ngIf="checkSelectClick(row,5)"
+                                [value]="row.RatingFactorLeader*100 | number: '1.0-0'" number mask="comma_separator"
+                                style="width: 60px;" maxlength="3" />
+
+                        </mat-cell>
+                    </ng-container>
+
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                </mat-table>
+
+                <!-- No records found -->
+                <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">
+                    No records found
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

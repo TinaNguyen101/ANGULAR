@@ -1,0 +1,54 @@
+@media (max-width: 1200px) { 
+    .month-group{
+        width: 100%;
+    }
+    .year-group{
+        width: 30%;
+    }
+
+    .curreny-group{
+        width: 100%;
+    }
+    
+    .year-curreny-group{
+        width: 60%;
+    }
+
+    .w-sm-45{
+        width: 45%
+    }
+
+    .chart-line{
+        height:  400px;
+    }
+    .chart-pie{
+        height: 400px;
+    }
+}
+@media (min-width: 1200px) { 
+    .w-lg-15{
+        width: 15%
+    }
+
+    .w-lg-25{
+        width: 25%
+    }
+    
+    .month-group{
+        width: 300px;
+    }
+    .year-group{
+        width: 120px;
+    }
+
+    .curreny-group,.year-curreny-group{
+        width: 150px;
+    }
+
+    .chart-line{
+        height:  calc(100% - 90px);
+    }
+    .chart-pie{
+        height: 45%;
+    }
+}

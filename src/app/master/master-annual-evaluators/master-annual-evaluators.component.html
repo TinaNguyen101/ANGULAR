@@ -1,0 +1,52 @@
+<div class="mb-2 ml-0">
+    <mat-form-field class="mr-3 ml-1 txtSearch">
+        <input autofocus [formControl]="searchYear" width="30px" matInput placeholder="Choose a year" maxlength="4"
+            number numbermask="0000" />
+        <mat-error>
+            <div *ngIf="searchYear.errors?.required">Year is required </div>
+        </mat-error>
+    </mat-form-field>
+    <button type="button" mat-raised-button color="warn" class="ml-2 btnSearch" (keyup.enter)="LoadListEvaluators()" (click)="LoadListEvaluators()">
+        <i class="material-icons ">search</i>
+    </button>
+    <button type="button" mat-raised-button color="success" class="ml-2"  (click)="onSave()" >
+        <i class="material-icons ">save</i> Save
+    </button>
+</div>
+
+<div  class="p-3 mat-elevation-z8 mr-4" style="background: white">
+    <mat-table [dataSource]="dataSource" class="" *ngIf="yearHeader != 0" >
+
+        <ng-container matColumnDef="Evaluator">
+            <mat-header-cell *matHeaderCellDef> Evaluator </mat-header-cell>
+            <mat-cell *matCellDef="let row" data-label="Evaluator"> {{row.EmpName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="BeforeYearSearch">
+            <mat-header-cell *matHeaderCellDef>
+                <span>{{yearHeader-1}}</span>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row" [attr.data-label]="yearHeader-1">
+                <mat-checkbox   [checked]="row.LastYear == 1" 
+                                [disabled]="true">
+                </mat-checkbox>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="YearSearch">
+            <mat-header-cell *matHeaderCellDef>
+                <span>{{yearHeader}}</span>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row" [attr.data-label]="yearHeader">
+                <mat-checkbox   [checked]="row.Year == 1" 
+                                (change)="onChangeChecked($event,row,true)">
+                </mat-checkbox>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+    <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">No records found</div>
+</div>

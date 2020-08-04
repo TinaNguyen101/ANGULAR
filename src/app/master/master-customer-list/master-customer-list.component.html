@@ -1,0 +1,520 @@
+<div class="lst" style="height: calc(100vh - 150px);margin-left: -25px;">
+
+    <button mat-mini-fab color="warn" class="mat-sm"
+        style="margin-top: 1px; border-radius: 4px 0  0 4px ; position: absolute; z-index: 9999;right: 0;"
+        (click)="drawer.toggle()">
+        <mat-icon *ngIf="!drawer.opened" aria-hidden="false">search</mat-icon>
+    </button>
+    <button [routerLink]="['create']" mat-mini-fab color="success" class="mat-sm" *ngIf="!drawer.opened" aria-hidden="false"
+        style="margin-top: 1px; margin-right: 40px; border-radius: 4px; position: absolute; z-index: 999;right: 0; width: 100px !important">
+        <mat-icon>add</mat-icon>Create
+    </button>
+
+    <!-- Drawer container -->
+    <mat-drawer-container class="h-100" [hasBackdrop]='true' style="transition: all 0;"
+        [ngClass]="{'isOpenLeftMenu': isMenuLeftOpen,'isCloseLeftMenu': !isMenuLeftOpen}">
+
+        <!-- Sub drawer -->
+        <mat-drawer class="searchPC" #drawer [mode]='side' style="width: 300px;font-size: 13px; z-index: 999 !important"
+            position='end'>
+            <div>
+                <form class="mt-3" [formGroup]="dtFormSearch" (ngSubmit)="onSubmitSearch()">
+                    <!-- btn ArrowBack -->
+                    <button mat-mini-fab color="warn" class="mat-sm"
+                        style="margin-top: 1px; border-radius: 0 4px 4px 0; position: absolute; z-index: 9999; top: 0px; overflow: hidden;"
+                        (click)="drawer.toggle()">
+                        <mat-icon *ngIf="drawer.opened" aria-hidden="false">
+                            arrow_forward_ios
+                        </mat-icon>
+                    </button>
+                    <br />
+                    <!-- txt Search CustName -->
+                    <mat-form-field class="px-0 col-11 ml-2">
+                        <mat-label>Customer Name</mat-label>
+                        <mat-select disableOptionCentering placeholder="Customer Name" formControlName="CustName">
+                            <div class="row m-0">
+                                <span class="m-1"><i class="material-icons colorGreen">
+                                        search
+                                    </i></span>
+                                <input autocomplete="off" (blur)="clearInput()" #filterName matInput
+                                    placeholder="Filter" class="col-lg-10 col-10" value=""
+                                    [formControl]="custFilterCtrl" (ngModelChange)="filterCustName()" />
+                            </div>
+                            <mat-option *ngFor="let customer of filterCustomer" [value]="customer.CustName">
+                                <span class="ml-2">{{customer.CustName}}</span>
+                            </mat-option>
+                        </mat-select>
+
+                        <mat-error>
+                            <div *ngIf="dtFormSearch.controls.CustName.errors?.required">
+                                Approve name is required</div>
+                        </mat-error>
+                    </mat-form-field>
+                    <br />
+                    <!-- txt Search CustContactName-->
+                    <mat-form-field class="px-0 col-11 ml-2">
+                        <mat-label>Contact Name</mat-label>
+                        <mat-select disableOptionCentering placeholder="Contact Name" formControlName="CustContactName">
+                            <div class="row m-0">
+                                <span class="m-1"><i class="material-icons colorGreen">
+                                        search
+                                    </i></span>
+                                <input autocomplete="off" (blur)="clearInput()" matInput placeholder="Filter"
+                                    class="col-lg-10 col-10" value="" [formControl]="custFilterCtrl"
+                                    (ngModelChange)="filterCustContactName()" />
+                            </div>
+                            <mat-option *ngFor="let customer of filterCustomerContact"
+                                [value]="customer.CustContactName">
+                                <span class="ml-2">{{customer.CustContactName}}</span>
+                            </mat-option>
+                        </mat-select>
+
+                        <mat-error>
+                            <div *ngIf="dtFormSearch.controls.CustName.errors?.required">
+                                Approve name is required</div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- btn Reresh & Search -->
+                    <div class="text-right pr-3">
+                        <button type="button" mat-raised-button color="primary" class="ml-2" (click)="refersh()">
+                            <i class="material-icons ">cached</i>
+                        </button>
+                        <button type="submit" mat-raised-button color="warn" class="ml-2" (click)="goToTop()">
+                            <i class="material-icons ">search</i>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </mat-drawer>
+        <!-- End sub drawer -->
+
+        <!-- Main Drawer -->
+        <mat-drawer-content class="h-100" style="overflow-y: unset !important;">
+
+
+            <div class="mat-elevation-z8 mb-3 mr-3"
+                style="margin-top: 35px; margin-left: 20px;overflow-y: unset !important;">
+
+                <!-- Mobile -->
+                <div cdkDropList class="example-list container border-0 your-css-class"
+                    (cdkDropListDropped)="dropMB($event)" #parentTableMB>
+                    <div class="example-box row cardSingle" style="margin-right:1px !important"
+                        *ngFor="let customer of lstCustomer; let i = index " cdkDrag>
+
+                        <div id="accordion" class="w-100">
+                            <div class="card">
+                                <div class="card-header" id="heading">
+                                    <div data-toggle="collapse" [attr.data-target]="'#heading_' + i"
+                                        aria-expanded="false" [attr.aria-label]="'heading_'+i">
+
+                                        <div class="">
+                                            <div class="d-flex align-items-center col-12">
+
+                                                <div class="d-flex align-items-center col-10 mb-2 CardTitle mt-2">
+
+                                                    <div class="mr-2">
+                                                        <button mat-mini-fab matTooltip='{{customer.CustShortName}}'
+                                                            [ngStyle]="{'background-color': customer.CustStyleCss}"
+                                                            style="box-shadow: none;margin-right: 15px;">
+                                                            <span style="font-size: 20px;" cdkDragHandle>
+                                                                {{formatNameCustShortName(customer.CustShortName)}}
+                                                            </span>
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="title">
+                                                        <a  [routerLink]="['./info',customer.Id]"><b><span class="titleName"> {{ customer.CustName }} </span></b></a>
+                                                        <br *ngIf="customer.CustEngName" />
+                                                        <span class="subTitileName" *ngIf="customer.CustEngName">
+                                                            - {{customer.CustEngName}}
+                                                        </span>
+                                                        <br />
+                                                        <a [href]="customer.CustWebsite" target="_blank"
+                                                            class="subTitileName" (click)="return;">
+                                                            {{customer.CustWebsite}}
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-2 mt-2">
+                                                    <button type="button" class="btn btn-primary d-flex">
+                                                        <i class="material-icons"
+                                                            [ngStyle]="{'color': customer.CustStyleCss}">
+                                                            format_list_bulleted
+                                                        </i> <span class="badge badge-pill badge-danger">{{customer.ProjectCount}}</span>
+                                                    </button>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div [id]="'heading_'+i" class="collapse" aria-labelledby="heading"
+                                    data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="align-items-center row">
+
+                                            <div class="d-flex col-6 align-items-center justify-content-start"
+                                                *ngIf="customer.CustContactName">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    emoji_people
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactName}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center justify-content-start"
+                                                *ngIf="customer.CustContactPhone">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    phone_in_talk
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactPhone}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center justify-content-start"
+                                                *ngIf="customer.CustContactSkype">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    rate_review
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactSkype}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center"
+                                                *ngIf="customer.CustContactFax">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    local_printshop
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactFax}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center justify-content-start"
+                                                *ngIf="customer.CustContactEmail">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    contact_mail
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactEmail}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center" *ngIf="customer.CustPostCode">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    local_laundry_service
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustPostCode}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-12 align-items-center" *ngIf="customer.CustAddress">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    local_offer
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustAddress}}</span><br />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- PC -->
+                <div cdkDropListGroup class="cdkDropListGroup" #parentTablePC>
+
+                    <div class="example-container" style="margin-right:1%" *ngIf="lstCustomer1.length > 0">
+                        <div cdkDropList [cdkDropListData]="lstCustomer1" class="example-list1 border-0"
+                            (cdkDropListDropped)="dropPC($event)">
+
+                            <div class="example-box row cardSingle pl-0" *ngFor="let customer of lstCustomer1" cdkDrag>
+
+                                <mat-accordion style="width: 100%">
+
+                                    <mat-expansion-panel (opened)="panelOpenState = true"
+                                        (closed)="panelOpenState = false">
+
+                                        <mat-expansion-panel-header cdkDragHandle>
+                                            <mat-panel-title class="d-flex align-items-center col-12">
+
+                                                <div class="d-flex align-items-center col-10 mb-2 CardTitle mt-2">
+
+                                                    <div class="mr-2">
+                                                        <button mat-mini-fab matTooltip='{{customer.CustShortName}}'
+                                                            [ngStyle]="{'background-color': customer.CustStyleCss}"
+                                                            style="box-shadow: none;margin-right: 15px;">
+                                                            <span style="font-size: 20px;">
+                                                                {{formatNameCustShortName(customer.CustShortName)}}
+                                                            </span>
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="title">
+                                                        <a  [routerLink]="['./info',customer.Id]"> <b><span class="titleName"> {{ customer.CustName }} </span></b></a>
+                                                        <span class="subTitileName" *ngIf="customer.CustEngName">
+                                                            - {{customer.CustEngName}}
+                                                        </span>
+                                                        <br />
+                                                        <a [href]="customer.CustWebsite" target="_blank"
+                                                            class="subTitileName">
+                                                            {{customer.CustWebsite}}
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-2 mt-2">
+                                                    <i class="material-icons" [matBadge]="customer.ProjectCount"
+                                                        matBadgeColor="warn"
+                                                        [ngStyle]="{'color': customer.CustStyleCss}">
+                                                        format_list_bulleted
+                                                    </i>
+                                                </div>
+
+                                            </mat-panel-title>
+
+                                        </mat-expansion-panel-header>
+
+                                        <div class="align-items-center row">
+
+                                            <div class="d-flex col-6 align-items-center justify-content-start"
+                                                *ngIf="customer.CustContactName">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    emoji_people
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactName}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center justify-content-start"
+                                                *ngIf="customer.CustContactPhone">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    phone_in_talk
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactPhone}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center justify-content-start"
+                                                *ngIf="customer.CustContactSkype">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    rate_review
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactSkype}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center"
+                                                *ngIf="customer.CustContactFax">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    local_printshop
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactFax}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center justify-content-start"
+                                                *ngIf="customer.CustContactEmail">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    contact_mail
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactEmail}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center" *ngIf="customer.CustPostCode">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    local_laundry_service
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustPostCode}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-12 align-items-center" *ngIf="customer.CustAddress">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    local_offer
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustAddress}}</span><br />
+                                            </div>
+
+                                        </div>
+
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="example-container" style="margin-right:0.5%" *ngIf="lstCustomer2.length > 0">
+                        <div cdkDropList [cdkDropListData]="lstCustomer2" class="example-list1 border-0"
+                            (cdkDropListDropped)="dropPC($event)">
+                            <div class="example-box row cardSingle pl-0" *ngFor="let customer of lstCustomer2" cdkDrag>
+
+                                <mat-accordion style="width: 100%">
+
+                                    <mat-expansion-panel (opened)="panelOpenState = true"
+                                        (closed)="panelOpenState = false">
+
+                                        <mat-expansion-panel-header cdkDragHandle>
+                                            <mat-panel-title class="d-flex align-items-center">
+
+                                                <div class="d-flex align-items-center col-10 mb-2 CardTitle mt-2">
+
+                                                    <div class="mr-2">
+                                                        <button mat-mini-fab matTooltip='{{customer.CustShortName}}'
+                                                            [ngStyle]="{'background-color': customer.CustStyleCss}"
+                                                            style="box-shadow: none;margin-right: 15px;">
+                                                            <span style="font-size: 20px;">
+                                                                {{formatNameCustShortName(customer.CustShortName)}}
+                                                            </span>
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="title">
+                                                        <a  [routerLink]="['./info',customer.Id]"><b><span class="titleName"> {{ customer.CustName }} </span></b></a>
+                                                        <span class="subTitileName" *ngIf="customer.CustEngName">
+                                                            - {{customer.CustEngName}}
+                                                        </span>
+                                                        <br />
+                                                        <a [href]="customer.CustWebsite" target="_blank"
+                                                            class="subTitileName">
+                                                            {{customer.CustWebsite}}
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-2 mt-2">
+                                                    <i class="material-icons" [matBadge]="customer.ProjectCount"
+                                                        matBadgeColor="warn"
+                                                        [ngStyle]="{'color': customer.CustStyleCss}">
+                                                        format_list_bulleted
+                                                    </i>
+                                                </div>
+
+                                            </mat-panel-title>
+
+                                        </mat-expansion-panel-header>
+
+                                        <div class="align-items-center row">
+
+                                            <div class="d-flex col-6 align-items-center justify-content-start"
+                                                *ngIf="customer.CustContactName">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    emoji_people
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactName}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center justify-content-start"
+                                                *ngIf="customer.CustContactPhone">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    phone_in_talk
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactPhone}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center justify-content-start"
+                                                *ngIf="customer.CustContactSkype">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    rate_review
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactSkype}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center"
+                                                *ngIf="customer.CustContactFax">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    local_printshop
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactFax}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center justify-content-start"
+                                                *ngIf="customer.CustContactEmail">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    contact_mail
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustContactEmail}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-6 align-items-center" *ngIf="customer.CustPostCode">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    local_laundry_service
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustPostCode}}</span><br />
+                                            </div>
+
+                                            <div class="d-flex col-12 align-items-center" *ngIf="customer.CustAddress">
+                                                <i class="material-icons mr-1 icon-info"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    local_offer
+                                                </i>
+                                                <span
+                                                    class="subTitileName titleIcon">{{customer.CustAddress}}</span><br />
+                                            </div>
+
+                                            <!-- <div class="d-flex col-12 align-items-center">
+                                                <i class="material-icons mr-1 icon-info" *ngIf="customer.CustComment"
+                                                    [ngStyle]="{'color': customer.CustStyleCss}">
+                                                    comment
+                                                </i>
+                                                <span class="subTitileName">{{customer.CustComment}}</span><br />
+                                            </div> -->
+
+                                        </div>
+
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </mat-drawer-content>
+        <!-- End main drawer -->
+
+    </mat-drawer-container>
+    <!-- End drawer container -->
+</div>

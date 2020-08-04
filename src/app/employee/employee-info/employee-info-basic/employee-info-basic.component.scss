@@ -1,0 +1,829 @@
+.example-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+.example-container > * {
+  width: 90%;
+}
+.badge {
+  font-weight: 400;
+}
+.row {
+  margin-left: 3%;
+  width: 100%;
+  height: 50px;
+  margin-bottom: 15px;
+}
+
+* {
+  padding-left: 0px !important;
+}
+.colorGreen {
+  color: #009688;
+}
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle,
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #008577 !important;
+}
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: #008577 !important;
+}
+
+::ng-deep .mat-select-arrow {
+  color: #008577 !important;
+}
+.iconSmall {
+  font-size: 18px;
+}
+.hiddenClass {
+  background-color: #fafafa;
+  height: 80px;
+}
+form .left {
+  float: left;
+  width: 50%;
+}
+form .right {
+  float: left;
+  width: 50%;
+  margin: 0px;
+}
+form .form-footer {
+  width: 100%;
+  float: left;
+}
+
+@media screen and (max-width: 1920px) {
+  input,
+  .mat-select {
+    font-size: 16px;
+  }
+  .mat-radio-button span {
+    font-size: 16px;
+  }
+  .mobile {
+    display: none;
+  }
+  mat-drawer-content {
+    max-height: calc(100vh - 200px);
+    width: 100%;
+  }
+  form {
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    max-height: calc(100vh - 200px);
+    height: 820px;
+    margin-top: 50px;
+  }
+  form .main-form {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    max-height: calc(100vh - 160px);
+  }
+
+  .right .row {
+    margin-left: 0px;
+  }
+  //Position
+  .row .depment-left,
+  .row .position-right,
+  .row .email-left,
+  .row .email-right,
+  .row .left-license,
+  .row .right-vehicle {
+    width: 50%;
+    float: left;
+    height: 50px;
+  }
+  .depment-left {
+    margin-top: 15px;
+  }
+  .position-right .cbox-dpicker {
+    width: 83%;
+  }
+  //email
+  .email-left mat-form-field,
+  .email-right mat-form-field {
+    width: 83%;
+  }
+  //start-endDate
+  .start-endDate {
+    width: 83%;
+  }
+  //identity no -date
+  .iden-left mat-form-field,
+  .iden-right mat-form-field {
+    width: 83%;
+  }
+  //lisence-vehicle
+  .left-license mat-form-field,
+  .right-vehicle mat-form-field {
+    width: 83%;
+  }
+  // Passport No
+  .passNo mat-form-field {
+    width: 83%;
+  }
+
+  mat-label {
+    font-size: 16px;
+  }
+  mat-option {
+    font-size: 16px;
+    margin-left: 15px;
+  }
+  //image
+
+  .right .image-gender {
+    width: 100%;
+    height: 250px;
+    margin-bottom: 12px;
+  }
+  .image-gender .left-image,
+  .image-gender .right-image {
+    width: 50%;
+    height: 100%;
+    float: left;
+  }
+  .left-image .item-left {
+    width: 100%;
+    height: 50px;
+    margin-bottom: 15px;
+  }
+  .left-image mat-form-field {
+    width: 100%;
+    float: left;
+  }
+  .right-image {
+    width: 100%;
+  }
+  .right-image .flascard-container {
+    width: 150px;
+    height: 180px;
+    border-radius: 4px !important;
+    border-top-left-radius: 4px;
+  }
+  .mat-drawer .mat-fab {
+    width: 40px;
+    height: 40px;
+    &::ng-deep .mat-button-wrapper {
+      padding-bottom: 0px;
+      padding-top: 10px;
+    }
+  }
+
+  .mat-drawer-container {
+    width: 150px;
+    margin-left: 30px;
+    margin-top: 60px;
+  }
+  .mat-drawer-content {
+    overflow: visible;
+  }
+  .mat-Draw {
+    text-align: center;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    box-shadow: none;
+    background-color: transparent;
+    margin-top: 79%;
+  }
+  .example-card {
+    background: linear-gradient(to bottom, #ffffff 0%, #5cffef17 50%, #5cffef8a 100%);
+    max-width: 210px;
+    height: 180px;
+    border: 1px #e8e8e8 solid;
+    border-radius: 4px !important;
+    border-top-left-radius: 4px;
+    box-shadow: none;
+    border-collapse: collapse;
+  }
+  .mat-drawer-content .mat-card {
+    padding-bottom: 0px;
+    padding-right: 0px;
+    width: 100%;
+    height: 100%;
+    padding-top: 0px;
+  }
+  .drawer {
+    height: auto;
+  }
+  .mat-card .mat-card-image {
+    width: 100%;
+  }
+  .mat-card .avatar,
+  .mat-card img {
+    max-height: 100% !important;
+    max-width: 100% !important;
+    margin: 0px;
+    object-fit: contain;
+  }
+
+  //gender
+  .item-left .gender-group {
+    width: 100%;
+    height: 30px;
+    margin-top: 20px;
+  }
+  .gender-group mat-radio-button {
+    width: 30%;
+    float: left;
+    height: 100%;
+    margin: 0px;
+    padding-top: 10px;
+  }
+  //Employee status
+  .row .empStatus {
+    width: 100%;
+    height: 100%;
+  }
+  .empStatus mat-radio-group {
+    width: 100%;
+    height: 100%;
+    margin-top: 30px;
+  }
+  .emS-radio-button {
+    margin-top: 25px;
+    margin-right: 50px;
+  }
+  .right .comment {
+    width: 100%;
+    height: 150px;
+    float: left;
+  }
+  .comment .content-comment {
+    width: 90%;
+  }
+  .content-comment .t-comment {
+    width: 100%;
+  }
+  .t-comment textarea {
+    width: 100%;
+  }
+
+  ::ng-deep textarea {
+    overflow: auto;
+    resize: vertical;
+  }
+  //form footer
+  form .form-footer {
+    width: 90%;
+    padding-left: 5%;
+    height: auto;
+  }
+  .form-footer .emp-button {
+    width: 100%;
+    height: auto;
+    float: left;
+  }
+  .emp-button .btn-employee {
+    width: 100%;
+    height: 100%;
+    float: right;
+  }
+  .btn-employee .btn-form {
+    width: 60%;
+    margin-left: 55%;
+    right: 0;
+  }
+}
+
+@media screen and (max-width: 1380px) {
+  //edit radio-button
+  .mat-radio-button span {
+    font-size: 13px;
+  }
+  input,
+  .mat-select {
+    font-size: 13px;
+  }
+  .mobile {
+    display: none;
+  }
+  mat-drawer-content {
+    max-height: calc(100vh - 160px);
+    width: 100%;
+  }
+  form {
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    max-height: calc(100vh - 160px);
+    height: 820px;
+    margin-top: 50px;
+  }
+  form .main-form {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    max-height: calc(100vh - 160px);
+  }
+  // .main-form .right,.main-form.left{
+  //   max-height: calc(100vh - 160px);
+  // }
+  .right .row {
+    margin-left: 0px;
+  }
+  //Position
+  .row .depment-left,
+  .row .position-right,
+  .row .email-left,
+  .row .email-right,
+  .row .left-license,
+  .row .right-vehicle {
+    width: 50%;
+    float: left;
+    height: 50px;
+  }
+  .depment-left {
+    margin-top: 15px;
+  }
+  .position-right .cbox-dpicker {
+    width: 83%;
+  }
+  //email
+  .email-left mat-form-field,
+  .email-right mat-form-field {
+    width: 83%;
+  }
+  //start-endDate
+  .start-endDate {
+    width: 83%;
+  }
+  //identity no -date
+  .iden-left mat-form-field,
+  .iden-right mat-form-field {
+    width: 83%;
+  }
+  //lisence-vehicle
+  .left-license mat-form-field,
+  .right-vehicle mat-form-field {
+    width: 83%;
+  }
+  // Passport No
+  .passNo mat-form-field {
+    width: 83%;
+  }
+
+  mat-label {
+    font-size: 13px;
+  }
+  mat-option {
+    font-size: 13px;
+    margin-left: 15px;
+  }
+  //image
+  .right .image-gender {
+    width: 100%;
+    height: 250px;
+    margin-bottom: 12px;
+  }
+  .image-gender .left-image,
+  .image-gender .right-image {
+    width: 50%;
+    height: 100%;
+    float: left;
+  }
+  .left-image .item-left {
+    width: 100%;
+    height: 50px;
+    margin-bottom: 15px;
+  }
+  .left-image mat-form-field {
+    width: 100%;
+    float: left;
+  }
+  .right-image {
+    width: 100%;
+  }
+  .right-image .flascard-container {
+    width: 150px;
+    height: 180px;
+    border-radius: 4px !important;
+    border-top-left-radius: 4px;
+  }
+  .mat-drawer .mat-fab {
+    width: 35px;
+    height: 35px;
+    line-height: 0px;
+    &::ng-deep .mat-button-wrapper {
+      padding-bottom: 0px;
+      padding-top: 3px;
+    }
+  }
+
+  .mat-drawer-container {
+    width: 150px;
+    margin-left: 30px;
+    margin-top: 60px;
+  }
+
+  .mat-drawer-content {
+    overflow: visible;
+  }
+  .mat-Draw {
+    text-align: center;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    box-shadow: none;
+    background-color: transparent;
+    margin-top: 79%;
+  }
+  .example-card {
+    background: linear-gradient(to bottom, #ffffff 0%, #5cffef17 50%, #5cffef8a 100%);
+    max-width: 210px;
+    height: 180px;
+    border: 1px #e8e8e8 solid;
+    border-radius: 4px !important;
+    border-top-left-radius: 4px;
+    box-shadow: none;
+    border-collapse: collapse;
+  }
+  .mat-drawer-content .mat-card {
+    padding-bottom: 0px;
+    padding-right: 0px;
+    width: 100%;
+    height: 100%;
+    padding-top: 0px;
+  }
+  .drawer {
+    height: auto;
+  }
+  .mat-card .avatar {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    object-fit: contain;
+  }
+  //gender
+  .item-left .gender-group {
+    width: 100%;
+    height: 30px;
+    margin-top: 20px;
+  }
+  .gender-group mat-radio-button {
+    width: 30%;
+    float: left;
+    height: 100%;
+    margin: 0px;
+    padding-top: 10px;
+  }
+  //Employee status
+  .row .empStatus {
+    width: 100%;
+    height: 100%;
+  }
+  .empStatus mat-radio-group {
+    width: 100%;
+    height: 100%;
+    margin-top: 30px;
+  }
+  .emS-radio-button {
+    margin-top: 25px;
+    margin-right: 15px;
+  }
+  .right .comment {
+    width: 100%;
+    height: 150px;
+    float: left;
+  }
+  .comment .content-comment {
+    width: 90%;
+    height: 100%;
+  }
+  .content-comment .t-comment {
+    width: 100%;
+    height: 100%;
+  }
+  .t-comment mat-form-field {
+    width: 100%;
+    height: 100%;
+  }
+  //form footer
+  form .form-footer {
+    width: 90%;
+    padding-left: 5%;
+    height: 50px;
+    margin-top: 15px;
+  }
+  .form-footer .emp-button {
+    width: 100%;
+    height: 50px;
+    float: left;
+  }
+  .emp-button .btn-employee {
+    width: 100%;
+    height: 100%;
+    float: right;
+  }
+  .btn-employee .btn-form {
+    width: 60%;
+    margin-left: 55%;
+    right: 0;
+  }
+}
+//Ipad
+@media screen and (max-width: 1045px) {
+  .pc {
+    display: none;
+  }
+  .mobile {
+    display: inline-grid;
+  }
+  .hiddenClass {
+    height: 0px !important;
+  }
+  .row {
+    margin-left: 0 !important;
+  }
+  .mat-drawer-content {
+    max-height: calc(100vh - 200px);
+  }
+  form {
+    padding-left: 12px !important;
+    width: 100%;
+    margin-top: 80px;
+    max-height: calc(100vh - 200px);
+    height: 700px;
+  }
+  form .main-form {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    max-height: calc(100vh - 250px);
+  }
+  .main-form .example-container {
+    width: 100%;
+  }
+  .example-container mat-form-field {
+    width: 95%;
+    margin: 0;
+  }
+  .main-form .image-gender {
+    width: 98%;
+  }
+  form .left,
+  form .right {
+    float: left;
+    width: 100%;
+  }
+  .row .cbox-dpicker {
+    width: 50%;
+  }
+  .row .lisence-vehicle {
+    width: 50%;
+  }
+  .startendDate {
+    width: 100%;
+    height: auto;
+  }
+  .startendDate .date {
+    width: 45%;
+    margin-right: 5%;
+    max-width: 200px;
+    float: left;
+  }
+  .lisence-vehicle .start-endDate,
+  .lisence-vehicle .lisence,
+  .lisence-vehicle .vehicle,
+  .lisence-vehicle .cbox-dpicker {
+    width: 90%;
+    margin-right: 5%;
+  }
+
+  mat-label {
+    font-size: 13px;
+  }
+  mat-option {
+    font-size: 13px;
+    margin-left: 15px;
+  }
+  //gender
+  .example-container .image-gender {
+    width: 100%;
+    height: 100%;
+  }
+  .image-gender .gender-emp {
+    width: 100%;
+    height: 100%;
+  }
+  .gender-emp .gender-group {
+    width: 100%;
+    height: 100%;
+  }
+  .gender-group .mat-radio-button {
+    width: 30%;
+    float: left;
+    margin-top: 15px;
+  }
+  .main-form .employeeStatus {
+    width: 100%;
+    height: auto;
+  }
+  .employeeStatus .empStatus {
+    width: 100%;
+    padding: 0px;
+  }
+  .empStatus .emS-radio-button {
+    width: 30%;
+    float: left;
+    margin: 0px;
+    padding: 0px;
+  }
+  .main-form .comment {
+    width: 100%;
+    height: 170px;
+    float: left;
+  }
+  .comment .content-comment {
+    width: 100%;
+    height: 100%;
+  }
+  .content-comment .t-comment {
+    width: 95%;
+    height: 100%;
+  }
+  .t-comment mat-form-field {
+    width: 100%;
+    height: 100%;
+    margin-left: 0px;
+  }
+  .main-form .emp-button {
+    width: 100%;
+    height: 100px;
+    float: left;
+  }
+  .emp-button .btn-employee {
+    width: 100%;
+    height: 100%;
+  }
+  .btn-employee .btn-form {
+    width: 100%;
+    height: 100%;
+    margin-left: 45%;
+  }
+  .btn-form button {
+    height: 40px;
+    margin-bottom: 10px;
+  }
+}
+//mobile
+@media screen and (max-width: 420px) {
+  mat-form-field.start-endDate.mat-form-field.ng-tns-c9-32.mat-primary.mat-form-field-type-mat-input.mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-has-label.ng-untouched.ng-pristine.mat-form-field-should-float.ng-valid {
+    margin-left: 7px !important;
+  }
+  mat-form-field.start-endDate.endDate.mat-form-field.ng-tns-c9-34.mat-primary.mat-form-field-type-mat-input.mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-has-label.mat-form-field-hide-placeholder.ng-untouched.ng-pristine.ng-valid {
+    margin-left: 7px !important;
+  }
+  button.col-md-2.col-sm-2.mr-2.mat-raised-button.mat-primary {
+    margin-left: 7px !important;
+  }
+  button.col-md-2.col-sm-2.mr-2.mat-raised-button.mat-success{
+    margin-left: 7px !important;
+  }
+  button.col-md-2.col-sm-2.mat-raised-button.mat-warn{
+    margin-left: 7px !important;
+  }
+  .pc {
+    display: none;
+  }
+  form .mobile {
+    display: inline-grid;
+    width: 100%;
+  }
+  .mat-drawer-content {
+    max-height: calc(100vh - 200px);
+  }
+  form {
+    width: 98%;
+    max-height: calc(100vh - 200px);
+    height: 600px;
+    padding: 0px;
+    margin-left: 0px;
+    padding-right: 5px;
+  }
+  form .main-form {
+    width: 100%;
+    margin-top: 10px;
+  }
+  .main-form .example-container {
+    width: 100%;
+  }
+  .example-container mat-form-field {
+    width: 95%;
+    margin: 0;
+  }
+  .main-form .image-gender {
+    width: 95%;
+  }
+  form .left,
+  form .right {
+    float: left;
+    width: 100%;
+  }
+  .row .cbox-dpicker {
+    width: 50%;
+  }
+  .example-container .date {
+    width: 47%;
+    float: left;
+  }
+  .date .start-endDate,
+  .date .lisence,
+  .date .vehicle,
+  .date .cbox-dpicker {
+    width: 100%;
+    margin-left: 0px;
+  }
+
+  mat-label {
+    font-size: 13px;
+  }
+  mat-option {
+    font-size: 13px;
+    margin-left: 15px;
+  }
+  //gender
+  .example-container .image-gender {
+    width: 100%;
+    height: 100%;
+  }
+  .image-gender .gender-emp {
+    width: 100%;
+    height: 100%;
+  }
+  .gender-emp .gender-group {
+    width: 100%;
+    height: 100%;
+  }
+  .gender-group .mat-radio-button {
+    width: 40%;
+    float: left;
+    margin-top: 15px;
+  }
+  //form footer
+  form .form-footer {
+    width: 95%;
+    padding-left: 5%;
+    height: 400px;
+  }
+  .form-footer .example-container {
+    height: 130px;
+  }
+  .main-form .employeeStatus {
+    width: 100%;
+    height: auto;
+  }
+  .employeeStatus .empStatus {
+    width: 100%;
+    padding: 0px;
+  }
+  .empStatus .emS-radio-button {
+    width: 45%;
+    float: left;
+    margin: 0px;
+    padding: 0px;
+  }
+  .main-form .comment {
+    width: 100%;
+    height: 170px;
+    float: left;
+  }
+  .comment .content-comment {
+    width: 100%;
+    height: 100%;
+  }
+  .content-comment .t-comment {
+    width: 100%;
+    height: 100%;
+  }
+  .t-comment mat-form-field {
+    width: 100%;
+    height: 100%;
+    margin-left: 0px;
+  }
+  .main-form .emp-button {
+    width: 100%;
+    height: 100px;
+    float: left;
+  }
+  .emp-button .btn-employee {
+    width: 100%;
+    height: 100%;
+    float: right;
+  }
+  .btn-employee .btn-form {
+    width: 100%;
+    height: 100%;
+    margin-left: 0px;
+  }
+  .btn-form button {
+    height: 40px;
+    margin-bottom: 10px;
+  }
+}

@@ -1,0 +1,106 @@
+<div #scrollContent style="overflow-y: auto; margin-left: -20px !important;" class="h-100 m-0 p-0">
+<form #divSearch class="form-inline ml-4">
+    <div class="row col-12">
+        <div class="form-group">
+            <label style="width: 80px;">Report By:</label>
+            <mat-radio-group class="radio mr-1" [(ngModel)]="reportByValue"  [formControl]="reportBy" >
+                <mat-radio-button *ngFor="let item of reportByValues" [value]="item.value">
+                    <span>{{item.text}}</span>
+                </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="row ml-1 mr-1">
+        <div class="form-group pl-1 " [ngClass]="{'month-group': reportByValue == 'm', 'year-group': reportByValue == 'y'}">
+            <mat-form-field [hidden]="reportByValue != 'm'" style="width: 49%">
+                <input #reportMonthFromElement [formControl]="reportMonthFrom" matInput [matDatepicker]="reportDatePicker" placeholder="Month from" yearmonthFormat>
+                <mat-datepicker-toggle matSuffix [for]="reportDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #reportDatePicker startView="multi-year" previousEnabled="false" class="monthOnly" panelClass="monthOnly"
+                (yearSelected)="chosenYearHandler($event, reportMonthFrom)"
+                (monthSelected)="chosenMonthHandler($event, reportDatePicker, reportMonthFrom)" ></mat-datepicker>
+                <mat-error>
+                    <div *ngIf="reportMonthFrom.errors?.monthRequired">Month from is required </div>
+                    <div *ngIf="reportMonthFrom.errors?.monthFormat">Month is invalid </div>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field [hidden]="reportByValue != 'm'" style="width: 49%; margin-left: 2%">
+                <input #reportMonthToElement [formControl]="reportMonthTo" matInput [matDatepicker]="reportDatePicker2" placeholder="Month to" yearmonthFormat>
+                <mat-datepicker-toggle matSuffix [for]="reportDatePicker2"></mat-datepicker-toggle>
+                <mat-datepicker #reportDatePicker2 startView="multi-year" previousEnabled="false" class="monthOnly" panelClass="monthOnly"
+                (yearSelected)="chosenYearHandler($event, reportMonthTo)"
+                (monthSelected)="chosenMonthHandler($event, reportDatePicker2, reportMonthTo)" ></mat-datepicker>
+                <mat-error>
+                    <div *ngIf="reportMonthTo.errors?.monthRequired">Month to is required </div>
+                    <div *ngIf="reportMonthTo.errors?.monthFormat">Month is invalid </div>
+                  </mat-error>
+            </mat-form-field>
+            <mat-form-field [hidden]="reportByValue != 'y'" class="w-100">
+                <input [formControl]="reportYear" matInput placeholder="Year" maxlength="4" number mask="0000">
+                <mat-error>
+                    <div *ngIf="reportYear.errors?.yearRequired">Year is required </div>
+                </mat-error>
+            </mat-form-field>
+      </div>
+      <div class="form-group pl-1"  [ngClass]="{'curreny-group': reportByValue == 'm', 'year-curreny-group': reportByValue == 'y'}" style="position: relative">
+          <mat-form-field class="text-right" style="width: 49%">
+              <input #rateUSDElement [formControl]="rateUSD" type="text" matInput placeholder="USD rate" maxlength=12 mask="comma_separator" numberCommaSeparator>
+              <div class="mat-form-field-subscript-wrapper" style="position: absolute;width: 160px;text-align: left;top: 32px;">
+                  <div class="mat-error" *ngIf=" (isSubmitted || rateUSD.touched || rateJPY.touched) && (rateUSD.errors?.customRequired || rateJPY.errors?.customRequired)">
+                          USD and JPY rate is required
+                  </div>
+              </div>
+              
+          </mat-form-field>
+          <mat-form-field class="text-right" style="width: 49%; margin-left: 2%">
+              <input #rateJPYElement [formControl]="rateJPY" type="text" matInput placeholder="JPY rate" maxlength=12 mask="comma_separator" numberCommaSeparator>
+          </mat-form-field>
+      </div>
+      </div>
+      <div class="form-group pl-1">
+          <button type="submit" class="btn btn-outline-primary ml-2" (click)="loadDataFromService()">Report</button>
+      </div>
+    </div>
+</form>
+<div style="clear: both"></div>
+<div class="row col-12" style="min-height: 90%;" *ngIf="pieChartLabels.length > 0">
+<div #pieChartGroup class="col-12 col-lg-5" [style.height.px]="pieChartGroupHeight">
+    <div class="row m-0 p-0" style="height: 49%;">
+        <div style="font-weight: 600; height: 30px; color: rgb(51, 51, 51)" class="col-12 text-center">Statistics revenue</div>
+        <div style="display: block; height: calc(100% - 30px)" class="col-12 chart-pie">
+            <canvas baseChart 
+            [data]="pie1Series"
+            [labels]="pieChartLabels"
+                [options]="pieChartOptions"
+                [chartType]="pieChartType"
+                [colors]="pieChartColors">
+            </canvas>
+        </div>
+    </div>
+    <div class="row m-0 p-0" style="height: 49%;">
+            <div style="font-weight: 600; height: 30px; color: rgb(51, 51, 51)" class="col-12 text-center">Statistics project</div>
+            <div style="display: block; height: calc(100% - 30px)" class="col-12 chart-pie">
+              <canvas baseChart 
+                [data]="pie2Series"
+                [labels]="pieChartLabels"
+                [options]="pie2ChartOptions"
+                [chartType]="pieChartType"
+                [colors]="pieChartColors"
+                [legend]="">
+              </canvas>
+            </div>
+    </div>
+</div>
+<div class="col-12 col-lg-6" *ngIf="barChartLabels.length > 0">
+    <div style="display: block; "  class="chart-line">
+    <canvas baseChart 
+      [datasets]="barChartData"
+      [labels]="barChartLabels"
+      [options]="barChartOptions"
+      [plugins]="barChartPlugins"
+      [legend]="barChartLegend"
+      [chartType]="barChartType">
+    </canvas>
+  </div>
+</div>
+</div>
+</div>
+  

@@ -1,0 +1,149 @@
+<div class="lst" style="height: calc(100vh - 180px);margin-left: -25px">
+
+    <form #divSearch class="ml-5 form-header">
+        <div class="">
+            <div class="hasForm">
+                <mat-form-field style="width: 130px !important">
+
+                    <input #reportMonthElement [formControl]="reportMonth" matInput [matDatepicker]="reportDatePicker"
+                        yearmonthFormat placeholder="Choose a month">
+
+                    <mat-datepicker-toggle matSuffix [for]="reportDatePicker"></mat-datepicker-toggle>
+
+                    <mat-datepicker #reportDatePicker startView="multi-year" previousEnabled="false" class="monthOnly"
+                        panelClass="monthOnly" (yearSelected)="chosenYearHandler($event)"
+                        (monthSelected)="chosenMonthHandler($event, reportDatePicker)">
+                    </mat-datepicker>
+                    <mat-error>
+                        <div *ngIf="reportMonth.errors?.monthRequired">Year and Month is required </div>
+                        <div *ngIf="reportMonth.errors?.monthFormat">Year and Month is invalid </div>
+                    </mat-error>
+                </mat-form-field>
+
+                <button type="submit" class="ml-3" mat-raised-button color="warn" (click)="loadMonthlySalary()">
+                    <i class="material-icons md-18 ml-1">search</i>
+                </button>
+                <button type="button" class="ml-0 ml-md-3" mat-raised-button color="success"
+                    (click)="onDownLoadFile()">
+                    <i class="material-icons md-18 ml-1">archive</i>DownLoad
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="mat-elevation-z8 mb-3 ml-3 mr-3" style="margin-top: -15px" *ngIf="flagHidden">
+
+        <div class="pt-3 pb-3">
+
+            <div class="col-lg-12 contentTable" #parentTable>
+
+                <mat-table style="max-height: calc(100vh - 240px)" [dataSource]="dataSource" matSort
+                    matSortActive="EmpName" matSortDirection="asc" matSortDisableClear>
+
+                    <!-- No. -->
+                    <ng-container matColumnDef="No">
+                        <mat-header-cell class="p-0 ml-0 mr-0" *matHeaderCellDef> No. </mat-header-cell>
+                        <mat-cell class="p-0 ml-0 mr-0" *matCellDef="let row" data-label="No.">
+                            <a>
+                                {{row.No}}
+                            </a>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- TotalDayOff -->
+                    <ng-container matColumnDef="TotalDayOff">
+                        <mat-header-cell class="p-0 ml-0 mr-0" *matHeaderCellDef> TotalDayOff </mat-header-cell>
+                        <mat-cell class="p-0 ml-0 mr-0" *matCellDef="let row" data-label="Total Day Off">
+                            <a>
+                                {{row.TotalDayOff}}
+                            </a>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- EmpName -->
+                    <ng-container matColumnDef="EmpName">
+                        <mat-header-cell *matHeaderCellDef> Employee Name </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Employee Name">
+                            <a #btn1 data-toggle="modal" data-target="#myModal" class="someclass" id="{{row.Id}}">
+                                {{row.EmpName}}
+                            </a>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- PositionName -->
+                    <ng-container matColumnDef="PositionName">
+                        <mat-header-cell *matHeaderCellDef> PositionName </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Position Name">
+                            {{row.PositionName}}
+                        </mat-cell>
+
+                    </ng-container>
+
+                    <!-- Salary -->
+                    <ng-container matColumnDef="Salary">
+                        <mat-header-cell *matHeaderCellDef> Salary </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Salary">
+                            {{row.Salary}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- BonusOT -->
+                    <ng-container matColumnDef="BonusOT">
+                        <mat-header-cell *matHeaderCellDef> Bonus / OT </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Bonus/OT">
+                            {{row.BonusOT}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Allowance -->
+                    <ng-container matColumnDef="Allowance">
+                        <mat-header-cell *matHeaderCellDef> Allowance
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Allowance">
+                            {{row.Allowance}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Deduction -->
+                    <ng-container matColumnDef="Deduction">
+                        <mat-header-cell *matHeaderCellDef> Deduction
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Deduction">
+                            {{row.Deduction}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- ActualSalary -->
+                    <ng-container matColumnDef="ActualSalary">
+                        <mat-header-cell *matHeaderCellDef> Actual Salary
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Actual Salary">
+                            {{row.ActualSalary}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Comment -->
+                    <ng-container matColumnDef="Comment">
+                        <mat-header-cell *matHeaderCellDef> Comment </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Comment">
+                            {{row.Comment}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                </mat-table>
+
+                <!-- No records found -->
+                <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">
+                    No records found
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

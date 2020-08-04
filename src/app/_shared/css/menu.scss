@@ -1,0 +1,17 @@
+
+ul.nav {
+    display:flex;
+    flex-wrap:nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+ul.nav li .nav-link{
+    display: inline-block;
+    white-space:nowrap;
+}
+
+.nav-link.active{
+    background-color : #b5e3de;
+    color:  #009688
+}

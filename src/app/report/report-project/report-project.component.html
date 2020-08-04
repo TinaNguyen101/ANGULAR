@@ -1,0 +1,183 @@
+<div #scrollContent style="overflow-y: auto; margin-left: -20px !important;" class="h-100 m-0 p-0">
+<form #divSearch class="form-inline ml-4">
+        <div class="row col-12 m-0 p-0">
+            <div class="form-group">
+            <span style="width: 80px;" class="text-right">Report By:</span>
+            <mat-radio-group class="radio mr-1" [(ngModel)]="reportByValue"  [formControl]="reportBy" >
+                    <mat-radio-button *ngFor="let item of reportByValues" [value]="item.value">
+                        <span>{{item.text}}</span>
+                    </mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <div class="form-group pl-1">
+            <mat-form-field [hidden]="reportByValue != 'm'" style="width: 120px">
+                <input #reportMonthElement [formControl]="reportMonth" matInput [matDatepicker]="reportDatePicker" placeholder="Choose a month" yearmonthFormat>
+                <mat-datepicker-toggle matSuffix [for]="reportDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #reportDatePicker startView="multi-year" previousEnabled="false" class="monthOnly" panelClass="monthOnly"
+                (yearSelected)="chosenYearHandler($event)"
+                (monthSelected)="chosenMonthHandler($event, reportDatePicker)" ></mat-datepicker>
+                <mat-error>
+                    <div *ngIf="reportMonth.errors?.monthRequired">Month is required </div>
+                    <div *ngIf="reportMonth.errors?.monthFormat">Month is invalid </div>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field [hidden]="reportByValue != 'y'" style="width: 120px">
+                <input [formControl]="reportYear" matInput placeholder="Choose a year" maxlength="4" number mask="0000">
+                <mat-error>
+                    <div *ngIf="reportYear.errors?.yearRequired">Year is required </div>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="text-right ml-1" style="width: 70px">
+                <input #rateUSDElement [formControl]="rateUSD" type="text" matInput placeholder="USD rate" maxlength=12 mask="comma_separator" numberCommaSeparator>
+                <div class="mat-form-field-subscript-wrapper" style="position: absolute;width: 160px;text-align: left;top: 32px;">
+                    <div class="mat-error" *ngIf=" (isSubmitted || rateUSD.touched || rateJPY.touched) && (rateUSD.errors?.customRequired || rateJPY.errors?.customRequired)">
+                            USD and JPY rate is required
+                    </div>
+                </div>
+                
+            </mat-form-field>
+            <mat-form-field class="text-right ml-1" style="width: 70px">
+                <input #rateJPYElement [formControl]="rateJPY" type="text" matInput placeholder="JPY rate" maxlength=12 mask="comma_separator" numberCommaSeparator>
+                <mat-error></mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="form-group col-12 p-0 m-0">
+            <span style="width: 80px;" class="text-right">Status:</span>
+            <mat-selection-list class="col-12 col-md-10 p-0 m-0" [(ngModel)]="reportStatusValue" [ngModelOptions]="{standalone: true}">
+                <mat-list-option class="col-6 col-md-4 col-lg-2 float-left mat-list-option-small p-0 m-0" checkboxPosition="before" *ngFor="let item of projectStatus" [value]="item.Id">
+                        <div style="font-size: 100%" class="badge py-2" [ngStyle]="convertStyleObject(item.StyleCss)" >{{item.ProjectStatusName}}</div>
+                </mat-list-option>
+        </mat-selection-list>
+    </div>
+    <div class="ml-2 mt-3">
+        <button type="button" class="btn btn-outline-primary ml-2" (click)="loadProject()">Report</button>
+    </div>
+</form>
+
+<div class="mr-3 ml-3" style="margin-bottom: 10px" *ngIf="isReported">
+<div class="p-3 mat-elevation-z8" style="padding-bottom: 5px" *ngIf="isReported" style="background: white">
+    <mat-table [style.max-height.px]="tableResultMaxHeight" [dataSource]="dataSource" matSort matSortActive="ProjectStartDate" matSortDirection="desc" matSortDisableClear class='text-small'>
+
+    <ng-container matColumnDef="ProjectName">
+    <mat-header-cell *matHeaderCellDef> Project Name </mat-header-cell>
+    <mat-cell *matCellDef="let row" data-label="Project Name"> {{row.ProjectName}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="CustName">
+            <mat-header-cell *matHeaderCellDef> Customer </mat-header-cell>
+            <mat-cell *matCellDef="let row" data-label="Customer"> {{row.CustName}} </mat-cell>
+            </ng-container>
+            
+    <ng-container matColumnDef="ProjectDate">
+            <mat-header-cell *matHeaderCellDef> Start Date - End Date </mat-header-cell>
+            <mat-cell *matCellDef="let row" data-label="Start-End Date"> 
+                <span *ngIf="row.ProjectStartDate !== null || row.ProjectEndDate !== null">
+                        {{row.ProjectStartDate | date: "yyyy/MM/dd" }} ~  {{row.ProjectEndDate | date: "yyyy/MM/dd" }} </span></mat-cell>
+        </ng-container>
+        
+    <ng-container matColumnDef="ProjectEstimateCost">
+            <mat-header-cell *matHeaderCellDef> Estimate Cost </mat-header-cell>
+            <mat-cell *matCellDef="let row" data-label="Estimate Cost"> 
+                    <span class="w-100 text-right" *ngIf="row.ProjectCurrencySymboy == 'đ'">{{row.ProjectEstimateCost | number}}{{row.ProjectCurrencySymboy}} </span>
+                    <span class="w-100 text-right" *ngIf="row.ProjectCurrencySymboy != 'đ'">{{row.ProjectCurrencySymboy}}{{row.ProjectEstimateCost | number}} </span>
+            </mat-cell>
+        </ng-container>
+            
+    <ng-container matColumnDef="ProjectDeliveryDate">
+            <mat-header-cell *matHeaderCellDef> Delivery Date </mat-header-cell>
+            <mat-cell *matCellDef="let row" data-label="Delivery Date"> {{row.ProjectDeliveryDate | date: "yyyy/MM/dd" }}</mat-cell>
+        </ng-container>
+
+    <ng-container matColumnDef="ProjectPaymentDate">
+            <mat-header-cell *matHeaderCellDef> Payment Date </mat-header-cell>
+            <mat-cell *matCellDef="let row" data-label="Payment Date"> {{row.ProjectPaymentDate | date: "yyyy/MM/dd" }}</mat-cell>
+        </ng-container>
+            
+    <ng-container matColumnDef="ProjectStatus">
+            <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+            <mat-cell *matCellDef="let row" data-label="Status"><div style="font-size: 100%" class="badge" [ngStyle]="convertStyleObject(row.ProjectStatusStyle)" >{{row.ProjectStatus}}</div></mat-cell>
+        </ng-container>
+        
+    <ng-container matColumnDef="ProjectTotalEstimateCost">
+            <mat-header-cell *matHeaderCellDef> Total Cost (VND) </mat-header-cell>
+            <mat-cell *matCellDef="let row" data-label="Total Cost (VND)"> 
+                <span class="w-100 text-right">{{row.ProjectTotalEstimateCost | number}}đ </span>
+            </mat-cell>
+                </ng-container>
+
+    <ng-container matColumnDef="detailExpand">
+    <mat-header-cell *matHeaderCellDef> detailExpand </mat-header-cell>
+    <mat-cell *matCellDef="let detail" data-label="Details" style="display: block"> 
+    <div class="row col-12 font-weight-bold">Decription:</div>
+    <div class="row col-xl-12 text-left" style="font-weight: normal; white-space: pre-line;">
+        {{detail.element.ProjectDecription}} 
+    </div>
+    <div *ngIf="detail.element.ProjectLeader || detail.element.ProjectCoder || detail.element.ProjectTester" class="row col-12 font-weight-bold pt-2">Member:</div>
+    <div class="row col-xl-12 text-left" style="font-weight: normal">
+        <div class='col-12' *ngIf="detail.element.ProjectLeader">Leader: {{detail.element.ProjectLeader}}</div>
+        <div class='col-12' *ngIf="detail.element.ProjectCoder">Coder: {{detail.element.ProjectCoder}}</div>
+        <div class='col-12' *ngIf="detail.element.ProjectTester">Tester: {{detail.element.ProjectTester}}</div>
+    </div>
+    <div class="row col-12 font-weight-bold pt-2" *ngIf="detail.element.ProjectMaintenanceReports && detail.element.ProjectMaintenanceReports.length !== 0">Maintenances:</div>
+    <div class="row col-12 pb-2 m-0 pr-0" *ngIf="detail.element.ProjectMaintenanceReports && detail.element.ProjectMaintenanceReports.length !== 0">
+    <mat-table [dataSource]="detail.element.ProjectMaintenanceReports" matSortDisableClear class='col-12 m-0'>
+
+            <ng-container matColumnDef="MaintenanceName">
+                    <mat-header-cell *matHeaderCellDef> Maintenance Name </mat-header-cell>
+                    <mat-cell *matCellDef="let row" data-label="Name">{{row.MaintenanceName}}</mat-cell>
+                </ng-container>
+            <ng-container matColumnDef="MaintenanceStatus">
+                    <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                    <mat-cell *matCellDef="let row" data-label="Status"><div style="font-size: 100%" class="badge" [ngStyle]="convertStyleObject(row.MaintenanceStatusStyle)" >{{row.MaintenanceStatus}}</div></mat-cell>
+                </ng-container>
+                    <ng-container matColumnDef="MaintenanceDate">
+                    <mat-header-cell *matHeaderCellDef> Maintenance Date </mat-header-cell>
+                    <mat-cell *matCellDef="let row" data-label="Date"> {{row.MaintenanceStartDate | date: "yyyy/MM/dd" }} ~  {{row.MaintenanceEndDate | date: "yyyy/MM/dd" }} </mat-cell>
+                            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="MaintenanceDeliveryDate">
+                            <mat-header-cell *matHeaderCellDef> Delivery Date </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="Delivery Date"> {{row.MaintenanceDeliveryDate | date: "yyyy/MM/dd" }}</mat-cell>
+                            <mat-footer-cell *matFooterCellDef></mat-footer-cell>      
+                        </ng-container>
+                
+                    <ng-container matColumnDef="MaintenancePaymentDate">
+                            <mat-header-cell *matHeaderCellDef> Payment Date </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="Payment Date"> {{row.MaintenancePaymentDate | date: "yyyy/MM/dd" }}</mat-cell>
+                            <mat-footer-cell *matFooterCellDef></mat-footer-cell>      
+                        </ng-container>
+                        
+                    <ng-container matColumnDef="MaintenanceEstimateCost">
+                        <mat-header-cell *matHeaderCellDef> Estimate Cost </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Estimate Cost">
+                                <span class="w-100 text-right" *ngIf="row.MaintenanceCurrencySymboy == 'đ'">{{row.MaintenanceEstimateCost | number}}{{row.MaintenanceCurrencySymboy}} </span>
+                                <span class="w-100 text-right" *ngIf="row.MaintenanceCurrencySymboy != 'đ'">{{row.MaintenanceCurrencySymboy}}{{row.MaintenanceEstimateCost | number}} </span>
+                            </mat-cell>
+                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>      
+                    </ng-container>
+                
+                    <mat-header-row class="detailHeader" *matHeaderRowDef="['MaintenanceName', 'MaintenanceDate', 'MaintenanceDeliveryDate', 'MaintenancePaymentDate', 'MaintenanceEstimateCost', 'MaintenanceStatus']"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: ['MaintenanceName', 'MaintenanceDate', 'MaintenanceDeliveryDate', 'MaintenancePaymentDate', 'MaintenanceEstimateCost', 'MaintenanceStatus'];"
+                                            class="element-row"></mat-row>
+                            
+                </mat-table>
+                <div class="text-center text-danger pt-1 col-12" *ngIf="detail.element.ProjectMaintenanceReports && detail.element.ProjectMaintenanceReports.length === 0">No records found</div>
+            </div>
+            </mat-cell>
+        </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"
+            class="element-row" 
+            [class.expanded]="expandedElement == row"
+            (click)="expandedElement && expandedElement == row ? expandedElement = null : expandedElement = row"></mat-row>
+    <mat-row *matRowDef="let row; columns: ['detailExpand']; when: isExpansionDetailRow"
+            [@detailExpand]="row.element == expandedElement ? 'expanded' : 'collapsed'"
+            style="overflow: hidden;"></mat-row>
+            
+</mat-table>
+        <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">No records found</div>
+</div>
+</div>
+</div>

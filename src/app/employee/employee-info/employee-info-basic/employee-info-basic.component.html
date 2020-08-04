@@ -1,0 +1,712 @@
+<form [formGroup]="EmployeeForm" (ngSubmit)="onSubmitEmployeeData()">
+    <!-- PC -->
+    <div class="pc">
+        <div class="row  justify-content-center main-form ">
+            <div class="col-xl-5 col-lg-5 col-sm-11 row-left">
+                <!-- list department name radio button -->
+                <div class="row example-container">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 depment-left ">
+                        <mat-radio-group class="example-radio-group" formControlName="DepartmentName"
+                            [(ngModel)]="defaultCheckDep">
+                            <mat-radio-button class="example-radio-button mr-3" #button [value]="item.Id"
+                                *ngFor="let item of departmentList; let i = index">
+                                <div style="font-size: 75%;margin-right:50px;" class="badge">
+                                    <span style="line-height: 1.5;padding-left: 2px !important;">
+                                        {{item.DepartmentName}}
+                                    </span>
+                                </div>
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <!-- Position -->
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 position-right">
+                        <mat-form-field class="cbox-dpicker">
+                            <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">person</i>
+                            <mat-select placeholder="Position" #singleSelect formControlName="Position">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let item of arrPosition " [value]="item.Id">
+                                    <span class="ml-2">{{item.PositionName}}</span>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- Employee Name                     -->
+                <div class="row example-container">
+                    <mat-form-field>
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">info</i>
+                        <mat-label>Employee Name</mat-label>
+                        <input matInput #EmpName formControlName="EmpName" maxlength="100">
+                        <mat-error>
+                            <div *ngIf="EmployeeForm.controls.EmpName.errors?.required">Employee Name is required</div>
+                        </mat-error>
+                        <mat-hint align="end">{{EmpName.value.length}} / 100</mat-hint>
+                    </mat-form-field>
+                </div>
+                <!-- Email -->
+                <div class="row example-container">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 email-left">
+                        <mat-form-field>
+                            <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">email</i>
+                            <mat-label>Email1</mat-label>
+                            <input matInput formControlName="EmpEmail1" #EmpEmail1 maxlength="100"
+                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+                            <mat-error>
+                                <div *ngIf="!EmpEmail1.errors?.pattern">Invalid email </div>
+                            </mat-error>
+                            <mat-hint align="end">{{EmpEmail1.value.length}} / 100</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 email-right">
+                        <mat-form-field>
+                            <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">email</i>
+                            <mat-label>Email2</mat-label>
+                            <input matInput formControlName="EmpEmail2" #EmpEmail2 maxlength="100"
+                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+                            <mat-error>
+                                <div *ngIf="!EmpEmail2.errors?.pattern">Invalid email </div>
+                            </mat-error>
+                            <mat-hint align="end">{{EmpEmail2.value.length}} / 100</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- Address            -->
+                <div class="row example-container">
+                    <mat-form-field>
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">place</i>
+                        <mat-label>Address</mat-label>
+                        <input matInput formControlName="Address" maxlength="500" #Address>
+                        <mat-hint align="end">{{Address.value.length}} / 500</mat-hint>
+                    </mat-form-field>
+                </div>
+                <!-- AddressBirth -->
+                <div class="row example-container">
+                    <mat-form-field>
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">place</i>
+                        <mat-label>Address Birth</mat-label>
+                        <input matInput formControlName="AddressBirth" maxlength="500" #AddressBirth>
+                        <mat-hint align="end">{{AddressBirth.value.length}} / 500</mat-hint>
+                    </mat-form-field>
+                </div>
+                <!-- Start-EndDate -->
+                <div class="row example-container">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                        <mat-form-field class="start-endDate">
+                            <mat-label>Start Date</mat-label>
+                            <input type="text" formControlName="StartDate" matInput [matDatepicker]="pickerStartDate"
+                                (blur)="checkValidDate(1)" placeholder="yyyy/mm/dd" (ngModelChange)="checkValidDate(1)"
+                                dateFormat>
+                            <mat-datepicker-toggle matSuffix [for]="pickerStartDate" class="colorGreen">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #pickerStartDate></mat-datepicker>
+                            <mat-error>
+                                <div *ngIf="EmployeeForm.controls.StartDate.errors?.required">Start date is required
+                                </div>
+                                <div *ngIf="EmployeeForm.controls.StartDate.errors?.compareDate">Start date is less than
+                                    end date </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                        <mat-form-field class="start-endDate ">
+                            <mat-label>Regular Date</mat-label>
+                            <input type="text" formControlName="RegularDate" (ngModelChange)="checkValidDate(2)"
+                                (ngModelChange)="checkValidDate(3)" (blur)="onblur()" matInput
+                                [matDatepicker]="pickerRegularDate" placeholder="yyyy/mm/dd" dateFormat>
+                            <mat-datepicker-toggle matSuffix [for]="pickerRegularDate" class="colorGreen">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #pickerRegularDate></mat-datepicker>
+                            <mat-error>
+                                <div *ngIf="EmployeeForm.controls.RegularDate.errors?.compareDate">Regular date don't
+                                    fall between start date and end date </div>
+                                <div *ngIf="EmployeeForm.controls.RegularDate.errors?.required">Regular date is required
+                                </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- Identity No - Date -->
+                <div class="row example-container">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 iden-left">
+                        <mat-form-field>
+                            <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">info</i>
+                            <mat-label>Identity No</mat-label>
+                            <input matInput formControlName="IdentityNo" number maxlength="15" #IdentityNo>
+                            <mat-hint align="end">{{IdentityNo.value.length}} / 15</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 iden-right">
+                        <mat-form-field class="cbox-dpicker">
+                            <mat-label>Identity Date </mat-label>
+                            <input type="text" formControlName="IdentityDate" matInput
+                                [matDatepicker]="pickerIdentityDate" placeholder="yyyy/mm/dd" dateFormat>
+                            <mat-datepicker-toggle matSuffix [for]="pickerIdentityDate" class="colorGreen">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #pickerIdentityDate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- Identity Place  -->
+                <div class="row example-container">
+                    <mat-form-field>
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">place</i>
+                        <mat-label>Identity Place</mat-label>
+                        <input matInput formControlName="IdentityPlace" maxlength="250" #IdentityPlace>
+                        <mat-hint align="end">{{IdentityPlace.value.length}} / 250</mat-hint>
+                    </mat-form-field>
+                </div>
+                <!-- Passport No -->
+                <div class="row example-container ">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 passNo">
+                        <mat-form-field>
+                            <i matPrefix class="fas fa-passport md-18 colorGreen  iconSmall pr-2"
+                                style="font-size: 25px;"></i>
+                            <mat-label>Passport No</mat-label>
+                            <input matInput formControlName="PassportNo" number maxlength="15" #PassportNo>
+                            <mat-hint align="end">{{PassportNo.value.length}} / 15</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- Passport date - Expiry -->
+                <div class="row example-container">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                        <mat-form-field class="start-endDate">
+                            <mat-label>Passport Date </mat-label>
+                            <input type="text" formControlName="PassportDate" matInput [matDatepicker]="pickerPassDate"
+                                placeholder="yyyy/mm/dd" dateFormat>
+                            <mat-datepicker-toggle matSuffix [for]="pickerPassDate" class="colorGreen">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #pickerPassDate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                        <mat-form-field class="start-endDate">
+                            <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">info</i>
+                            <mat-label>Passport Expiry Date</mat-label>
+                            <input matInput number formControlName="PassportExDate" maxlength="9" #PassportExDate>
+                            <mat-hint align="end">{{PassportExDate.value.length}} / 9</mat-hint>
+
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-5 col-lg-5 col-sm-11 right">
+                <div class="image-gender">
+                    <!-- Employee Gender-->
+                    <div class="left-image">
+                        <div class="col-lg-12 item-left">
+                            <mat-radio-group class="example-radio-group gender-group" formControlName="EmpGender"
+                                [(ngModel)]="defaultCheckGender">
+                                <mat-radio-button class="example-radio-button mr-3" style="margin-top: 15px;" #button
+                                    [value]="item.Id" *ngFor="let item of lstGender; let i = index">
+                                    <div style="font-size: 75%;margin-right:50px;" class="badge">
+                                        <span style="line-height: 1.5; padding-left: 2px !important;">
+                                            {{item.GenderName}}
+                                        </span></div>
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                        <!-- Birthday -->
+                        <div class="col-lg-12 item-left">
+                            <mat-form-field class="cbox-dpicker">
+                                <mat-label>Birthday </mat-label>
+                                <input type="text" formControlName="Birthday" matInput [matDatepicker]="pickerBirthday"
+                                    placeholder="yyyy/mm/dd" dateFormat>
+                                <mat-datepicker-toggle matSuffix [for]="pickerBirthday" class="colorGreen">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerBirthday></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-12 item-left">
+                            <mat-form-field>
+                                <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">phone_iphone</i>
+                                <mat-label>Mobile1</mat-label>
+                                <input matInput formControlName="EmpMobile1" #EmpMobile1 maxlength="15"
+                                    pattern="^0[1-9]\d{8}$">
+                                <mat-error>
+                                    <div *ngIf="!EmpMobile1.errors?.pattern">Invalid mobile1 </div>
+                                </mat-error>
+                                <mat-hint align="end">{{EmpMobile1.value.length}} / 15</mat-hint>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-12 item-left">
+                            <mat-form-field>
+                                <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">phone_iphone</i>
+                                <mat-label>Mobile2</mat-label>
+                                <input matInput formControlName="EmpMobile2" #EmpMobile2 maxlength="15"
+                                    pattern="^0[1-9]\d{8}$">
+                                <mat-error>
+                                    <div *ngIf="!EmpMobile2.errors?.pattern">Invalid mobile2 </div>
+                                </mat-error>
+                                <mat-hint align="end">{{EmpMobile2.value.length}} / 15</mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <!-- Employee Image -->
+                    <div class="right-image">
+                        <mat-drawer-container class="flascard-container" (mouseenter)="drawerFlashCard.toggle() "
+                            (mouseleave)="drawerFlashCard.toggle(false)">
+                            <mat-drawer #drawerFlashCard class="mat-Draw">
+                                <button mat-fab *ngIf="employee.EmpImage" style=" color:#fff; background-color: #009688;margin-right: 5px;"
+                                    type="button" (click)="btnEmpImage.click()">
+                                    <i class="material-icons" style="font-size: larger;">edit</i>
+                                </button>
+                                <button mat-fab *ngIf="employee.EmpImage" type="button" style="color:#fff; background-color: #f44366"
+                                    (click)="onDeleteImage(btnEmpImage)">
+                                    <i class="material-icons" style="font-size: larger;">delete</i>
+                                </button>
+                                <button mat-fab *ngIf="!employee.EmpImage" style=" color:#fff; background-color: #009688;margin-right: 5px;"
+                                    type="button" (click)="btnEmpImage.click()">
+                                    <i class="material-icons" style="font-size: larger;">add_photo_alternate</i>
+                                </button>
+                            </mat-drawer>
+                            <mat-drawer-content class="content">
+                                <mat-card class="example-card">
+                                    <!-- accept='image/*' -->
+                                    <input type="file" formControlName="EmpImage" #btnEmpImage
+                                        id="{{employee.EmpImage}}" (change)="uploadImageFile($event)" hidden />
+                                    <ng-template [ngIf]="employee.EmpImage" [ngIfElse]="notShow">
+                                        <img class="avatar" mat-card-image src="{{employee.EmpImage}}">
+                                    </ng-template>
+                                    <ng-template #notShow>
+                                        <img class="avatar" mat-card-image *ngIf="employee.EmpGender === 0"
+                                            src="../../../../assets/images/avatar_male.png">
+                                        <img class="avatar" mat-card-image *ngIf="employee.EmpGender === 1"
+                                            src="../../../../assets/images/avatar_female.png">
+                                    </ng-template>
+                                </mat-card>
+                            </mat-drawer-content>
+                        </mat-drawer-container>
+                    </div>
+                </div>
+                <div class="row example-container">
+                    <div class="col-lg-12 empStatus">
+                        <mat-radio-group class="example-radio-group empStatus-radio " formControlName="EmployeeStatus"
+                            [(ngModel)]="defaultCheckEmpStatus">
+                            <mat-radio-button class="example-radio-button emS-radio-button  " #button [value]="item.Id"
+                                *ngFor="let item of employyeeStatusList; let i = index">
+                                <div style="font-size: 75%" class="badge">
+                                    <span style="line-height: 1.5;padding-left: 2px !important;">
+                                        {{item.EmpStatus}}
+                                    </span></div>
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+                <div class="row example-container">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 ">
+                        <mat-form-field class="start-endDate endDate">
+                            <mat-label>End Date</mat-label>
+                            <input type="text" formControlName="EndDate" matInput [matDatepicker]="pickerEndDate"
+                                (blur)="checkValidDate(0)" placeholder="yyyy/mm/dd" (ngModelChange)="checkValidDate(0)"
+                                dateFormat>
+                            <mat-datepicker-toggle matSuffix [for]="pickerEndDate" class="colorGreen">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #pickerEndDate></mat-datepicker>
+                            <mat-error>
+                                <div *ngIf="EmployeeForm.controls.EndDate.errors?.required">End date is required</div>
+                                <div *ngIf="EmployeeForm.controls.EndDate.errors?.compareDate">End date is greater than
+                                    start date </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- Lisence - Vehicle -->
+                <div class="row example-container">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 left-license">
+                        <mat-form-field>
+                            <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">info</i>
+                            <mat-label>Lisence Plate</mat-label>
+                            <input matInput formControlName="LicensePlate" maxlength="20" #LicensePlate>
+                            <mat-hint align="end">{{LicensePlate.value.length}} / 20</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 right-vehicle">
+                        <mat-form-field class="vehicle">
+                            <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">motorcycle</i>
+                            <mat-select placeholder="Vehicle Type" #singleSelect formControlName="VehicleType">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let vType of vehicleTypeList " [value]="vType.Id">
+                                    <span class="ml-2">{{vType.VehicleType}}</span>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row example-container">
+                    <mat-form-field>
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">comment</i>
+                        <mat-label>Vehicle Comment</mat-label>
+                        <input matInput formControlName="VehicleComment" maxlength="500" #VehicleComment>
+                        <mat-hint align="end">{{VehicleComment.value.length}} / 500</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="row example-container comment" style="height: inherit;">
+                    <div class="content-comment">
+                        <div fxLayout="row" fxLayout.xs="column" class="t-comment" fxLayoutWrap fxLayoutAlign="left">
+                            <mat-form-field appearance="outline" flex-gt-sm fxFlex="100%">
+                                <mat-label>Comment</mat-label>
+                                <textarea formControlName="Comment" #Comment matInput maxlength="4000"
+                                    rows="4"></textarea>
+                                <mat-hint align="end">{{Comment.value.length}} / 4000</mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="form-footer">
+                <div class="emp-button">
+                    <div class="col-lg-12 col-xl-8 btn-employee">
+                        <div *ngIf="employeeId" class="btn-form">
+                            <button type="button" mat-raised-button color="primary" (click)="goBack()"
+                                class="col-md-2 col-sm-2 mr-2">
+                                <i class="material-icons md-18 ml-1">arrow_back</i> Back
+                            </button>
+                            <button type="button" mat-raised-button color="success" (click)="onSubmitEmployeeData()"
+                                class="col-md-2 col-sm-2 mr-2">
+                                <i class="material-icons md-18 ml-1">save</i> Edit
+                            </button>
+                            <button type="button" (click)="deleteEmployee()" mat-raised-button color="warn"
+                                class="col-md-2 col-sm-2">
+                                <i class="material-icons md-18 ml-1">delete</i> Delete
+                            </button>
+                        </div>
+                        <div *ngIf="!employeeId" class="btn-form">
+                            <button type="button" mat-raised-button color="primary" (click)="goBack()"
+                                class="col-md-2 mx-md-2 col-sm-2 mr-2">
+                                <i class="material-icons md-18 ml-1">arrow_back</i> Back
+                            </button>
+                            <button type="button" mat-raised-button color="success" (click)="onSubmitEmployeeData()"
+                                class="col-md-2 mx-md-2 col-sm-2 my-1">
+                                <i class="material-icons md-18 ml-1">save</i> Create
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile -->
+    <div class="mobile" >
+        <div class="row  justify-content-center main-form ">
+            <!-- list department name radio button -->
+            <div class="row example-container">
+                <div class="col-lg-12">
+                    <mat-radio-group class="example-radio-group" formControlName="DepartmentName"
+                        [(ngModel)]="defaultCheckDep">
+                        <mat-radio-button class="example-radio-button mr-3" #button [value]="item.Id"
+                            *ngFor="let item of departmentList; let i = index">
+                            <div style="font-size: 75%;margin-right:50px;" class="badge">
+                                <span style="line-height: 1.5;padding-left: 2px !important;">
+                                    {{item.DepartmentName}}
+                                </span></div>
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+            <div class="row example-container">
+                <mat-form-field class="cbox-dpicker">
+                    <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">person</i>
+                    <mat-select placeholder="Position" #singleSelect formControlName="Position">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let item of arrPosition " [value]="item.Id">
+                            <span class="ml-2">{{item.PositionName}}</span>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="row example-container">
+                <mat-form-field>
+                    <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">info</i>
+                    <mat-label>Employee Name</mat-label>
+                    <input matInput #EmpNamemb formControlName="EmpName" maxlength="100">
+                    <mat-error>
+                        <div *ngIf="EmployeeForm.controls.EmpName.errors?.required">Employee Name is required</div>
+                    </mat-error>
+                    <mat-hint align="end">{{EmpNamemb.value.length}} / 100</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="image-gender">
+                <!-- Employee Gender-->
+                <div class="gender-emp">
+                    <div class="col-lg-12">
+                        <mat-radio-group class="example-radio-group gender-group" formControlName="EmpGender"
+                            [(ngModel)]="defaultCheckGender">
+                            <mat-radio-button class="example-radio-button mr-3" style="margin-top: 15px;" #button
+                                [value]="item.Id" *ngFor="let item of lstGender; let i = index">
+                                <div style="font-size: 75%;margin-right:50px;" class="badge">
+                                    <span style="line-height: 1.5;padding-left: 2px !important;">
+                                        {{item.GenderName}}
+                                    </span></div>
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </div>
+            <div class="row example-container">
+                <mat-form-field class="cbox-dpicker">
+                    <mat-label>Birthday </mat-label>
+                    <input type="text" formControlName="Birthday" matInput [matDatepicker]="pickerBirthdaymb"
+                        placeholder="yyyy/mm/dd" dateFormat>
+                    <mat-datepicker-toggle matSuffix [for]="pickerBirthdaymb" class="colorGreen">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #pickerBirthdaymb></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="row example-container">
+                <mat-form-field>
+                    <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">place</i>
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="Address" maxlength="500" #Addressmb>
+                    <mat-hint align="end">{{Addressmb.value.length}} / 500</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="row example-container">
+                <mat-form-field>
+                    <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">place</i>
+                    <mat-label>Address Birth</mat-label>
+                    <input matInput formControlName="AddressBirth" maxlength="500" #AddressBirthmb>
+                    <mat-hint align="end">{{AddressBirthmb.value.length}} / 500</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="startendDate">
+                <div class="date">
+                    <mat-form-field class="start-endDate">
+                        <mat-label>Start Date</mat-label>
+                        <input type="text" formControlName="StartDate" matInput [matDatepicker]="pickerStartDatemb"
+                            (blur)="checkValidDate(1)" placeholder="yyyy/mm/dd" (ngModelChange)="checkValidDate(1)"
+                            dateFormat>
+                        <mat-datepicker-toggle matSuffix [for]="pickerStartDatemb" class="colorGreen">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #pickerStartDatemb></mat-datepicker>
+                        <mat-error>
+                            <div *ngIf="EmployeeForm.controls.StartDate.errors?.required">Start date is required </div>
+                            <div *ngIf="EmployeeForm.controls.StartDate.errors?.compareDate">Start date is less than end
+                                date </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="date">
+                    <mat-form-field class="start-endDate ">
+                        <mat-label>Regular Date</mat-label>
+                        <input type="text" formControlName="RegularDate" (ngModelChange)="checkValidDate(2)"
+                            (ngModelChange)="checkValidDate(3)" matInput [matDatepicker]="pickerRegularDatemb"
+                            placeholder="yyyy/mm/dd" dateFormat (blur)="onblur()">
+                        <mat-datepicker-toggle matSuffix [for]="pickerRegularDatemb" class="colorGreen">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #pickerRegularDatemb></mat-datepicker>
+                        <mat-error>
+                            <div *ngIf="EmployeeForm.controls.RegularDate.errors?.compareDate">Regular date don't fall
+                                between start date and end date </div>
+                            <div *ngIf="EmployeeForm.controls.RegularDate.errors?.required">Regular date is required
+                            </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="date">
+                    <mat-form-field class="start-endDate endDate">
+                        <mat-label>End Date</mat-label>
+                        <input type="text" formControlName="EndDate" matInput [matDatepicker]="pickerEndDatemb"
+                            (blur)="checkValidDate(0)" placeholder="yyyy/mm/dd" (ngModelChange)="checkValidDate(0)"
+                            dateFormat>
+                        <mat-datepicker-toggle matSuffix [for]="pickerEndDatemb" class="colorGreen">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #pickerEndDatemb></mat-datepicker>
+                        <mat-error>
+                            <div *ngIf="EmployeeForm.controls.EndDate.errors?.required">End date is required</div>
+                            <div *ngIf="EmployeeForm.controls.EndDate.errors?.compareDate">End date is greater than
+                                start date </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row example-container">
+                <div class="lisence-vehicle">
+                    <mat-form-field>
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">info</i>
+                        <mat-label>Identity No</mat-label>
+                        <input matInput formControlName="IdentityNo" number maxlength="15" #IdentityNomb>
+                        <mat-hint align="end">{{IdentityNomb.value.length}} / 15</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="lisence-vehicle">
+                    <mat-form-field class="start-endDate">
+                        <mat-label>Identity Date </mat-label>
+                        <input type="text" formControlName="IdentityDate" matInput
+                            [matDatepicker]="pickerIdentityDatemb" placeholder="yyyy/mm/dd" dateFormat>
+                        <mat-datepicker-toggle matSuffix [for]="pickerIdentityDatemb" class="colorGreen">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #pickerIdentityDatemb></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row example-container">
+                <mat-form-field>
+                    <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">place</i>
+                    <mat-label>Identity Place</mat-label>
+                    <input matInput formControlName="IdentityPlace" maxlength="250" #IdentityPlacemb>
+                    <mat-hint align="end">{{IdentityPlacemb.value.length}} / 250</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="row example-container">
+                <div class="lisence-vehicle">
+                    <mat-form-field class="lisence">
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">info</i>
+                        <mat-label>Lisence Plate</mat-label>
+                        <input matInput formControlName="LicensePlate" maxlength="20" #LicensePlatemb>
+                        <mat-hint align="end">{{LicensePlatemb.value.length}} / 20</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="lisence-vehicle">
+                    <mat-form-field class="vehicle">
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">motorcycle</i>
+                        <mat-select placeholder="Vehicle Type" #singleSelect formControlName="VehicleType">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let vType of vehicleTypeList " [value]="vType.Id">
+                                <span class="ml-2">{{vType.VehicleType}}</span>
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row example-container">
+                <mat-form-field>
+                    <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">phone_iphone</i>
+                    <mat-label>Mobile1</mat-label>
+                    <input matInput formControlName="EmpMobile1" #EmpMobile1mb maxlength="15" pattern="^0[1-9]\d{8}$">
+                    <mat-error>
+                        <div *ngIf="!EmpMobile1.errors?.pattern">Invalid mobile1 </div>
+                    </mat-error>
+                    <mat-hint align="end">{{EmpMobile1mb.value.length}} / 15</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="row example-container">
+                <mat-form-field>
+                    <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">phone_iphone</i>
+                    <mat-label>Mobile2</mat-label>
+                    <input matInput formControlName="EmpMobile2" maxlength="15" #EmpMobile2mb pattern="^0[1-9]\d{8}$">
+                    <mat-error>
+                        <div *ngIf="!EmpMobile2.errors?.pattern">Invalid mobile2 </div>
+                    </mat-error>
+                    <mat-hint align="end">{{EmpMobile2mb.value.length}} / 15</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="row example-container">
+                <mat-form-field>
+                    <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">email</i>
+                    <mat-label>Email1</mat-label>
+                    <input matInput formControlName="EmpEmail1" #EmpEmail1mb maxlength="100" type="email">
+                    <mat-error>
+                        <div *ngIf="EmpEmail1.errors?.email">Invalid email !</div>
+                    </mat-error>
+                    <mat-hint align="end">{{EmpEmail1mb.value.length}} / 100</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="row example-container">
+                <mat-form-field>
+                    <i matPrefix class="material-icons colorGreen iconSmall pr-2">email</i>
+                    <mat-label>Email2</mat-label>
+                    <input matInput formControlName="EmpEmail2" maxlength="100" #EmpEmail2mb type="email">
+                    <mat-error>
+                        <div *ngIf="EmpEmail2.errors?.email">Invalid email !</div>
+                    </mat-error>
+                    <mat-hint align="end">{{EmpEmail2mb.value.length}} / 100</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="row example-container">
+                <mat-form-field>
+                    <i matPrefix class="fas fa-passport md-18 colorGreen  iconSmall pr-2" style="font-size: 25px;"></i>
+                    <mat-label>Passport No</mat-label>
+                    <input matInput formControlName="PassportNo" number maxlength="15" #PassportNomb>
+                    <mat-hint align="end">{{PassportNomb.value.length}} / 15</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="row example-container">
+                <div class="lisence-vehicle">
+                    <mat-form-field class="start-endDate">
+                        <mat-label>Passport Date </mat-label>
+                        <input type="text" formControlName="PassportDate" matInput [matDatepicker]="pickerPassDatemb"
+                            placeholder="yyyy/mm/dd" dateFormat>
+                        <mat-datepicker-toggle matSuffix [for]="pickerPassDatemb" class="colorGreen">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #pickerPassDatemb></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="lisence-vehicle">
+                    <mat-form-field class="start-endDate">
+                        <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2 ">info</i>
+                        <mat-label>Passport Expiry Date</mat-label>
+                        <input matInput number formControlName="PassportExDate" maxlength="9" #PassportExDatemb>
+                        <mat-hint align="end">{{PassportExDate.value.length}} / 9</mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row example-container">
+                <mat-form-field>
+                    <i matPrefix class="material-icons md-18 colorGreen iconSmall pr-2">comment</i>
+                    <mat-label>Vehicle Comment</mat-label>
+                    <input matInput formControlName="VehicleComment" maxlength="500" #VehicleCommentmb>
+                    <mat-hint align="end">{{VehicleCommentmb.value.length}} / 500</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="employeeStatus">
+                <div class="col-lg-12 empStatus">
+                    <mat-radio-group class="example-radio-group empStatus-radio" formControlName="EmployeeStatus"
+                        [(ngModel)]="defaultCheckEmpStatus">
+                        <mat-radio-button class="example-radio-button emS-radio-button mr-3 mt-3" #button
+                            [value]="item.Id" *ngFor="let item of employyeeStatusList; let i = index">
+                            <div style="font-size: 75%" class="badge">
+                                <span style="line-height: 1.5;padding-left: 2px !important;">
+                                    {{item.EmpStatus}}
+                                </span></div>
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+            <div class="comment">
+                <div class="content-comment">
+                    <div fxLayout="row" fxLayout.xs="column" class="t-comment" fxLayoutWrap fxLayoutAlign="left">
+                        <mat-form-field appearance="outline" flex-gt-sm fxFlex="100%">
+                            <mat-label>Comment</mat-label>
+                            <textarea formControlName="Comment" style="overflow-x: hidden" #Commentmb matInput
+                                maxlength="4000" rows="5"></textarea>
+                            <mat-hint align="end">{{Commentmb.value.length}} / 4000</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="emp-button">
+                <div class="col-lg-12 col-xl-8 btn-employee">
+                    <div *ngIf="employeeId" class="btn-form">
+                        <button type="button" mat-raised-button color="primary" (click)="goBack()"
+                            class="col-md-2 col-sm-2 mr-2">
+                            <i class="material-icons md-18 ml-1">arrow_back</i> Back
+                        </button>
+                        <button type="button" mat-raised-button color="success" (click)="onSubmitEmployeeData()"
+                            class="col-md-2 col-sm-2 mr-2">
+                            <i class="material-icons md-18 ml-1">save</i> Edit
+                        </button>
+                        <button type="button" (click)="deleteEmployee()" mat-raised-button color="warn"
+                            class="col-md-2 col-sm-2">
+                            <i class="material-icons md-18 ml-1">delete</i> Delete
+                        </button>
+                    </div>
+                    <div *ngIf="!employeeId" class="btn-form">
+                        <button type="button" mat-raised-button color="primary" (click)="goBack()"
+                            class="col-md-2 mx-md-2 col-sm-2 mr-2">
+                            <i class="material-icons md-18 ml-1">arrow_back</i> Back
+                        </button>
+                        <button type="button" mat-raised-button color="success" (click)="onSubmitEmployeeData()"
+                            class="col-md-2 mx-md-2 col-sm-2 my-1">
+                            <i class="material-icons md-18 ml-1">save</i> Create
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

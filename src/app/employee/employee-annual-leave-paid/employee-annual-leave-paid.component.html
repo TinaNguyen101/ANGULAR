@@ -1,0 +1,301 @@
+<form class="form-inline m-3">
+    <div class="w-100 form__content pr-0">
+        <div class="form-group form__content-employye d-flex justify-content-between">
+            <div class="requestbox">
+                <mat-form-field class="formChooseAnnualDate mr-2 ml-3">
+                    <!-- validation type = 1: allow only number -->
+                    <input [formControl]="employeeAnnualLeavePaidYear" width="30px" matInput placeholder="Choose a year"
+                        maxlength="4" number mask="0000">
+                    <mat-error>
+                        <div *ngIf="employeeAnnualLeavePaidYear.errors?.yearRequired">Year is required </div>
+                    </mat-error>
+                </mat-form-field>
+                <button type="button" mat-raised-button color="warn" class="ml-0 ml-lg-2" (click)="loadAllAnnualLeavePaid()">
+                    <i class="material-icons md-18 ml-1">search</i>
+                </button>
+                <button type="button" mat-raised-button color="success" class="ml-2" (click)="addAnnualLeavePaid()">
+                    <i class="material-icons md-18 ml-1">add</i> Add
+                </button>
+            </div>
+            <div class="d-flex justify-content-end">
+
+                <button type="button" mat-raised-button color="success" style="background: #007bff" class="mr-3"
+                    (click)="annualLeavePaidDowloadFile()">
+                    Annual Leave Paid <i class="material-icons md-18 ml-1">save_alt</i>
+                </button>
+                <!-- <button type="button" mat-raised-button color="infor" [attr.data-toggle]="'modal'"
+                    data-target="#modalAddDayOff">
+                    <i class="material-icons md-18 ml-1">post_add</i> Day
+                    Off
+                </button> -->
+                <button type="button" mat-raised-button color="success" (click)="openDialog(null,null,'add')">
+                    <i class="material-icons md-18 ml-1">post_add</i> Day
+                    Off
+                </button>
+            </div>
+        </div>
+
+
+    </div>
+</form>
+
+<div class="mx-2 mb-2" *ngIf="innerWidth >=1200">
+    <div class="p-3 mat-elevation-z8" style="background: white">
+
+        <mat-table [dataSource]="dataSource" class='text-small'>
+            <!-- No collum -->
+            <ng-container matColumnDef="No">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">No</span> </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="No"> <span class="w-100 text-center">{{row.No}}</span>
+                </mat-cell>
+            </ng-container>
+
+            <!-- EmpName collum -->
+            <ng-container matColumnDef="EmpName">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">Employee Name</span>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="Employee Name"> <span>{{row.EmpName}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 2018 collum -->
+            <ng-container matColumnDef="DayRemainLastYear">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">{{currentYearHeader-1}}</span>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="2018"> <span
+                        class="w-100 text-center">{{row.DayRemainLastYear}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 2019 collum -->
+            <ng-container matColumnDef="DayCurrentYear">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">{{currentYearHeader}}</span>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="2019"> <span
+                        class="w-100 text-center">{{row.DayCurrentYear}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 1 collum -->
+            <ng-container matColumnDef="Jan">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">1</span> </mat-header-cell>
+                <mat-cell data-target="#exampleModal" [ngStyle]="{'color':row.Jan?'red':''}"
+                    [ngClass]="renderClassMatCell(1, row.EmpStartDate, row.EmpEndDate, row.year)" *matCellDef="let row"
+                    (click)="openDialog(row ,1)" data-label="1">
+                    <span class="w-100 text-center">{{row.Jan}}</span>
+                </mat-cell>
+            </ng-container>
+
+            <!-- 2 collum -->
+            <ng-container matColumnDef="Feb">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">2</span> </mat-header-cell>
+                <mat-cell (click)="openDialog(row ,2)" [ngStyle]="{'color':row.Feb?'red':''}"
+                    [ngClass]="renderClassMatCell(2, row.EmpStartDate, row.EmpEndDate, row.year)" *matCellDef="let row"
+                    data-label="2"> <span class="w-100 text-center">{{row.Feb}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 3 collum -->
+            <ng-container matColumnDef="Mar">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">3</span> </mat-header-cell>
+                <mat-cell (click)="openDialog(row ,3)" data-target="#exampleModal"
+                    [ngStyle]="{'color':row.Mar?'red':''}"
+                    [ngClass]="renderClassMatCell(3, row.EmpStartDate, row.EmpEndDate, row.year)" *matCellDef="let row"
+                    data-label="3"> <span class="w-100 text-center">{{row.Mar}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 4 collum -->
+            <ng-container matColumnDef="Apr">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">4</span> </mat-header-cell>
+                <mat-cell (click)="openDialog(row ,4)" data-target="#exampleModal"
+                    [ngStyle]="{'color':row.Apr?'red':''}"
+                    [ngClass]="renderClassMatCell(4, row.EmpStartDate, row.EmpEndDate, row.year)" *matCellDef="let row"
+                    data-label="4"> <span class="w-100 text-center">{{row.Apr}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 5 collum -->
+            <ng-container matColumnDef="May">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">5</span> </mat-header-cell>
+                <mat-cell (click)="openDialog(row ,5)" data-target="#exampleModal"
+                    [ngStyle]="{'color':row.May?'red':''}"
+                    [ngClass]="renderClassMatCell(5, row.EmpStartDate, row.EmpEndDate, row.year)" *matCellDef="let row"
+                    data-label="5"> <span class="w-100 text-center">{{row.May}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 6 collum -->
+            <ng-container matColumnDef="Jun">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">6</span> </mat-header-cell>
+                <mat-cell (click)="openDialog(row ,6)" data-target="#exampleModal"
+                    [ngStyle]="{'color':row.Jun?'red':''}"
+                    [ngClass]="renderClassMatCell(6, row.EmpStartDate, row.EmpEndDate, row.year)" *matCellDef="let row"
+                    data-label="6"> <span class="w-100 text-center">{{row.Jun}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 7 collum -->
+            <ng-container matColumnDef="Jul">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">7</span> </mat-header-cell>
+                <mat-cell (click)="openDialog(row ,7)" data-target="#exampleModal"
+                    [ngStyle]="{'color':row.Jul?'red':''}"
+                    [ngClass]="renderClassMatCell(7, row.EmpStartDate, row.EmpEndDate, row.year)" *matCellDef="let row"
+                    data-label="7"> <span class="w-100 text-center">{{row.Jul}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 8 collum -->
+            <ng-container matColumnDef="Aug">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">8</span> </mat-header-cell>
+                <mat-cell (click)="openDialog(row ,8)" [ngStyle]="{'color':row.Aug?'red':''}"
+                    [ngClass]="renderClassMatCell(8, row.EmpStartDate, row.EmpEndDate, row.year)" *matCellDef="let row"
+                    data-label="8"> <span class="w-100 text-center">{{row.Aug}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 9 collum -->
+            <ng-container matColumnDef="Sep">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">9</span> </mat-header-cell>
+                <mat-cell (click)="openDialog(row ,9)" [ngStyle]="{'color':row.Sep?'red':''}"
+                    [ngClass]="renderClassMatCell(9, row.EmpStartDate, row.EmpEndDate, row.year)" *matCellDef="let row"
+                    data-label="9"> <span class="w-100 text-center">{{row.Sep}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 10 collum -->
+            <ng-container matColumnDef="Oct">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">10</span> </mat-header-cell>
+                <mat-cell (click)="openDialog(row ,10)" [ngStyle]="{'color':row.Oct?'red':''}"
+                    [ngClass]="renderClassMatCell(10, row.EmpStartDate, row.EmpEndDate, row.year)" *matCellDef="let row"
+                    data-label="10"> <span class="w-100 text-center">{{row.Oct}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 11 collum -->
+            <ng-container matColumnDef="Nov">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">11</span> </mat-header-cell>
+                <mat-cell (click)="openDialog(row ,11)" data-target="#exampleModal"
+                    [ngStyle]="{'color':row.Nov?'red':''}"
+                    [ngClass]="renderClassMatCell(11, row.EmpStartDate, row.EmpEndDate, row.year)" *matCellDef="let row"
+                    data-label="11"> <span class="w-100 text-center">{{row.Nov}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- 12 collum -->
+            <ng-container matColumnDef="Dec">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">12</span> </mat-header-cell>
+                <mat-cell (click)="openDialog(row ,12)" data-target="#exampleModal"
+                    [ngStyle]="{'color':row.Dec?'red':''}"
+                    [ngClass]="renderClassMatCell(12, row.EmpStartDate, row.EmpEndDate, row.year)" *matCellDef="let row"
+                    data-label="12"> <span class="w-100 text-center">{{row.Dec}}</span> </mat-cell>
+            </ng-container>
+
+            <!-- Days of left collum -->
+            <ng-container matColumnDef="DaysOfLeft">
+                <mat-header-cell *matHeaderCellDef> <span class="w-100 text-center">Days of left</span>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" data-label="Days of left"> <span
+                        class="w-100 text-center">{{row.TotalDay}}</span>
+                </mat-cell>
+            </ng-container>
+
+
+
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;">
+            </mat-row>
+
+        </mat-table>
+        <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">No records found
+        </div>
+    </div>
+</div>
+
+
+<div id="wrapTableMobile" class="mx-2 py-2" *ngIf="innerWidth<1200">
+    <div class="py-3 pl-3 pr-0 mat-elevation-z8" style="background: white">
+        <div class="text-center text-danger pt-1" *ngIf="allEmp && allEmp.length === 0">No records found
+        </div>
+        <div class="contentmobile pr-3 mr-0" style="overflow: auto;" [ngStyle]="{maxHeight: innerHeight > 500?'calc(100vh - 300px)':'calc(100vh - 140px)'}">
+            <div class="wrap-table" style="height: 1200px;">
+                <table *ngFor="let item of allEmp" style="width: 100%;">
+                    <tr class="border-table-x border-table-top">
+                        <td class="text-left pl-2 py-2 " colspan="6">Employee Name</td>
+                        <td class="text-right pr-2 py-2 font-weight-bold" colspan="6">{{item.EmpName}}</td>
+                    </tr>
+                    <tr class="border-table-x border-table-top">
+                        <td class="text-center baCoTi border-table-right py-md-1" colspan="6">{{currentYearHeader-1}}</td>
+                        <td class="text-center baCoTi py-md-1" colspan="6">{{currentYearHeader}}</td>
+                    </tr>
+                    <tr class="border-table-x border-table-top">
+                        <td class="text-center border-table-right py-md-1" colspan="6">{{item.DayRemainLastYear}}</td>
+                        <td class="text-center py-md-1" colspan="6">{{item.DayCurrentYear}}</td>
+                    </tr>
+                    <tr class="border-table-x border-table-top data-month-row">
+                        <td class="border-table-right text-center baCoTi py-md-1">1</td>
+                        <td class="border-table-right text-center baCoTi py-md-1">2</td>
+                        <td class="border-table-right text-center baCoTi py-md-1">3</td>
+                        <td class="border-table-right text-center baCoTi py-md-1">4</td>
+                        <td class="border-table-right text-center baCoTi py-md-1">5</td>
+                        <td class="border-table-right text-center baCoTi py-md-1">6</td>
+                        <td class="border-table-right text-center baCoTi py-md-1">7</td>
+                        <td class="border-table-right text-center baCoTi py-md-1">8</td>
+                        <td class="border-table-right text-center baCoTi py-md-1">9</td>
+                        <td class="border-table-right text-center baCoTi py-md-1">10</td>
+                        <td class="border-table-right text-center baCoTi py-md-1">11</td>
+                        <td class="text-center baCoTi py-md-1">12</td>
+                    </tr>
+                    <tr class="border-table-x border-table-top">
+                        <td class="border-table-right text-center py-md-1"
+                            (click)="openDialog(item ,1)"
+                            [ngClass]="renderClassMatCell(1, item.EmpStartDate, item.EmpEndDate, item.year)"
+                            [ngStyle]="{'color':item.Jan?'red':''}"
+                        >{{item.Jan}}</td>
+                        <td class="border-table-right text-center py-md-1"
+                            (click)="openDialog(item ,2)"
+                            [ngClass]="renderClassMatCell(2, item.EmpStartDate, item.EmpEndDate, item.year)"
+                            [ngStyle]="{'color':item.Feb?'red':''}"
+                        >{{item.Feb}}</td>
+                        <td class="border-table-right text-center py-md-1"
+                            (click)="openDialog(item ,3)"
+                            [ngClass]="renderClassMatCell(3, item.EmpStartDate, item.EmpEndDate, item.year)"
+                            [ngStyle]="{'color':item.Mar?'red':''}"
+                        >{{item.Mar}}</td>
+                        <td class="border-table-right text-center py-md-1"
+                            (click)="openDialog(item ,4)"
+                            [ngClass]="renderClassMatCell(4, item.EmpStartDate, item.EmpEndDate, item.year)"
+                            [ngStyle]="{'color':item.Apr?'red':''}"
+                        >{{item.Apr}}</td>
+                        <td class="border-table-right text-center py-md-1"
+                            (click)="openDialog(item ,5)"
+                            [ngClass]="renderClassMatCell(5, item.EmpStartDate, item.EmpEndDate, item.year)"
+                            [ngStyle]="{'color':item.May?'red':''}"
+                        >{{item.May}}</td>
+                        <td class="border-table-right text-center py-md-1"
+                            (click)="openDialog(item ,6)"
+                            [ngClass]="renderClassMatCell(6, item.EmpStartDate, item.EmpEndDate, item.year)"
+                            [ngStyle]="{'color':item.Jun?'red':''}"
+                        >{{item.Jun}}</td>
+                        <td class="border-table-right text-center py-md-1"
+                            (click)="openDialog(item ,7)"
+                            [ngClass]="renderClassMatCell(7, item.EmpStartDate, item.EmpEndDate, item.year)"
+                            [ngStyle]="{'color':item.Jul?'red':''}"
+                        >{{item.Jul}}</td>
+                        <td class="border-table-right text-center py-md-1"
+                            (click)="openDialog(item ,8)"
+                            [ngClass]="renderClassMatCell(8, item.EmpStartDate, item.EmpEndDate, item.year)"
+                            [ngStyle]="{'color':item.Aug?'red':''}"
+                        >{{item.Aug}}</td>
+                        <td class="border-table-right text-center py-md-1" 
+                            (click)="openDialog(item ,9)"
+                            [ngClass]="renderClassMatCell(9, item.EmpStartDate, item.EmpEndDate, item.year)"
+                            [ngStyle]="{'color':item.Sep?'red':''}"
+                        >{{item.Sep}}</td>
+                        <td class="border-table-right text-center py-md-1" (click)="openDialog(item ,10)"
+                            [ngClass]="renderClassMatCell(10, item.EmpStartDate, item.EmpEndDate, item.year)"
+                            [ngStyle]="{'color':item.Oct?'red':''}">{{item.Oct}}</td>
+                        <td class="border-table-right text-center py-md-1" (click)="openDialog(item ,11)"
+                            [ngClass]="renderClassMatCell(11, item.EmpStartDate, item.EmpEndDate, item.year)"
+                            [ngStyle]="{'color':item.Nov?'red':''}">{{item.Nov}}</td>
+                        <td (click)="openDialog(item ,12)" class="text-center py-md-1"
+                            [ngClass]="renderClassMatCell(12, item.EmpStartDate, item.EmpEndDate, item.year)"
+                            [ngStyle]="{'color':item.Dec?'red':''}">{{item.Dec}}</td>
+                    </tr>
+                    <tr class="border-table-x border-table-y">
+                        <td class="text-left pl-2 py-2 " colspan="6">Days Of Left</td>
+                        <td class="text-right pr-2 py-2 font-weight-bold" colspan="6">{{item.TotalDay}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+    </div>
+</div>

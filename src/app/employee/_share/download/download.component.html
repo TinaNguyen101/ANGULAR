@@ -1,0 +1,10 @@
+<!-- <button
+  [disabled]="disabled"
+  class="button download"
+  [ngClass]="{'disabled': disabled}"
+  (click)="download()">download</button> -->
+
+  <button mat-icon-button  style="width: 22px;"  [disabled]="disabled"  class="button download {{isEnable == 'false' ? 'enable' : 'disable'}}" [ngClass]="{'disabled': disabled}"
+    (click)="download()" >
+                  <i class="material-icons pt-1 icon download {{isEnable == 'false' ? 'enable' : 'disable'}}" style="font-size: 22px;">cloud_download</i>
+                </button>

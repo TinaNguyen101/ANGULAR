@@ -1,0 +1,61 @@
+.row{
+    margin-left: 3%;
+  }
+  *{
+    padding-left: 0px !important;
+  }
+  .colorGreen { color: #009688; }
+  ::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle,
+  ::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle
+ {
+   border-color:#008577!important; 
+ }
+  ::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+   background-color: #008577!important;  
+ }
+ 
+  ::ng-deep .mat-select-arrow {
+   color:#008577!important;
+ }
+ .iconSmall{
+   font-size: 18px;
+ }
+ .hiddenClass{
+   background-color: #fafafa;
+   height: 80px;
+ }
+ ::ng-deep.row.mat-form-field{
+     width: 100%;
+ }
+ @media screen and (min-width: 1045px) {
+    .mobile{
+        display: none;
+    }
+ }
+  @media screen and (max-width: 1045px) {
+  .hiddenClass{
+    height: 0px !important;
+   }
+  .row{
+     margin-left: 0 !important;
+   }
+   form{
+     padding-left: 12px !important;
+     margin-bottom: 12%;
+   }
+   
+  }
+  @media screen and (max-width: 786px) {
+    .pc{
+        display: none;
+    }
+  }
+  @media screen and (max-width: 420px) {
+      .pc{
+          display: none;
+      }
+      button{
+        margin-bottom: 5px;
+      }
+  }
+  

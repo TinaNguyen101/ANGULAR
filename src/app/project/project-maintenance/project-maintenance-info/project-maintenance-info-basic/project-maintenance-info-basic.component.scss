@@ -1,0 +1,37 @@
+.example-container {
+    margin-left: 5%;
+  }
+  
+  .btnWidth{width: 100px;}
+  .material-icons.md-18 { font-size: 18px; }
+  .colorGreen { color: #009688; }
+ 
+  .example-right-align {
+    text-align: right;
+    padding-right: 2px;
+    
+  }
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle,
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle
+{
+  border-color:#008577!important; 
+}
+
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: #008577!important;  
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-label {
+  padding-right: 10px!important;  
+}
+
+::ng-deep .mat-select-arrow {
+  color:#008577!important;
+}
+
+::ng-deep .radio label, label.radio-inline{
+  padding-left: 0%;
+  padding-right: 15px;
+}

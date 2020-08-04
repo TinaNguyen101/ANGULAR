@@ -1,0 +1,209 @@
+<div class="lst" style="height: calc(100vh - 125px)">
+    <!-- Drawer container -->
+    <mat-drawer-container style="height: 100% !important;" [hasBackdrop]='true'>
+
+        <!-- Sub drawer search -->
+        <mat-drawer #drawer mode="over" style="width: 300px;font-size: 13px;">
+            <form [formGroup]="formSearch" style="overflow: hidden; position: relative;">
+                <button mat-mini-fab color="success" class="mat-sm text-center"
+                    style="border-radius: 4px 0px 0px 4px; position: absolute;right: 0px ; z-index: 9999;"
+                    (click)="drawer.toggle()">
+                    <mat-icon *ngIf="drawer.opened" style="padding-left: 5px;" aria-hidden="false">arrow_back_ios
+                    </mat-icon>
+                </button>
+                <div>
+                    <!-- txt Search Employee Name -->
+                    <mat-form-field class="w-100 px-3 pb-3 pt-4">
+                        <input matInput placeholder="Employee Name" formControlName="EmpName">
+                    </mat-form-field>
+                    <br>
+                    <div class="d-flex">
+                        <!-- txt Search SalaryFrom -->
+                        <mat-form-field class="w-50 p-3">
+                            <input matInput placeholder="SalaryFrom" numberCommaSeparator mask="comma_separator"
+                                formControlName="SalaryFrom">
+                        </mat-form-field>
+                        <!-- txt Search SalaryTo -->
+                        <mat-form-field class="w-50 p-3">
+                            <input matInput placeholder="SalaryTo" numberCommaSeparator mask="comma_separator"
+                                formControlName="SalaryTo">
+                        </mat-form-field>
+                    </div>
+                    <div class="text-right pr-3">
+                        <button type="button" mat-raised-button color="primary" class="ml-2 py-1"
+                            (click)="resetFromSearch()">
+                            <i class="material-icons ">cached</i>
+                        </button>
+                        <button type="submit" mat-raised-button color="warn" class="ml-2 py-1"
+                            (click)="onSubmitformSearch(); drawer.toggle()">
+                            <i class="material-icons ">search</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </mat-drawer>
+        <!-- End sub drawer search -->
+
+        <!-- Main table -->
+        <mat-drawer-content style="position: relative; overflow-y: auto">
+            <button mat-mini-fab color="warn" class="mat-sm"
+                style="margin-top: 1px; border-radius: 0 4px 4px 0; position: absolute; z-index: 9999;"
+                (click)="drawer.toggle();setValueFormSearch()">
+                <mat-icon *ngIf="!drawer.opened" aria-hidden="false">search</mat-icon>
+            </button>
+
+            <form style="height: 50px; padding-left: 30px;" class="d-flex flex-wrap">
+                <div class="d-flex flex-nowrap">
+                    <mat-form-field [ngStyle]="{width: innerWidth > 480 ? '150px' : '120px'}">
+                        <input #salaryYearMonthElement [formControl]="salaryYearMonth" matInput
+                            [matDatepicker]="reportDatePicker" placeholder="Choose a month" yearmonthFormat>
+                        <mat-datepicker-toggle matSuffix [for]="reportDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #reportDatePicker startView="multi-year" previousEnabled="false"
+                            class="monthOnly" panelClass="monthOnly" (yearSelected)="chosenYearHandler($event)"
+                            (monthSelected)="chosenMonthHandler($event, reportDatePicker)"></mat-datepicker>
+                        <mat-error>
+                            <div *ngIf="salaryYearMonth.errors?.monthRequired">Month is required </div>
+                            <div *ngIf="salaryYearMonth.errors?.monthFormat">Month is invalid </div>
+                        </mat-error>
+                    </mat-form-field>
+                    <div>
+                        <button type="button" class="mx-2"
+                            style="padding-top: 5px; padding-bottom: 5px; margin-top: 15px;" mat-raised-button
+                            color="warn" (click)="getAllMonthlySalary()">
+                            <i class="material-icons md-18 ml-1">search</i>
+                        </button>
+                    </div>
+                </div>
+                <div [ngStyle]="{paddingTop: innerWidth > 480 ? '15px' : '0px'}" class="d-flex flex-nowrap">
+                    <div>
+                        <button type="button" [disabled]="checkDisableTimeButton()||isLoadingData"
+                            style="padding-top: 5px; padding-bottom: 5px;" mat-raised-button color="success"
+                            (click)="updateSalary()">
+                            <i class="material-icons md-18 ml-1">save</i> {{innerWidth > 720 ? "Save" :""}}
+                        </button>
+                        <button [disabled]="checkDisableTimeButton()||isLoadingData" type="button" class="ml-2"
+                            style="padding-top: 5px; padding-bottom: 5px;" mat-raised-button color="warn"
+                            (click)="deleteMonthlySalary()">
+                            <i class="material-icons md-18 ml-1">delete</i> {{innerWidth > 720?'Delete':''}}
+                        </button>
+                        <button [disabled]="isLoadingData || listAllSalary.length==0" type="button"
+                            class="ml-2 btn-download" mat-raised-button color="warn"
+                            style="background: #007bff; color: white; padding-top: 5px; padding-bottom: 5px;"
+                            (click)="downloadFileAnnuaListForYear()">
+                            <i class="material-icons md-18 ml-1">save_alt</i> {{innerWidth>720?'Download':''}}
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="mat-elevation-z8 wrap-table mx-4 mb-4 py-3" [ngStyle]="{marginTop: innerWidth > 480 ? '24px' : '70px'}">
+
+                <div #parentTable class="parentTable" 
+                    style="overflow-y: auto;">
+
+                    <div class="px-3">
+                        <mat-table [dataSource]="dataSource">
+                            <ng-container matColumnDef="Action">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <span class="text-center w-100"> Action </span>
+                                </mat-header-cell>
+                                <mat-cell class="text-right" data-label="Action" *matCellDef="let employee">
+                                    <!-- <div class="d-flex justify-content-center w-100">
+                                        <i (click)="onEditBonusEmployee(employee)"
+                                            class="material-icons btn-edit">edit</i>
+                                    </div> -->
+                                    <span [ngStyle]="{textAlign: innerWidth>1200?'center':'right' }" class="w-100"><i
+                                            (click)="onEditBonusEmployee(employee)"
+                                            class="material-icons colorGreen cursor-pointer btn-edit">edit</i></span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="EmpName">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <span class="text-center w-100"> Employee Name </span>
+                                </mat-header-cell>
+                                <mat-cell class="text-right" data-label="Employee Name" *matCellDef="let row">
+                                    <span>{{row.EmpName}}</span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Salary">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <span class="text-center w-100"> Salary </span>
+                                </mat-header-cell>
+                                <mat-cell class="text-right" data-label="Salary" *matCellDef="let row">
+                                    <span class="text-right w-100">{{row.Salary||0 | number: '1.0'}} đ</span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="BonusOt">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <span class="text-center w-100"> Bonus / OT </span>
+                                </mat-header-cell>
+                                <mat-cell class="text-right" data-label="Bonus / OT" *matCellDef="let row">
+                                    <span class="text-right w-100">{{row.BonusOt||0 | number: '1.0'}} đ</span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Allowance">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <span class="text-center w-100"> Allowance </span>
+                                </mat-header-cell>
+                                <mat-cell (dblclick)="setSelectClick(row, 4)" class="text-right" data-label="Allowance"
+                                    *matCellDef="let row">
+                                    <span *ngIf="!checkSelectClick(row,4)"
+                                        class="text-right w-100">{{row.Allowance||0 | number: '1.0'}} đ</span>
+                                    <input [id]="'input-' + row.EmpId + '4'" class="width-input" autofocus='true'
+                                        (blur)="setValueDataSource($event, row.EmpId,4)" *ngIf="checkSelectClick(row,4)"
+                                        [value]="row.Allowance | number: '1.0-0'" numberCommaSeparator
+                                        mask="comma_separator" />
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Deduction">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <span class="text-center w-100"> Deduction </span>
+                                </mat-header-cell>
+                                <mat-cell (dblclick)="setSelectClick(row, 5)" class="text-right" data-label="Deduction"
+                                    *matCellDef="let row">
+                                    <span *ngIf="!checkSelectClick(row,5)"
+                                        class="text-right w-100">{{row.Deduction||0 | number: '1.0'}} đ</span>
+                                    <input [id]="'input-' + row.EmpId + '5'" class="width-input" autofocus='true'
+                                        (blur)="setValueDataSource($event, row.EmpId,5)" *ngIf="checkSelectClick(row,5)"
+                                        [value]="row.Deduction | number: '1.0-0'" mask="comma_separator"
+                                        numberCommaSeparator />
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Actual">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <span class="text-center w-100"> Actual Salary </span>
+                                </mat-header-cell>
+                                <mat-cell class="text-right" data-label="Actual Salary" *matCellDef="let row">
+                                    <span
+                                        class="text-right w-100">{{( (+row.Salary) + (+row.BonusOt) + (+row.Allowance) - (+row.Deduction)) | number: '1.0'}}
+                                        đ</span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                        </mat-table>
+
+                        <!-- No records found -->
+                        <div class="text-center text-danger pt-1" *ngIf="dataSource && dataSource.data.length === 0">
+                            No records found
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </mat-drawer-content>
+        <!-- End main table -->
+
+
+    </mat-drawer-container>
+    <!-- End drawer container -->
+</div>

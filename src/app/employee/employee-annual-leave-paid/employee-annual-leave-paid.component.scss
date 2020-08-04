@@ -1,0 +1,350 @@
+@import "../../_shared/css/mattable.scss";
+.mat-table {
+    overflow: auto;
+    max-height: calc(100vh - 300px);
+  }
+  element-row {
+    position: relative;
+  }
+  .colorGreen {
+    color: #008577;
+  }
+  .element-row {
+    cursor: pointer;
+  }
+  
+  .element-row:not(.expanded):hover {
+    background: #f5f5f5;
+  }
+  
+  .element-row.expanded {
+    border-bottom-color: #e4e3e3;
+  }
+  ::ng-deep .drawer-mobile div#cdk-overlay-1 {
+    transform: translateX(-8px);
+  }
+//Config width
+ .mat-column- {
+    &No {
+      flex: 0 0 5%;
+      text-align: center;
+    }
+    &EmpName {
+      flex: 0 0 21%;
+    }
+    &DayRemainLastYear {
+      flex: 0 0 8%;
+    }
+    &DayCurrentYear {
+      flex: 0 0 8%;
+    }
+    &Jan, &Feb, &Mar, &Apr, &May, &Jun, &Jul, &Aug, &Sep, &Oct, &Nov, &Dec {
+      flex: 0 0 4%;
+    }
+    &DaysOfLeft {
+      flex: 0 0 10%;
+    }
+  }
+
+  .mat-header-row.detailHeader .mat-header-cell {
+      background-color: #defffb;
+      color: #505050;
+  }
+
+  .mat-list-option.mat-list-option-small{
+    height: 29px;
+  }
+  .mat-list-option.mat-list-option-small .badge{
+    line-height: 0.8em !important;
+    font-size: 0.8em !important;
+  }
+  .emp_status-out {
+    background-color: #737373;
+  }
+  .emp_status-out_InMonth {
+    background-color: #A6A6A6;
+    &.curentYear {
+      cursor: pointer;
+    }    
+  }
+  .emp_status-in {
+    &.curentYear {
+      cursor: pointer;
+    }    
+  }
+
+
+::ng-deep mat-dialog-container {
+  padding: 0 !important;
+  .dialog-header {
+    background-color: #008577;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    .icon-colose-dialog {
+      color: #008577;
+      background-color: #fff;
+    }
+    }
+
+}
+::ng-deep .form-update {
+  max-height: 100vh !important;
+  .mat-dialog-content {
+    max-height: unset !important;
+  }
+}
+
+
+//Child table
+::ng-deep .form-update {
+  .mat-calendar-controls {
+    display: none !important;
+  }
+}
+::ng-deep mat-form-field.ng-untouched .mat-form-field-label {
+  color: rgba(0,0,0,.54) !important ;
+
+}
+::ng-deep mat-form-field.ng-untouched .mat-select-arrow {
+  color: rgba(0,0,0,.54) !important ;
+
+}
+::ng-deep mat-form-field.ng-untouched .mat-form-field-ripple {
+  background-color:  rgba(0,0,0,.54) !important ;
+
+}
+
+::ng-deep #mat-datepicker-4 > mat-calendar-header > .mat-calendar-header > .mat-calendar-controls > .mat-icon-button{
+  display: none !important;
+}
+::ng-deep #mat-datepicker-5 > mat-calendar-header > .mat-calendar-header > .mat-calendar-controls > .mat-icon-button{
+  display: none !important;
+}
+::ng-deep mat-dialog-actions {
+  position: absolute !important;
+  right: 10px;
+}
+  @media screen and (max-width: 468px) {
+    .form__content-employye {
+      flex-wrap: wrap !important;
+      .formChooseAnnualDate {
+        width: 108px;
+      }
+    }
+    .formEditWrap {
+      margin-top: 80px;
+      margin-bottom: 80px;
+    }
+    .dialog {
+      mat-table {
+        max-height: calc(100vh - 240px);
+      }
+      .mat-calendar-header {
+        display: none !important;
+      }
+      .mat-table {
+        border: 0;
+        vertical-align: middle
+      }
+    
+      .mat-table caption {
+        font-size: 1em;
+      }
+      
+      .mat-table .mat-header-row {
+        display: none
+      }
+      .mat-table .mat-row {
+        border-bottom: 5px solid #ddd;
+        display: block;
+      }
+      /*
+      .mat-table .mat-row:nth-child(even) {background: #CCC}
+      .mat-table .mat-row:nth-child(odd) {background: #FFF}
+      */
+      .mat-table .mat-cell {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: 0.9em;
+        text-align: right;
+        font-weight: bold;
+        min-height:28px;
+        margin-bottom: 4%;
+        padding-left: 0px;
+        padding-right: 4px;
+      }
+      .mat-table .mat-cell:before {
+        /*
+        * aria-label has no advantage, it won't be read inside a table
+        content: attr(aria-label);
+        */
+        content: attr(data-label);
+        float: left;
+        text-transform: uppercase;
+        font-weight: normal;
+        
+        font-size: .85em;
+      }
+      .mat-table .mat-cell:last-child {
+        border-bottom: 0;
+      }
+        .mat-table .mat-cell:first-child {
+        margin-top: 4%;
+      }
+    }
+  }
+  @media screen and (min-width: 468px) {
+
+    .dialog {
+      mat-table {
+        max-height: calc(100vh - 320px);
+      }
+      // mat-table {
+      //   border-bottom: 1px solid #737373;
+      //   .mat-row:last-of-type {
+      //     border-bottom: none;
+      //   }
+      // }
+      .mat-calendar-header {
+        display: none !important;
+      }
+      .mat-column- {
+        &ActionC {
+          flex: 0 0 8% ;
+          text-align: center;
+          color:  #008577 !important;
+          cursor: pointer;
+        }
+        &DayOffC {
+          flex: 0 0 15%;
+        }
+        &TimeOffC {
+          flex: 0 0 10%;
+        }
+        &ApprovedByC {
+          flex: 0 0 25%;
+        }
+        &ApprovedDateC {
+          flex: 0 0 15%
+        }
+        &ReasonC {
+          flex: 0 0 27%;
+        }
+      }
+      .mat-header-cell {
+        background-color: #008577;
+        color: #fff
+      }
+      .mat-sort-header-arrow{
+        color: #fff
+      }
+      .mat-table .mat-cell:first-child,.mat-table .mat-header-cell:first-child {
+        border-left: 1px solid #979797;
+      }
+      .mat-table .mat-cell, .mat-header-cell {
+        border-right: 1px solid #979797;
+      }
+  
+      .mat-header-cell {
+        border-bottom: 1px solid #979797;
+        border-top: 1px solid #979797;
+        font-weight: 600;
+      }
+  
+      .mat-table .mat-header-row{
+        border-bottom-width: 0px;
+      }
+  
+      mat-cell:first-of-type, mat-footer-cell:first-of-type, mat-header-cell:first-of-type {
+        padding-left: 8px;
+      }
+      mat-cell, mat-footer-cell, mat-header-cell {
+        padding-left: 8px;
+      }
+    }
+  }
+  @media all and (max-width: 1200px) {
+    .mat-table .mat-cell, .mat-header-cell {
+      border-right: none !important;
+      border-left: none !important;
+    }
+    .mat-cell.mat-column-ActionC {
+      text-align: right !important;
+    }
+
+  }
+  .header-edit-title {
+    cursor: initial;
+  } 
+  mat-row, mat-header-row{
+    min-height:22px;
+    align-items: stretch;
+    border-color: #979797;
+  }
+
+  mat-cell, mat-header-cell{
+    min-height:32px;
+  }
+
+  .text-small .mat-cell {
+    font-size: 0.9em;
+  }
+
+  mat-cell:last-of-type, mat-footer-cell:last-of-type, mat-header-cell:last-of-type {
+    padding-right: 4px;
+  }
+  mat-cell, mat-footer-cell, mat-header-cell {
+    padding-right: 4px;
+  }
+  .contentmobile {
+    * {
+      box-sizing: border-box;
+    }
+    overflow: auto;
+    
+    .baCoTi {
+      background-color: #008578c0;
+      color: white;
+    }
+    .border-table {
+      border: 1px solid #979797;
+      &-top {
+        border-top: 1px solid #979797;
+      }
+      &-right {
+        border-right: 1px solid #979797;
+      }
+      &-left {
+        border-left: 1px solid #979797;
+      }
+      &-bottom {
+        border-bottom: 1px solid #979797;
+      }
+      &-x {
+        border-left: 1px solid #979797;
+        border-right: 1px solid #979797;
+      }
+      &-y {
+        border-top: 1px solid #979797;
+        border-bottom: 1px solid #979797;
+      }
+    }
+    .wrap-table {
+      table {
+        margin: 0px;
+        font-size: 75%;
+        margin-top: 20px;
+        &:first-of-type {
+          margin-top: 0px !important;
+        }
+        .data-month-row {
+          td {
+            width: calc(100% / 12);
+          }
+        }
+      }
+    }
+  }

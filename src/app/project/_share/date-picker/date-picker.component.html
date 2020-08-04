@@ -1,0 +1,10 @@
+<div [formGroup]="parts" class="example-tel-input-container">
+  <input type="number"  class="example-tel-input-element"  formControlName="area" maxLength="4" aria-label="Area code" (input)="_handleInput()"
+  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+  <span class="example-tel-input-spacer">/</span>
+  <input type="number" class="example-tel-input-element" formControlName="exchange" maxLength="2" aria-label="Exchange code" (input)="_handleInput()"
+   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+  <span class="example-tel-input-spacer">/</span>
+  <input type="number"  class="example-tel-input-element" formControlName="subscriber" maxLength="2" aria-label="Subscriber number" (input)="_handleInput()"
+  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+</div>
